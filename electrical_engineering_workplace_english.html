@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electrical Engineering Workplace English - Flashcards</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            electric: {
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+               glow: '#00f0ff'
+            },
+            amberVolt: '#f59e0b',
+            darkPanel: '#0f172a',
+            cardBg: '#1e293b'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .perspective { perspective: 1200px; }
+    .transform-style-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+    
+    .glow-effect {
+      box-shadow: 0 0 20px rgba(14, 165, 233, 0.15);
+    }
+    .glow-effect:hover {
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col justify-between selection:bg-cyan-500 selection:text-slate-950">
+
+  <!-- Top Navigation / Header -->
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 px-4 py-3 shadow-lg">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-sky-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-cyan-500/20">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div>
+          <h1 class="text-lg md:text-xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-sky-300 to-amber-300 bg-clip-text text-transparent">
+            EE Workplace English Flashcards
+          </h1>
+          <p class="text-xs text-slate-400 font-mono">Argentina Technical Industry &bull; A2/B1 Speaking</p>
+        </div>
+      </div>
+
+      <!-- Stats Badge Bar -->
+      <div class="flex items-center gap-3 bg-slate-950/80 px-3.5 py-1.5 rounded-xl border border-slate-800 text-xs font-mono">
+        <div class="flex items-center gap-1.5 text-emerald-400">
+          <i class="fa-solid fa-circle-check"></i>
+          <span id="masteredCount">0</span> Mastered
+        </div>
+        <span class="text-slate-700">|</span>
+        <div class="flex items-center gap-1.5 text-amber-400">
+          <i class="fa-solid fa-circle-notch"></i>
+          <span id="reviewCount">0</span> Practice
+        </div>
+        <span class="text-slate-700">|</span>
+        <div class="text-cyan-400 font-bold" id="cardCounter">
+          1 / 60
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <main class="max-w-4xl w-full mx-auto px-4 py-6 flex-grow flex flex-col items-center justify-center gap-5">
+
+    <!-- Filters & Search Bar -->
+    <div class="w-full bg-slate-900/90 border border-slate-800 p-3.5 rounded-2xl flex flex-col md:flex-row gap-3 items-center justify-between shadow-xl">
+      
+      <div class="flex flex-col sm:flex-row w-full md:w-auto gap-2.5 items-center">
+        <!-- Category Dropdown -->
+        <select id="categoryFilter" class="w-full sm:w-auto bg-slate-950 border border-slate-700 text-slate-200 text-xs font-mono rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-cyan-500 transition">
+          <option value="all">⚡ All Categories (60 Cards)</option>
+          <option value="safety">🛡️ Safety, EPP & ENRE Regulations</option>
+          <option value="substations">🏭 Substations & High/Medium Voltage</option>
+          <option value="maintenance">🔧 Industrial Maintenance & Motors</option>
+          <option value="control">🖥️ Control Systems, PLCs & SCADA</option>
+          <option value="renewable">🍃 Renewable Energy & Grid (CAMMESA)</option>
+          <option value="management">📋 Site Visits & Shift Handovers</option>
+        </select>
+
+        <!-- Status Filter -->
+        <select id="statusFilter" class="w-full sm:w-auto bg-slate-950 border border-slate-700 text-slate-200 text-xs font-mono rounded-xl px-3 py-2.5 focus:outline-none focus:border-cyan-500 transition">
+          <option value="all">All Statuses</option>
+          <option value="mastered">✅ Mastered Only</option>
+          <option value="practice">⏳ Need Practice Only</option>
+        </select>
+      </div>
+
+      <!-- Search Input & Actions -->
+      <div class="flex w-full md:w-auto gap-2 items-center">
+        <div class="relative flex-grow">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
+          <input type="text" id="searchInput" placeholder="Search keywords..." class="w-full bg-slate-950 border border-slate-700 text-slate-200 text-xs pl-8 pr-3 py-2.5 rounded-xl focus:outline-none focus:border-cyan-500 placeholder-slate-500 font-mono">
+        </div>
+
+        <button id="shuffleBtn" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3.5 py-2.5 rounded-xl text-xs font-mono font-semibold transition flex items-center gap-1.5 whitespace-nowrap" title="Shuffle active cards">
+          <i class="fa-solid fa-shuffle"></i> Shuffle
+        </button>
+      </div>
+    </div>
+
+    <!-- Flashcard Perspective Container -->
+    <div class="w-full perspective min-h-[430px] sm:min-h-[380px]">
+      <div id="flashcard" class="relative w-full h-full min-h-[430px] sm:min-h-[380px] transform-style-3d transition-transform duration-500 cursor-pointer rounded-2xl bg-slate-900 border border-slate-800 glow-effect">
+        
+        <!-- FRONT OF CARD -->
+        <div class="absolute inset-0 w-full h-full backface-hidden rounded-2xl p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800">
+          <div>
+            <div class="flex justify-between items-start gap-2 mb-4">
+              <span id="cardCategory" class="text-[11px] font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/80 px-3 py-1 rounded-lg border border-cyan-800/60 shadow-sm">
+                Category
+              </span>
+              
+              <div class="flex items-center gap-2">
+                <button id="masteryBtn" class="text-xs font-mono px-3 py-1 rounded-lg border border-slate-700 bg-slate-950 text-slate-400 hover:text-emerald-400 hover:border-emerald-500/50 transition flex items-center gap-1.5" title="Toggle Mastered Status">
+                  <i class="fa-regular fa-circle-check"></i> <span id="masteryBtnText">Mark Mastered</span>
+                </button>
+                <button id="speakFrontBtn" class="text-slate-400 hover:text-cyan-400 p-2 text-base transition rounded-lg hover:bg-slate-800" title="Listen to Question (English Speech)">
+                  <i class="fa-solid fa-volume-high"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Technical Scenario Question -->
+            <div class="mt-3">
+              <span class="text-xs font-mono text-slate-500 uppercase tracking-widest block mb-1">Workplace Scenario / Question:</span>
+              <h2 id="cardQuestion" class="text-lg sm:text-2xl font-bold text-slate-100 leading-relaxed tracking-tight">
+                Loading engineering scenario...
+              </h2>
+            </div>
+          </div>
+
+          <!-- Front Card Bottom Hint Bar -->
+          <div class="pt-4 border-t border-slate-800/80 flex justify-between items-center text-xs font-mono text-slate-500">
+            <span class="flex items-center gap-1.5 text-cyan-400/80">
+              <i class="fa-solid fa-hand-pointer animate-pulse"></i> Click or tap card to view technical vocab & sample response
+            </span>
+            <span class="font-bold text-slate-600 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">FRONT</span>
+          </div>
+        </div>
+
+        <!-- BACK OF CARD -->
+        <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-2xl p-6 sm:p-8 flex flex-col justify-between bg-slate-900 border border-cyan-900/40">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-400 bg-amber-950/80 px-2.5 py-1 rounded-lg border border-amber-800/60">
+                ⚡ Key Technical Vocab & Expressions
+              </span>
+              <button id="speakBackBtn" class="text-slate-400 hover:text-amber-400 p-1.5 text-sm transition rounded-lg hover:bg-slate-800" title="Listen to Key Vocab">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+
+            <!-- Technical Vocabulary Chips with Spanish Hints -->
+            <div id="vocabContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2 my-3">
+              <!-- Dynamically populated tags with tooltips -->
+            </div>
+
+            <!-- Sentence Frame / Answer Starter -->
+            <div class="mt-4 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800">
+              <span class="text-[11px] font-mono font-bold text-cyan-400 block mb-1">
+                <i class="fa-solid fa-comment-dots mr-1"></i> Recommended Answer Starter:
+              </span>
+              <p id="starterText" class="text-xs sm:text-sm text-slate-300 font-mono italic">
+                "In my response, I would mention..."
+              </p>
+            </div>
+          </div>
+
+          <!-- Back Card Bottom Hint Bar -->
+          <div class="pt-3 border-t border-slate-800 flex justify-between items-center text-xs font-mono text-slate-500">
+            <span class="text-slate-400"><i class="fa-solid fa-rotate-left mr-1 text-cyan-400"></i> Click to flip back to scenario</span>
+            <span class="font-bold text-amber-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">BACK</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Navigation Control Bar -->
+    <div class="flex items-center justify-between w-full px-1 gap-3">
+      <button id="prevBtn" class="flex-1 sm:flex-none bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-mono font-semibold text-xs sm:text-sm py-3 px-5 rounded-xl shadow-md flex items-center justify-center gap-2 transition disabled:opacity-30 disabled:cursor-not-allowed">
+        <i class="fa-solid fa-chevron-left"></i> Previous
+      </button>
+
+      <button id="flipBtn" class="flex-1 sm:flex-none bg-gradient-to-r from-cyan-600 to-sky-500 hover:from-cyan-500 hover:to-sky-400 text-slate-950 font-extrabold text-xs sm:text-sm py-3 px-6 rounded-xl shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 transition">
+        <i class="fa-solid fa-repeat"></i> Flip Card
+      </button>
+
+      <button id="nextBtn" class="flex-1 sm:flex-none bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-mono font-semibold text-xs sm:text-sm py-3 px-5 rounded-xl shadow-md flex items-center justify-center gap-2 transition disabled:opacity-30 disabled:cursor-not-allowed">
+        Next <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 border-t border-slate-900 text-slate-600 text-center py-3 text-xs font-mono">
+    EE Workplace English Flashcards &bull; Designed for Argentine Engineers & Young Professionals
+  </footer>
+
+  <script>
+    // 60 Comprehensive Electrical Engineering Workplace Flashcard Data
+    const eeFlashcardsData = [
+      // 1. Safety, PPE & Regulations (10 Cards)
+      {
+        id: 1,
+        catKey: "safety",
+        category: "Safety, EPP & ENRE",
+        question: "What safety equipment (EPP) do you inspect before entering a Medium Voltage (MV) switchgear room?",
+        vocab: [
+          { en: "dielectric boots", es: "calzado dieléctrico" },
+          { en: "arc-flash face shield", es: "pantalla facial contra arco eléctrico" },
+          { en: "voltage detector / tester", es: "revelador de tensión" },
+          { en: "flame-resistant (FR) coverall", es: "mameluco ignífugo" },
+          { en: "insulating rubber gloves", es: "guantes dieléctricos de goma" }
+        ],
+        starter: "Before stepping into the MV room, I always verify my dielectric boots and FR suit, and I test my insulating gloves for punctures..."
+      },
+      {
+        id: 2,
+        catKey: "safety",
+        category: "Safety, EPP & ENRE",
+        question: "How do you explain the Lockout/Tagout (LOTO) procedure to a junior technician on site?",
+        vocab: [
+          { en: "isolate energy sources", es: "aislar fuentes de energía" },
+          { en: "padlock and safety tag", es: "candado y tarjeta de seguridad" },
+          { en: "zero energy state", es: "estado de energía cero" },
+          { en: "verify line-is-dead", es: "verificar ausencia de tensión" },
+          { en: "discharge residual voltage", es: "descargar tensión residual" }
+        ],
+        starter: "First, we open the main circuit breaker, apply our personal padlock and safety tag, and perform a three-point voltage check to confirm a zero energy state..."
+      },
+      {
+        id: 3,
+        catKey: "safety",
+        category: "Safety, EPP & ENRE",
+        question: "What steps must you take to establish a safe work zone near high-voltage energized equipment?",
+        vocab: [
+          { en: "safety barrier / signaling tape", es: "cinta de señalización / vallado" },
+          { en: "minimum clearance distance", es: "distancia mínima de seguridad" },
+          { en: "grounding switch", es: "seccionador de puesta a tierra" },
+          { en: "warning signs", es: "carteles de advertencia" },
+          { en: "de-energize the feeder", es: "desenergizar el alimentador" }
+        ],
+        starter: "To secure the area, we place warning barriers keeping the minimum clearance distance and close the earthing switch before starting work..."
+      },
+      {
+        id: 4,
+        catKey: "safety",
+        category: "Safety, EPP & ENRE",
+        question: "How do ENRE safety protocols in Argentina influence daily maintenance in industrial plants?",
+        vocab: [
+          { en: "ENRE regulations", es: "normativas del ENRE" },
+          { en: "mandatory safety audits", es: "auditorías de seguridad obligatorias" },
+          { en: "work permit / permiso de trabajo", es: "permiso de trabajo" },
+          { en: "risk assessment", es: "evaluación de riesgos" },
+          { en: "compliance standards", es: "estándares de cumplimiento" }
+        ],
+        starter: "According to regulatory standards, we cannot begin any high-risk task without a signed work permit and a completed risk assessment..."
+      },
+      {
+        id: 5,
+        catKey: "safety",
+        category: "Safety, EPP & ENRE",
+        question: "What do you do if you notice a damaged insulation sleeve on a 380V power cable during inspection?",
+        vocab: [
+          { en: "damaged insulation", es: "aislación dañada" },
+          { en: "report the anomaly", es: "reportar la anomalía" },
+          { en: "de-energize immediately", es: "desenergizar inmediatamente" },
+          { en: "heat-shrink sleeve", es: "manga termocontraíble" },
+          { en: "replace damaged section", es: "reemplazar tramo afectado" }
+        ],
+        starter: "If I spot exposed or cracked insulation, I immediately notify the supervisor, cut off power to that circuit, and arrange a cable repair..."
+      },
+      {
+        id: 6,
+        catKey: "safety",
+        category: "Safety, EPP & ENRE",
+        question: "Why is portable temporary grounding essential when servicing transformer bays?",
+        vocab: [
+          { en: "portable grounding set", es: "juego de puesta a tierra temporaria" },
+          { en: "induced voltage", es: "tensión inducida" },
+          { en: "earth clamp / jaw", es: "morsa o prensa a tierra" },
+          { en: "short-circuit protection", es: "protección contra cortocircuito" },
+          { en: "accidental re-energization", es: "reenergización accidental" }
+        ],
+        starter: "Temporary grounding protects technicians against accidental re-energization or capacitive charge by diverting fault currents straight to ground..."
+      },
+      {
+        id: 7,
+        catKey: "safety",
+        category: "Safety, EPP & ENRE",
+        question: "How do you handle an arc-flash hazard warning label on a low voltage distribution board?",
+        vocab: [
+          { en: "arc-flash boundary", es: "frontera de ráfaga de arco" },
+          { en: "incident energy level", es: "nivel de energía incidente" },
+          { en: "PPE category", es: "categoría de EPP" },
+          { en: "maintain safe distance", es: "mantener distancia de seguridad" },
+          { en: "qualified personnel", es: "personal calificado" }
+        ],
+        starter: "I read the warning label carefully to check the arc boundary and required PPE rating before opening the enclosure doors..."
+      },
+      {
+        id: 8,
+        catKey: "safety",
+        category: "Safety, EPP & ENRE",
+        question: "What emergency response actions should you take if a co-worker suffers an electrical shock?",
+        vocab: [
+          { en: "disconnect main supply", es: "desconectar alimentación principal" },
+          { en: "insulated hook / rod", es: "pértiga aislante" },
+          { en: "call emergency services", es: "llamar a emergencias" },
+          { en: "CPR / first aid", es: "RCP / primeros auxilios" },
+          { en: "do not touch directly", es: "no tocar directamente" }
+        ],
+        starter: "First, I must never touch the victim directly; I immediately shut off power or use an insulated rescue hook to free them, then call for medical help..."
+      },
+      {
+        id: 9,
+        catKey: "safety",
+        category: "Safety, EPP & ENRE",
+        question: "How do you verify if an emergency stop button (E-Stop) circuit is operating correctly?",
+        vocab: [
+          { en: "normally closed (NC) contact", es: "contacto normalmente cerrado" },
+          { en: "hardwired safety relay", es: "relé de seguridad cableado" },
+          { en: "trip test", es: "prueba de disparo" },
+          { en: "manual reset", es: "reinicialización manual" },
+          { en: "fail-safe design", es: "diseño a prueba de fallas" }
+        ],
+        starter: "We press the E-stop button during dry-run testing to confirm it breaks the circuit via the safety relay and requires a manual reset..."
+      },
+      {
+        id: 10,
+        catKey: "safety",
+        category: "Safety, EPP & ENRE",
+        question: "What is the importance of grounding resistance measurement in industrial installations?",
+        vocab: [
+          { en: "tellurometer / earth tester", es: "telurómetro" },
+          { en: "earth pit / electrode", es: "jabalina / pozo de tierra" },
+          { en: "low impedance path", es: "camino de baja impedancia" },
+          { en: "threshold limit (<10 ohms)", es: "límite umbral (<10 ohmios)" },
+          { en: "dissipate surge current", es: "disipar corriente de sobretensión" }
+        ],
+        starter: "Measuring earth resistance ensures fault currents dissipate safely; in Argentina, we usually target a value well below regulatory limits..."
+      },
+
+      // 2. Substations & High/Medium Voltage (10 Cards)
+      {
+        id: 11,
+        catKey: "substations",
+        category: "Substations & HV/MV",
+        question: "What are the main parameters you check during a visual routine walk-through in a 132kV substation?",
+        vocab: [
+          { en: "oil level indicator", es: "indicador de nivel de aceite" },
+          { en: "SF6 gas pressure gauge", es: "manómetro de presión de gas SF6" },
+          { en: "silica gel color", es: "color de la gel de sílice" },
+          { en: "bushings condition", es: "estado de los aisladores / bujes" },
+          { en: "corona discharge noise", es: "ruido por efecto corona" }
+        ],
+        starter: "During my inspection, I check transformer oil levels, inspect silica gel breathers for moisture, and verify SF6 pressure on circuit breakers..."
+      },
+      {
+        id: 12,
+        catKey: "substations",
+        category: "Substations & HV/MV",
+        question: "How do you describe the function of an On-Load Tap Changer (OLTC) in a power transformer?",
+        vocab: [
+          { en: "regulate output voltage", es: "regular tensión de salida" },
+          { en: "adjust winding ratio", es: "ajustar relación de transformación" },
+          { en: "without interrupting load", es: "sin interrumpir la carga" },
+          { en: "voltage fluctuations", es: "fluctuaciones de tensión" },
+          { en: "automatic voltage regulator (AVR)", es: "regulador automático de tensión" }
+        ],
+        starter: "The OLTC adjusts the transformer's turn ratio under load conditions to maintain stable secondary voltage despite grid fluctuations..."
+      },
+      {
+        id: 13,
+        catKey: "substations",
+        category: "Substations & HV/MV",
+        question: "What is the difference between a disconnector (seccionador) and a circuit breaker (interruptor) in high voltage?",
+        vocab: [
+          { en: "breaking capacity under load", es: "capacidad de ruptura bajo carga" },
+          { en: "arc quenching medium", es: "medio de extinción de arco" },
+          { en: "visible isolation gap", es: "brecha de aislación visible" },
+          { en: "interlocking logic", es: "lógica de enclavamiento" },
+          { en: "fault clearance", es: "despeje de fallas" }
+        ],
+        starter: "A circuit breaker can interrupt short-circuit currents under load, whereas a disconnector provides visible isolation and must only operate off-load..."
+      },
+      {
+        id: 14,
+        catKey: "substations",
+        category: "Substations & HV/MV",
+        question: "How do you interpret a Buchholz relay trip signal on a main power transformer?",
+        vocab: [
+          { en: "gas accumulation", es: "acumulación de gas" },
+          { en: "internal dielectric fault", es: "falla dieléctrica interna" },
+          { en: "oil surge / movement", es: "oleada de aceite" },
+          { en: "alarm vs trip contact", es: "contacto de alarma vs disparo" },
+          { en: "dissolved gas analysis (DGA)", es: "análisis de gases disueltos" }
+        ],
+        starter: "A Buchholz trip indicates a severe internal fault or rapid gas generation inside the transformer tank, requiring immediate gas sampling..."
+      },
+      {
+        id: 15,
+        catKey: "substations",
+        category: "Substations & HV/MV",
+        question: "What procedure do you follow when performing insulation resistance testing (Megger) on a MV cable?",
+        vocab: [
+          { en: "insulation tester (megohmmeter)", es: "megóhmetro" },
+          { en: "apply test voltage (2.5kV/5kV)", es: "aplicar tensión de prueba" },
+          { en: "polarization index (PI)", es: "índice de polarización" },
+          { en: "discharge cable capacitance", es: "descargar capacitancia del cable" },
+          { en: "record giga-ohms (GΩ)", es: "registrar giga-ohmios" }
+        ],
+        starter: "We disconnect both ends of the cable, ground adjacent conductors, apply test voltage for one minute, and safely discharge the cable after reading..."
+      },
+      {
+        id: 16,
+        catKey: "substations",
+        category: "Substations & HV/MV",
+        question: "Why are Current Transformers (CTs) dangerous if their secondary circuit is opened while energized?",
+        vocab: [
+          { en: "open-circuit secondary", es: "secundario en circuito abierto" },
+          { en: "high induced voltage peak", es: "pico de alta tensión inducida" },
+          { en: "core saturation", es: "saturación del núcleo" },
+          { en: "shorting terminal block", es: "bornera de cortocircuitado" },
+          { en: "insulation breakdown", es: "ruptura de aislación" }
+        ],
+        starter: "An open CT secondary generates dangerously high voltages across terminals; we must always short-circuit CT terminals before working on instrument loops..."
+      },
+      {
+        id: 17,
+        catKey: "substations",
+        category: "Substations & HV/MV",
+        question: "How do potential transformers (PTs/VTs) supply signal inputs to numerical protection relays?",
+        vocab: [
+          { en: "step-down voltage ratio", es: "relación de reducción de tensión" },
+          { en: "110V standard secondary", es: "secundario estándar de 110V" },
+          { en: "voltage measurement", es: "medición de tensión" },
+          { en: "secondary fuses / MCB", es: "fusibles o llaves del secundario" },
+          { en: "phase angle accuracy", es: "precisión de ángulo de fase" }
+        ],
+        starter: "PTs step down high busbar voltages to standard 110V levels to feed voltage elements in protection and metering relays..."
+      },
+      {
+        id: 18,
+        catKey: "substations",
+        category: "Substations & HV/MV",
+        question: "What is the role of a DC station battery bank in a transformer substation?",
+        vocab: [
+          { en: "uninterruptible power supply", es: "fuente ininterrumpida" },
+          { en: "tripping coil power", es: "alimentación de bobinas de disparo" },
+          { en: "110VDC / 220VDC system", es: "sistema de 110Vcc / 220Vcc" },
+          { en: "battery charger & rectifier", es: "cargador de batería y rectificador" },
+          { en: "grid blackout backup", es: "respaldo en apagón de red" }
+        ],
+        starter: "The DC battery bank guarantees that protection relays and trip coils operate reliably even during a complete blackout..."
+      },
+      {
+        id: 19,
+        catKey: "substations",
+        category: "Substations & HV/MV",
+        question: "How do surge arresters (pararrayos/descargadores) protect substation equipment from lightning strikes?",
+        vocab: [
+          { en: "metal-oxide varistor (MOV)", es: "varistor de óxido metálico" },
+          { en: "non-linear resistance", es: "resistencia no lineal" },
+          { en: "divert transient overvoltage", es: "desviar sobretensión transitoria" },
+          { en: "surge counter", es: "contador de descargas" },
+          { en: "clamping voltage", es: "tensión de enclavamiento" }
+        ],
+        starter: "Surge arresters quickly conduct lightning overvoltages to ground while presenting high resistance at normal operating voltage..."
+      },
+      {
+        id: 20,
+        catKey: "substations",
+        category: "Substations & HV/MV",
+        question: "What is thermographic inspection (infrared) used for on high-current switchgear busbars?",
+        vocab: [
+          { en: "thermal imaging camera", es: "cámara termográfica" },
+          { en: "hot spots / overheating", es: "puntos calientes / sobrecalentamiento" },
+          { en: "loose bolt connections", es: "conexiones con bulones flojos" },
+          { en: "high contact resistance", es: "alta resistencia de contacto" },
+          { en: "predictive maintenance", es: "mantenimiento predictivo" }
+        ],
+        starter: "Thermography detects hot spots caused by high contact resistance or loose connections before equipment failure occurs..."
+      },
+
+      // 3. Industrial Maintenance & Motors (10 Cards)
+      {
+        id: 21,
+        catKey: "maintenance",
+        category: "Industrial Maintenance",
+        question: "How do you troubleshoot a 3-phase induction motor that trips its thermal overload relay on startup?",
+        vocab: [
+          { en: "check phase currents", es: "medir corrientes de fase" },
+          { en: "current unbalance", es: "desbalance de corriente" },
+          { en: "mechanical overload / jam", es: "sobrecarga mecánica / trabamiento" },
+          { en: "winding resistance test", es: "prueba de resistencia de bobinados" },
+          { en: "bearing wear", es: "desgaste de rodamientos" }
+        ],
+        starter: "I check for mechanical binding, measure phase current balance with a clamp meter, and test winding resistance for shorted turns..."
+      },
+      {
+        id: 22,
+        catKey: "maintenance",
+        category: "Industrial Maintenance",
+        question: "What are the advantages of using a Variable Frequency Drive (VFD/VFDs) over a Star-Delta starter?",
+        vocab: [
+          { en: "smooth acceleration (ramp time)", es: "aceleración suave (tiempo de rampa)" },
+          { en: "speed control / RPM", es: "control de velocidad / RPM" },
+          { en: "reduced inrush current", es: "corriente de irrupción reducida" },
+          { en: "energy savings", es: "ahorro de energía" },
+          { en: "torque control", es: "control de torque" }
+        ],
+        starter: "A VFD allows precise speed regulation, minimizes mechanical stress, and eliminates the high inrush currents typical of direct starters..."
+      },
+      {
+        id: 23,
+        catKey: "maintenance",
+        category: "Industrial Maintenance",
+        question: "How do you diagnose a single-phasing (falta de fase) fault in a 380V industrial panel?",
+        vocab: [
+          { en: "phase failure relay", es: "relé de falta de fase" },
+          { en: "blown line fuse", es: "fusible de línea quemado" },
+          { en: "line-to-line voltage check", es: "medición de tensión entre fases" },
+          { en: "contactor contact pitting", es: "fogueado de contactos de contactor" },
+          { en: "overheating motor windings", es: "sobrecalentamiento de bobinados" }
+        ],
+        starter: "I measure voltage between lines L1-L2, L2-L3, and L1-L3 using a multimeter to confirm if a fuse blew or a contactor pole failed..."
+      },
+      {
+        id: 24,
+        catKey: "maintenance",
+        category: "Industrial Maintenance",
+        question: "What checks do you perform on a main low voltage circuit breaker (ACB) during preventive maintenance?",
+        vocab: [
+          { en: "arc chute cleaning", es: "limpieza de cámaras apaga chispas" },
+          { en: "contact erosion check", es: "inspección de desgaste de contactos" },
+          { en: "rack-in / rack-out mechanism", es: "mecanismo de extracción / inserción" },
+          { en: "lubricate mechanical linkages", es: "lubricar articulaciones mecánicas" },
+          { en: "electronic trip unit test", es: "prueba de la unidad de disparo electrónica" }
+        ],
+        starter: "We clean the arc chutes, inspect main contact wear, test the electronic trip unit with secondary injection, and lubricate mechanical levers..."
+      },
+      {
+        id: 25,
+        catKey: "maintenance",
+        category: "Industrial Maintenance",
+        question: "How do you explain power factor correction using automatic capacitor banks?",
+        vocab: [
+          { en: "reactive power (kVAr)", es: "potencia reactiva (kVAr)" },
+          { en: "power factor controller", es: "controlador de factor de potencia" },
+          { en: "step contactors", es: "contactores de escalones" },
+          { en: "detuned reactors (harmonics)", es: "reactancias desintonizadas (armónicos)" },
+          { en: "utility penalty fees", es: "penalizaciones de la distribuidora" }
+        ],
+        starter: "Capacitor banks inject reactive power to improve the overall power factor, avoiding penalty surcharges on electricity bills..."
+      },
+      {
+        id: 26,
+        catKey: "maintenance",
+        category: "Industrial Maintenance",
+        question: "What is harmonic distortion (THD) and how does it affect transformers and variable drives?",
+        vocab: [
+          { en: "non-linear loads", es: "cargas no lineales" },
+          { en: "total harmonic distortion (THD)", es: "distorsión armónica total" },
+          { en: "neutral wire overheating", es: "sobrecalentamiento del neutro" },
+          { en: "harmonic filter", es: "filtro de armónicos" },
+          { en: "transformer eddy current losses", es: "pérdidas por corrientes parásitas" }
+        ],
+        starter: "Harmonics generated by non-linear drives cause excess heat in transformer windings and excessive current flow in the neutral conductor..."
+      },
+      {
+        id: 27,
+        catKey: "maintenance",
+        category: "Industrial Maintenance",
+        question: "How do you align a three-phase motor with a pump after replacement?",
+        vocab: [
+          { en: "dial indicator / laser alignment", es: "comparador de carátula / alineación láser" },
+          { en: "angular & parallel misalignment", es: "desalineación angular y paralela" },
+          { en: "shim adjustment", es: "ajuste mediante suplementos / calzas" },
+          { en: "flexible coupling", es: "acoplamiento flexible" },
+          { en: "vibration reduction", es: "reducción de vibraciones" }
+        ],
+        starter: "We perform laser shaft alignment to align parallel and angular offsets, inserting shims under motor feet to minimize vibration..."
+      },
+      {
+        id: 28,
+        catKey: "maintenance",
+        category: "Industrial Maintenance",
+        question: "Why is vibration analysis a key tool in predictive electrical maintenance?",
+        vocab: [
+          { en: "accelerometer sensor", es: "sensor acelerómetro" },
+          { en: "bearing defect frequency", es: "frecuencia de falla de rodamiento" },
+          { en: "unbalance / eccentricity", es: "desbalanceo / excentricidad" },
+          { en: "trend monitoring", es: "monitoreo de tendencia" },
+          { en: "prevent catastrophic failure", es: "prevenir fallas catastróficas" }
+        ],
+        starter: "Vibration FFT analysis allows us to catch mechanical bearing defects or rotor imbalance long before complete motor failure..."
+      },
+      {
+        id: 29,
+        catKey: "maintenance",
+        category: "Industrial Maintenance",
+        question: "How do you select the proper fuse type (gG vs aM) for motor protection circuits?",
+        vocab: [
+          { en: "gG general purpose fuse", es: "fusible de uso general gG" },
+          { en: "aM motor companion fuse", es: "fusible de acompañamiento de motor aM" },
+          { en: "inrush current tolerance", es: "tolerancia a corriente de irrupción" },
+          { en: "short-circuit breaking capacity", es: "capacidad de ruptura de cortocircuito" },
+          { en: "coordination with overload relay", es: "coordinación con relé térmico" }
+        ],
+        starter: "We use aM fuses for motor branch circuits because they tolerate motor starting currents without blowing, relying on the overload relay for thermal protection..."
+      },
+      {
+        id: 30,
+        catKey: "maintenance",
+        category: "Industrial Maintenance",
+        question: "What steps do you take when commissioning a direct-on-line (DOL) motor starter control box?",
+        vocab: [
+          { en: "wire continuity check", es: "verificación de continuidad" },
+          { en: "control transformer voltage", es: "tensión del transformador de comando" },
+          { en: "no-load dry test", es: "prueba en vacío sin carga" },
+          { en: "rotation direction verification", es: "verificación del sentido de giro" },
+          { en: "tighten terminal screws", es: "ajustar borneras de conexión" }
+        ],
+        starter: "First, I verify wire torque settings, test control logic without main power, and bump the motor to confirm correct shaft rotation..."
+      },
+
+      // 4. Control Systems, PLCs & SCADA (10 Cards)
+      {
+        id: 31,
+        catKey: "control",
+        category: "Control Systems & SCADA",
+        question: "How do you troubleshoot a missing 4-20mA current loop signal from a field pressure transmitter?",
+        vocab: [
+          { en: "loop calibrator / multimeter", es: "calibrador de lazo / multímetro" },
+          { en: "24VDC loop power supply", es: "fuente de lazo de 24Vcc" },
+          { en: "open loop wire", es: "cable de lazo abierto" },
+          { en: "PLC analog input card", es: "módulo de entrada analógica del PLC" },
+          { en: "transmitter calibration", es: "calibración del transmisor" }
+        ],
+        starter: "I place my meter in series to measure loop current, verify 24VDC excitation voltage, and check terminal connections for broken wires..."
+      },
+      {
+        id: 32,
+        catKey: "control",
+        category: "Control Systems & SCADA",
+        question: "How do you explain the difference between Modbus RTU and Modbus TCP/IP in industrial telemetry?",
+        vocab: [
+          { en: "RS485 serial line vs Ethernet", es: "línea serie RS485 vs Ethernet" },
+          { en: "baud rate & parity", es: "velocidad de baudios y paridad" },
+          { en: "IP address & port 502", es: "dirección IP y puerto 502" },
+          { en: "master/slave (client/server)", es: "maestro/esclavo (cliente/servidor)" },
+          { en: "shielded twisted pair", es: "par trenzado blindado" }
+        ],
+        starter: "Modbus RTU operates over RS485 serial wires using baud rates, whereas Modbus TCP/IP packages messages over standard Ethernet networks..."
+      },
+      {
+        id: 33,
+        catKey: "control",
+        category: "Control Systems & SCADA",
+        question: "What is the purpose of an interposing relay (relé interpositor) between PLC outputs and heavy field contactors?",
+        vocab: [
+          { en: "galvanic isolation", es: "aislación galvánica" },
+          { en: "voltage level conversion", es: "conversión de nivel de tensión" },
+          { en: "protect PLC transistor output", es: "proteger salida a transistor del PLC" },
+          { en: "inductive kickback / flyback diode", es: "diodo de rueda libre contra sobretensión" },
+          { en: "load switching capacity", es: "capacidad de maniobra de carga" }
+        ],
+        starter: "Interposing relays isolate sensitive PLC output modules from high contactor coil currents and electrical noise..."
+      },
+      {
+        id: 34,
+        catKey: "control",
+        category: "Control Systems & SCADA",
+        question: "How do you respond when a SCADA screen shows a communication alarm with a remote RTU?",
+        vocab: [
+          { en: "comm driver status", es: "estado del driver de comunicación" },
+          { en: "ping gateway / IP", es: "hacer ping a la puerta de enlace / IP" },
+          { en: "radio link / fiber transceiver", es: "enlace de radio / transceptor de fibra" },
+          { en: "poll timeout interval", es: "tiempo de espera de consulta" },
+          { en: "reboot telemetry modem", es: "reiniciar módem de telemetría" }
+        ],
+        starter: "I first attempt to ping the RTU's IP address, verify fiber optic link LEDs, and check SCADA driver diagnostic logs..."
+      },
+      {
+        id: 35,
+        catKey: "control",
+        category: "Control Systems & SCADA",
+        question: "Why are shielded cables and proper cable tray separation necessary for instrumentation lines?",
+        vocab: [
+          { en: "electromagnetic interference (EMI)", es: "interferencia electromagnética" },
+          { en: "noise coupling", es: "acoplamiento de ruido" },
+          { en: "drain wire ground at one end", es: "malla a tierra en un solo extremo" },
+          { en: "separate signal from power", es: "separar señal de potencia" },
+          { en: "twisted pair conductors", es: "conductores en par trenzado" }
+        ],
+        starter: "Shielded cabling prevents high-power 380V or motor drive noise from corrupting sensitive 4-20mA or digital instrument signals..."
+      },
+      {
+        id: 36,
+        catKey: "control",
+        category: "Control Systems & SCADA",
+        question: "How do you describe Ladder Logic structure when explaining a control program to a colleague?",
+        vocab: [
+          { en: "power rungs", es: "escalones de potencia" },
+          { en: "normally open/closed contacts", es: "contactos normalmente abiertos/cerrados" },
+          { en: "coil output", es: "bobina de salida" },
+          { en: "timer / counter blocks", es: "bloques temporizadores / contadores" },
+          { en: "scan time execution", es: "tiempo de escaneo de programa" },
+        ],
+        starter: "Ladder logic reads left-to-right along power rungs, evaluating input conditions to energize output coils and software memory bits..."
+      },
+      {
+        id: 37,
+        catKey: "control",
+        category: "Control Systems & SCADA",
+        question: "What is the function of a Digital Twin or HMI simulation during factory acceptance testing (FAT)?",
+        vocab: [
+          { en: "pre-commissioning testing", es: "pruebas de precomisionado" },
+          { en: "simulate sensor inputs", es: "simular entradas de sensores" },
+          { en: "catch software bugs early", es: "detectar errores de software temprano" },
+          { en: "operator training interface", es: "interfaz de capacitación para operadores" },
+          { en: "reduce site downtime", es: "reducir tiempos de parada en obra" }
+        ],
+        starter: "Simulating HMI and PLC logic during FAT allows us to test interlocks and fix programming errors before physical hardware installation..."
+      },
+      {
+        id: 38,
+        catKey: "control",
+        category: "Control Systems & SCADA",
+        question: "How do PT100 Resistance Temperature Detectors (RTDs) connect to PLC temperature modules?",
+        vocab: [
+          { en: "3-wire / 4-wire configuration", es: "configuración de 3 o 4 hilos" },
+          { en: "lead wire resistance compensation", es: "compensación de resistencia de cables" },
+          { en: "100 ohms at 0°C", es: "100 ohmios a 0°C" },
+          { en: "temperature transmitter", es: "transmisor de temperatura" },
+          { en: "linear resistance change", es: "cambio lineal de resistencia" }
+        ],
+        starter: "We prefer 3-wire RTD wiring to compensate for lead wire resistance, feeding directly into specialized PLC RTD input cards..."
+      },
+      {
+        id: 39,
+        catKey: "control",
+        category: "Control Systems & SCADA",
+        question: "What is an IEC 61850 GOOSE message used for in modern digital substations?",
+        vocab: [
+          { en: "peer-to-peer Ethernet comms", es: "comunicación Ethernet punto a punto" },
+          { en: "high-speed tripping (<4ms)", es: "disparo a alta velocidad (<4ms)" },
+          { en: "substation automation", es: "automatización de subestaciones" },
+          { en: "replace hardwired copper cables", es: "reemplazar cableado de cobre físico" },
+          { en: "intelligent electronic devices (IEDs)", es: "equipos electrónicos inteligentes" }
+        ],
+        starter: "GOOSE messaging allows digital protection IEDs to exchange interlocking and tripping signals over Ethernet in milliseconds..."
+      },
+      {
+        id: 40,
+        catKey: "control",
+        category: "Control Systems & SCADA",
+        question: "How do you handle a fail-safe condition when configuring a digital PLC output for a trip valve?",
+        vocab: [
+          { en: "de-energize to trip", es: "desenergizar para disparar" },
+          { en: "wire-break detection", es: "detección de corte de cable" },
+          { en: "power loss safety state", es: "estado seguro por corte de energía" },
+          { en: "normally energized coil", es: "bobina normalmente energizada" },
+          { en: "safety SIL level compliance", es: "cumplimiento de nivel de seguridad SIL" }
+        ],
+        starter: "For safety-critical trip valves, we configure outputs to 'de-energize to trip' so that wire loss or power failure triggers a safe shutdown..."
+      },
+
+      // 5. Renewable Energy & Grid (10 Cards)
+      {
+        id: 41,
+        catKey: "renewable",
+        category: "Renewables & Grid (CAMMESA)",
+        question: "How do solar PV inverters synchronize with the 50Hz grid voltage in Argentina?",
+        vocab: [
+          { en: "Phase-Locked Loop (PLL)", es: "bucle de enganche de fase (PLL)" },
+          { en: "grid frequency (50 Hz)", es: "frecuencia de red (50 Hz)" },
+          { en: "anti-islanding protection", es: "protección anti-isla" },
+          { en: "MPPT optimization", es: "optimización MPPT" },
+          { en: "grid connection code (CAMMESA)", es: "código de red de CAMMESA" }
+        ],
+        starter: "Grid-tied solar inverters use internal Phase-Locked Loops to match grid voltage frequency and phase before closing output contactors..."
+      },
+      {
+        id: 42,
+        catKey: "renewable",
+        category: "Renewables & Grid (CAMMESA)",
+        question: "What is the function of anti-islanding protection in distributed generation plants?",
+        vocab: [
+          { en: "prevent isolated grid feeding", es: "evitar alimentar red aislada" },
+          { en: "utility line worker safety", es: "seguridad de linieros de la distribuidora" },
+          { en: "under/over frequency relay", es: "relé de sub/sobre frecuencia" },
+          { en: "automatic disconnect", es: "desconexión automática" },
+          { en: "grid blackout scenario", es: "escenario de apagón de red" }
+        ],
+        starter: "Anti-islanding ensures solar/wind generators trip immediately if utility grid power fails, protecting utility crews working on downstream lines..."
+      },
+      {
+        id: 43,
+        catKey: "renewable",
+        category: "Renewables & Grid (CAMMESA)",
+        question: "How do Patagonia wind turbine generators handle strong wind gusts (high wind speeds)?",
+        vocab: [
+          { en: "pitch control system", es: "sistema de control de paso de pala (pitch)" },
+          { en: "cut-out wind speed limit", es: "velocidad límite de desconexión" },
+          { en: "aerodynamic braking", es: "frenado aerodinámico" },
+          { en: "yaw alignment system", es: "sistema de orientación (yaw)" },
+          { en: "mechanical disk brake", es: "freno mecánico de disco" }
+        ],
+        starter: "In strong Patagonian gusts, blade pitch systems rotate blades to feather position to spill wind, and trip if speeds exceed cut-out thresholds..."
+      },
+      {
+        id: 44,
+        catKey: "renewable",
+        category: "Renewables & Grid (CAMMESA)",
+        question: "What parameter requirements does CAMMESA request for large power plant grid connection tests?",
+        vocab: [
+          { en: "ramp rate control", es: "control de tasa de rampa" },
+          { en: "reactive power capability curve", es: "curva de capacidad de potencia reactiva" },
+          { en: "voltage ride-through (LVRT)", es: "soporte ante huecos de tensión (LVRT)" },
+          { en: "frequency response / droop", es: "respuesta en frecuencia / estatismo" },
+          { en: "telemetry reporting", es: "reporte de telemedición" }
+        ],
+        starter: "CAMMESA mandates low-voltage ride-through capability and active power ramp rate limits during utility interconnection commissioning..."
+      },
+      {
+        id: 45,
+        catKey: "renewable",
+        category: "Renewables & Grid (CAMMESA)",
+        question: "What are Battery Energy Storage Systems (BESS) used for in renewable energy parks?",
+        vocab: [
+          { en: "frequency regulation", es: "regulación de frecuencia" },
+          { en: "peak shaving", es: "recorte de picos de demanda" },
+          { en: "smoothing power output", es: "suavización de generación" },
+          { en: "lithium-ion container", es: "contenedor de baterías de ion de litio" },
+          { en: "energy arbitrage", es: "arbitraje de energía" }
+        ],
+        starter: "BESS units smooth out rapid wind or solar power fluctuations and supply fast frequency response during grid disturbances..."
+      },
+      {
+        id: 46,
+        catKey: "renewable",
+        category: "Renewables & Grid (CAMMESA)",
+        question: "How does a solar farm pad-mounted transformer step up voltage for internal collector lines?",
+        vocab: [
+          { en: "inverter output voltage (e.g. 600V)", es: "tensión de salida de inversor" },
+          { en: "collector MV network (33kV)", es: "red colectora en MT (33kV)" },
+          { en: "oil-immersed compact transformer", es: "transformador compacto en aceite" },
+          { en: "low losses core", es: "núcleo de bajas pérdidas" },
+          { en: "hermetically sealed tank", es: "tanque herméticamente sellado" }
+        ],
+        starter: "Pad-mounted step-up transformers boost inverter AC outputs from 600V to 33kV for efficient collection to the main substation..."
+      },
+      {
+        id: 47,
+        catKey: "renewable",
+        category: "Renewables & Grid (CAMMESA)",
+        question: "What are the key differences between mono-crystalline and poly-crystalline solar panels?",
+        vocab: [
+          { en: "conversion efficiency %", es: "eficiencia de conversión %" },
+          { en: "temperature coefficient", es: "coeficiente de temperatura" },
+          { en: "silicon cell structure", es: "estructura de celda de silicio" },
+          { en: "cost per watt ratio", es: "relación costo por vatio" },
+          { en: "bifacial panel technology", es: "tecnología de paneles bifaciales" }
+        ],
+        starter: "Monocrystalline panels offer higher efficiency and better heat coefficients, making them preferred for high-irradiance projects..."
+      },
+      {
+        id: 48,
+        catKey: "renewable",
+        category: "Renewables & Grid (CAMMESA)",
+        question: "Why is a STATCOM (Static Synchronous Compensator) used near wind park substations?",
+        vocab: [
+          { en: "dynamic reactive power support", es: "soporte dinámico de potencia reactiva" },
+          { en: "fast voltage regulation", es: "regulación rápida de tensión" },
+          { en: "grid stability compliance", es: "cumplimiento de estabilidad de red" },
+          { en: "IGBT power electronics", es: "electrónica de potencia IGBT" },
+          { en: "flicker mitigation", es: "mitigación de parpadeo (flicker)" }
+        ],
+        starter: "STATCOM devices inject or absorb reactive power within milliseconds to stabilize substation busbar voltage during grid transients..."
+      },
+      {
+        id: 49,
+        catKey: "renewable",
+        category: "Renewables & Grid (CAMMESA)",
+        question: "How do high DC voltages (up to 1500VDC) in modern PV arrays change safety requirements?",
+        vocab: [
+          { en: "DC arc fault protection", es: "protección contra arco en CC" },
+          { en: "rated DC fuses & switches", es: "fusibles y llaves aptas para CC" },
+          { en: "high voltage insulation rating", es: "nivel de aislamiento de alta tensión" },
+          { en: "combiner box protection", es: "protección de cajas combinadoras" },
+          { en: "thermal expansion stress", es: "estrés por expansión térmica" }
+        ],
+        starter: "Working with 1500VDC arrays requires specialized DC-rated switchgear and strict arc-flash safety protocols during string maintenance..."
+      },
+      {
+        id: 50,
+        catKey: "renewable",
+        category: "Renewables & Grid (CAMMESA)",
+        question: "What measurements do you log during a power quality analysis test at a plant boundary?",
+        vocab: [
+          { en: "power quality analyzer", es: "analizador de calidad de energía" },
+          { en: "voltage sags and swells", es: "huecos y elevaciones de tensión" },
+          { en: "transient spikes", es: "picos transitorios" },
+          { en: "flicker severity index (Pst)", es: "índice de severidad de flicker" },
+          { en: "unbalance ratio %", es: "porcentaje de desbalance" }
+        ],
+        starter: "We log voltage sags, harmonics, power factor, and flicker severity over 7 days to prove grid code compliance to the system operator..."
+      },
+
+      // 6. Project Management & Site Visits (10 Cards)
+      {
+        id: 51,
+        catKey: "management",
+        category: "Site Visits & Handovers",
+        question: "How do you conduct a structured shift handover meeting with the incoming electrical team?",
+        vocab: [
+          { en: "ongoing tasks log", es: "registro de tareas en curso" },
+          { en: "active work permits", es: "permisos de trabajo activos" },
+          { en: "equipment status / outages", es: "estado de equipos / indisponibilidades" },
+          { en: "safety incidents review", es: "revisión de incidentes de seguridad" },
+          { en: "pending maintenance tickets", es: "órdenes de trabajo pendientes" }
+        ],
+        starter: "During shift handover, I review active safety permits, highlight isolated feeders, and report any unresolved equipment alarms..."
+      },
+      {
+        id: 52,
+        catKey: "management",
+        category: "Site Visits & Handovers",
+        question: "What steps do you take when reviewing single-line diagrams (SLD/unifilar) during a field audit?",
+        vocab: [
+          { en: "as-built drawing comparison", es: "comparación con planos 'conforme a obra'" },
+          { en: "verify breaker ratings", es: "verificar calibres de interruptores" },
+          { en: "cable cross-section tagging", es: "etiquetado de sección de cables" },
+          { en: "busbar node identification", es: "identificación de nodos de barras" },
+          { en: "mark discrepancies in red", es: "marcar discrepancias en rojo" }
+        ],
+        starter: "I walk through the electrical room with the single-line diagram, verifying breaker ratings and red-lining any field modifications..."
+      },
+      {
+        id: 53,
+        catKey: "management",
+        category: "Site Visits & Handovers",
+        question: "How do you explain a project delay caused by imported component lead times to a site manager?",
+        vocab: [
+          { en: "lead time delays", es: "demoras en tiempos de entrega" },
+          { en: "customs clearance", es: "despacho de aduana" },
+          { en: "critical path task", es: "tarea de camino crítico" },
+          { en: "propose alternative supplier", es: "proponer proveedor alternativo" },
+          { en: "mitigation action plan", es: "plan de acción de mitigación" }
+        ],
+        starter: "I explain that the specialized protection relays are delayed in customs, but we can progress cable tray installation to keep on schedule..."
+      },
+      {
+        id: 54,
+        catKey: "management",
+        category: "Site Visits & Handovers",
+        question: "What items do you include in a punch list (lista de pendientes) before pre-commissioning?",
+        vocab: [
+          { en: "unlabeled wire terminals", es: "borneras sin etiquetar" },
+          { en: "missing cable glands", es: "prensacables faltantes" },
+          { en: "improper grounding connection", es: "conexión de puesta a tierra inadecuada" },
+          { en: "cabinet door sealing / IP rating", es: "sellado de tableros / grado IP" },
+          { en: "corrective deadline", es: "plazo para correcciones" }
+        ],
+        starter: "My punch list items include missing terminal labels, unsealed panel cable glands, and loose earth bonding jumpers..."
+      },
+      {
+        id: 55,
+        catKey: "management",
+        category: "Site Visits & Handovers",
+        question: "How do you coordinate with civil and mechanical contractors when installing a new generator set?",
+        vocab: [
+          { en: "concrete pad dimensions", es: "dimensiones de la base de hormigón" },
+          { en: "exhaust duct routing", es: "ruteo del ducto de escape" },
+          { en: "vibration damper pads", es: "tacos antivibratorios" },
+          { en: "cable trench layout", es: "trazado de trincheras de cables" },
+          { en: "interface schedule", es: "cronograma de interfaces" }
+        ],
+        starter: "We verify concrete pad leveling with civil engineers and align cable trench entries with mechanical fuel piping schedules..."
+      },
+      {
+        id: 56,
+        catKey: "management",
+        category: "Site Visits & Handovers",
+        question: "How do you document an unexpected equipment failure during a factory acceptance test (FAT)?",
+        vocab: [
+          { en: "Non-Conformity Report (NCR)", es: "Reporte de No Conformidad (NCR)" },
+          { en: "root cause analysis", es: "análisis de causa raíz" },
+          { en: "test protocol sign-off", es: "firma de protocolo de prueba" },
+          { en: "corrective action proposal", es: "propuesta de acción correctiva" },
+          { en: "re-testing schedule", es: "cronograma de reevaluación" }
+        ],
+        starter: "I issue a formal Non-Conformity Report detailing the component failure, request root cause analysis, and reschedule the re-test..."
+      },
+      {
+        id: 57,
+        catKey: "management",
+        category: "Site Visits & Handovers",
+        question: "What key points do you present during an engineering progress update to non-technical stakeholders?",
+        vocab: [
+          { en: "percentage completion", es: "porcentaje de avance" },
+          { en: "key project milestones", es: "hitos clave del proyecto" },
+          { en: "budget variance", es: "desvío presupuestario" },
+          { en: "clear high-level terms", es: "términos claros de alto nivel" },
+          { en: "upcoming commissioning phase", es: "próxima fase de comisionado" }
+        ],
+        starter: "I highlight milestone completion percentages, simplify technical descriptions, and emphasize safety achievements and target energization dates..."
+      },
+      {
+        id: 58,
+        catKey: "management",
+        category: "Site Visits & Handovers",
+        question: "How do you handle a disagreement with a contractor regarding panel wiring quality standards?",
+        vocab: [
+          { en: "reference contract specifications", es: "referenciar especificaciones de contrato" },
+          { en: "IEC wiring standards", es: "normas IEC de cableado" },
+          { en: "ferrule crimping quality", es: "calidad de engarzado de terminales" },
+          { en: "wire color coding", es: "código de colores de conductores" },
+          { en: "request rework", es: "solicitar retrabajo / corrección" }
+        ],
+        starter: "I refer directly to the contract engineering specifications and IEC standards to request clean rewiring with proper terminal ferrules..."
+      },
+      {
+        id: 59,
+        catKey: "management",
+        category: "Site Visits & Handovers",
+        question: "What safety toolbox talk (charlas de 5 minutos) topics do you lead before starting outdoor high-voltage work?",
+        vocab: [
+          { en: "weather hazards (wind/lightning)", es: "peligros del clima (viento/rayos)" },
+          { en: "hydration & sun exposure", es: "hidratación y exposición al sol" },
+          { en: "emergency evacuation point", es: "punto de evacuación de emergencia" },
+          { en: "review work permit scope", es: "revisar alcance del permiso de trabajo" },
+          { en: "PPE visual check", es: "revisión visual de EPP" }
+        ],
+        starter: "Before starting, I remind the team about high Patagonian wind risks, confirm required PPE, and review our emergency evacuation protocol..."
+      },
+      {
+        id: 60,
+        catKey: "management",
+        category: "Site Visits & Handovers",
+        question: "How do you organize as-built electrical documentation after energizing a new industrial facility?",
+        vocab: [
+          { en: "as-built schematic drawings", es: "planos esquemáticos conforme a obra" },
+          { en: "relay parameter setting files", es: "archivos de parametrización de relés" },
+          { en: "cable schedule spreadsheet", es: "planilla de listado de cables" },
+          { en: "operation & maintenance manual", es: "manual de operación y mantenimiento" },
+          { en: "digital archive folder", es: "carpeta de archivo digital" }
+        ],
+        starter: "I compile final red-lined drawings, relay settings backup files, and vendor O&M manuals into a structured digital repository for site operations..."
+      }
+    ];
+
+    // App State Management
+    let filteredList = [...eeFlashcardsData];
+    let currentIndex = 0;
+    let isFlipped = false;
+    let masteredIds = new Set(JSON.parse(localStorage.getItem('ee_mastered_ids') || '[]'));
+
+    // DOM References
+    const flashcard = document.getElementById('flashcard');
+    const cardCategory = document.getElementById('cardCategory');
+    const cardQuestion = document.getElementById('cardQuestion');
+    const vocabContainer = document.getElementById('vocabContainer');
+    const starterText = document.getElementById('starterText');
+    const cardCounter = document.getElementById('cardCounter');
+    const masteredCount = document.getElementById('masteredCount');
+    const reviewCount = document.getElementById('reviewCount');
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const flipBtn = document.getElementById('flipBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    
+    const categoryFilter = document.getElementById('categoryFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const searchInput = document.getElementById('searchInput');
+
+    const masteryBtn = document.getElementById('masteryBtn');
+    const masteryBtnText = document.getElementById('masteryBtnText');
+    const speakFrontBtn = document.getElementById('speakFrontBtn');
+    const speakBackBtn = document.getElementById('speakBackBtn');
+
+    // Update Counter Stats Header
+    function updateStats() {
+      const totalMastered = masteredIds.size;
+      const totalCards = eeFlashcardsData.length;
+      masteredCount.textContent = totalMastered;
+      reviewCount.textContent = totalCards - totalMastered;
+    }
+
+    // Filter Logic
+    function applyFilters() {
+      const catValue = categoryFilter.value;
+      const statusValue = statusFilter.value;
+      const query = searchInput.value.toLowerCase().trim();
+
+      filteredList = eeFlashcardsData.filter(item => {
+        // Category check
+        const matchesCat = (catValue === 'all') || (item.catKey === catValue);
+        
+        // Status check
+        const isMastered = masteredIds.has(item.id);
+        const matchesStatus = (statusValue === 'all') || 
+                              (statusValue === 'mastered' && isMastered) || 
+                              (statusValue === 'practice' && !isMastered);
+
+        // Search text check
+        const matchesQuery = query === '' || 
+                             item.question.toLowerCase().includes(query) ||
+                             item.category.toLowerCase().includes(query) ||
+                             item.starter.toLowerCase().includes(query) ||
+                             item.vocab.some(v => v.en.toLowerCase().includes(query) || v.es.toLowerCase().includes(query));
+
+        return matchesCat && matchesStatus && matchesQuery;
+      });
+
+      currentIndex = 0;
+      renderCard();
+    }
+
+    // Render Flashcard UI
+    function renderCard() {
+      if (isFlipped) {
+        flashcard.classList.remove('rotate-y-180');
+        isFlipped = false;
+      }
+
+      updateStats();
+
+      if (filteredList.length === 0) {
+        cardCategory.textContent = "No Matches";
+        cardQuestion.textContent = "No flashcards found matching your filter or search query. Please reset filters.";
+        vocabContainer.innerHTML = '<span class="text-xs text-slate-500 font-mono">No vocabulary available.</span>';
+        starterText.textContent = "Try searching for another keyword or clearing filters.";
+        cardCounter.textContent = "0 / 0";
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+      }
+
+      setTimeout(() => {
+        const currentItem = filteredList[currentIndex];
+        
+        cardCategory.textContent = currentItem.category;
+        cardQuestion.textContent = currentItem.question;
+        starterText.textContent = `"${currentItem.starter}"`;
+
+        // Render Vocabulary Chips with Spanish hint tooltips
+        vocabContainer.innerHTML = '';
+        currentItem.vocab.forEach(item => {
+          const chip = document.createElement('div');
+          chip.className = 'bg-slate-950 border border-slate-800 hover:border-amber-500/50 p-2 rounded-xl flex flex-col justify-center transition group';
+          chip.innerHTML = `
+            <span class="text-xs font-mono font-bold text-amber-300 group-hover:text-amber-200 transition">
+              <i class="fa-solid fa-bolt text-[10px] mr-1 text-amber-500"></i>${item.en}
+            </span>
+            <span class="text-[10px] font-mono text-slate-400 italic">
+              ↳ ${item.es}
+            </span>
+          `;
+          vocabContainer.appendChild(chip);
+        });
+
+        // Mastery status on card
+        const isMastered = masteredIds.has(currentItem.id);
+        if (isMastered) {
+          masteryBtn.className = "text-xs font-mono px-3 py-1 rounded-lg border border-emerald-500/50 bg-emerald-950/60 text-emerald-400 transition flex items-center gap-1.5 shadow-sm";
+          masteryBtnText.textContent = "Mastered";
+          masteryBtn.querySelector('i').className = "fa-solid fa-circle-check";
+        } else {
+          masteryBtn.className = "text-xs font-mono px-3 py-1 rounded-lg border border-slate-700 bg-slate-950 text-slate-400 hover:text-emerald-400 hover:border-emerald-500/50 transition flex items-center gap-1.5";
+          masteryBtnText.textContent = "Mark Mastered";
+          masteryBtn.querySelector('i').className = "fa-regular fa-circle-check";
+        }
+
+        // Navigation controls state
+        cardCounter.textContent = `${currentIndex + 1} / ${filteredList.length}`;
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === filteredList.length - 1;
+      }, isFlipped ? 200 : 0);
+    }
+
+    // Toggle Flip Animation
+    function toggleFlip() {
+      if (filteredList.length === 0) return;
+      isFlipped = !isFlipped;
+      flashcard.classList.toggle('rotate-y-180');
+    }
+
+    // Toggle Mastered Status
+    function toggleMastery(e) {
+      if (e) e.stopPropagation();
+      if (filteredList.length === 0) return;
+      
+      const currentId = filteredList[currentIndex].id;
+      if (masteredIds.has(currentId)) {
+        masteredIds.delete(currentId);
+      } else {
+        masteredIds.add(currentId);
+      }
+      
+      localStorage.setItem('ee_mastered_ids', JSON.stringify([...masteredIds]));
+      renderCard();
+    }
+
+    // Text-To-Speech Function
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.88; // Comfortable pace for tech English learners
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    // Event Listeners
+    flashcard.addEventListener('click', (e) => {
+      // Avoid flip if clicking specific button triggers
+      if (e.target.closest('#speakFrontBtn') || e.target.closest('#masteryBtn') || e.target.closest('#speakBackBtn')) return;
+      toggleFlip();
+    });
+
+    flipBtn.addEventListener('click', toggleFlip);
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderCard();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < filteredList.length - 1) {
+        currentIndex++;
+        renderCard();
+      }
+    });
+
+    shuffleBtn.addEventListener('click', () => {
+      if (filteredList.length <= 1) return;
+      for (let i = filteredList.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filteredList[i], filteredList[j]] = [filteredList[j], filteredList[i]];
+      }
+      currentIndex = 0;
+      renderCard();
+    });
+
+    masteryBtn.addEventListener('click', toggleMastery);
+
+    speakFrontBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (filteredList.length > 0) {
+        speakText(filteredList[currentIndex].question);
+      }
+    });
+
+    speakBackBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (filteredList.length > 0) {
+        const item = filteredList[currentIndex];
+        const terms = item.vocab.map(v => v.en).join(', ');
+        speakText(`Key vocabulary: ${terms}. Answer starter: ${item.starter}`);
+      }
+    });
+
+    // Inputs & Filter listeners
+    categoryFilter.addEventListener('change', applyFilters);
+    statusFilter.addEventListener('change', applyFilters);
+    searchInput.addEventListener('input', applyFilters);
+
+    // Keyboard Shortcuts Navigation
+    document.addEventListener('keydown', (e) => {
+      // Don't trigger if user typing in search bar
+      if (document.activeElement === searchInput) return;
+
+      if (e.key === 'ArrowRight' && currentIndex < filteredList.length - 1) {
+        currentIndex++;
+        renderCard();
+      } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        currentIndex--;
+        renderCard();
+      } else if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        toggleFlip();
+      } else if (e.key === 'm' || e.key === 'M') {
+        toggleMastery();
+      }
+    });
+
+    // Initialize App
+    renderCard();
+  </script>
+</body>
+</html>
