@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronics Engineering Workplace English Flashcards</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0a0d14',
+                            card: '#121824',
+                            border: '#1e293b',
+                            cyan: '#00f0ff',
+                            amber: '#ffb703',
+                            green: '#00f5d4',
+                            pink: '#ff007f',
+                            text: '#e2e8f0'
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['"Fira Code"', 'monospace'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0a0d14;
+            color: #e2e8f0;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 85% 85%, rgba(255, 183, 3, 0.04) 0%, transparent 25%);
+        }
+
+        /* Perspective and 3D Flip Effects */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .card-inner.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            overflow-y: auto;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d131f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+
+        /* Glowing Border Animation on active elements */
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
+        }
+        .glow-amber {
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.25);
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-black">
+
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 bg-cyan-950/60 border border-cyan-500/40 rounded-lg text-cyan-400">
+                        <i class="fa-solid font-mono text-xl fa-microchip"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                            <span>ELECTRONIC ENG. WORKPLACE ENGLISH</span>
+                            <span class="text-xs px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 font-mono">ARGENTINA</span>
+                        </h1>
+                        <p class="text-xs text-slate-400">A2/B1 Technical Conversation & Interview Preparation</p>
+                    </div>
+                </div>
+
+                <!-- Progress Bar & Status -->
+                <div class="flex items-center gap-4 bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl text-xs sm:text-sm">
+                    <div class="flex flex-col gap-1 w-36 sm:w-48">
+                        <div class="flex justify-between font-mono text-slate-300">
+                            <span>Mastery:</span>
+                            <span id="mastery-percentage" class="text-cyan-400 font-bold">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
+                            <div id="mastery-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="border-l border-slate-800 pl-3 font-mono text-slate-300">
+                        <span id="mastered-count" class="text-emerald-400 font-bold">0</span>/<span id="total-cards-count">60</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex-1 w-full flex flex-col gap-6">
+
+        <!-- Controls Bar: Search & Category Filter -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 bg-slate-900/60 border border-slate-800/80 p-4 rounded-xl backdrop-blur">
+            
+            <!-- Search Bar -->
+            <div class="md:col-span-4 relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                <input type="text" id="search-input" placeholder="Search keywords (e.g., STM32, Oscilloscope, SPI, Soldering)..." 
+                       class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+            </div>
+
+            <!-- Category Filter -->
+            <div class="md:col-span-5">
+                <select id="category-select" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 transition cursor-pointer">
+                    <option value="ALL">All Categories (60 Cards)</option>
+                    <option value="Embedded Systems & Microcontrollers">Embedded Systems & Microcontrollers</option>
+                    <option value="PCB Design & Prototyping">PCB Design & Prototyping</option>
+                    <option value="Instrumentation & Testing">Instrumentation & Testing</option>
+                    <option value="Communication Protocols & IoT">Communication Protocols & IoT</option>
+                    <option value="Power Electronics & Sensors">Power Electronics & Sensors</option>
+                    <option value="Hardware Troubleshooting & QA">Hardware Troubleshooting & QA</option>
+                </select>
+            </div>
+
+            <!-- Display Options Toggle -->
+            <div class="md:col-span-3 flex items-center justify-between gap-2">
+                <button id="filter-unmastered-btn" class="flex-1 bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs px-3 py-2 rounded-lg font-medium transition flex items-center justify-center gap-1.5">
+                    <i class="fa-regular fa-circle"></i> <span>Unmastered Only</span>
+                </button>
+                <button id="reset-progress-btn" title="Reset local storage progress" class="bg-slate-950 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50 text-slate-400 hover:text-rose-400 p-2 rounded-lg transition">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Cards Deck Container -->
+        <div class="flex-1 flex flex-col items-center justify-center my-2">
+            
+            <div class="w-full max-w-2xl h-[480px] sm:h-[440px] perspective-1000 relative">
+                
+                <div id="flashcard-inner" class="card-inner shadow-2xl border border-slate-800 rounded-xl bg-slate-900/90 text-slate-100">
+                    
+                    <!-- FRONT OF CARD -->
+                    <div class="card-front bg-slate-900 border border-slate-800 p-6 flex flex-col justify-between">
+                        
+                        <!-- Top Metadata Bar -->
+                        <div class="flex items-center justify-between text-xs pb-3 border-b border-slate-800">
+                            <span id="card-category" class="font-mono text-cyan-400 bg-cyan-950/80 border border-cyan-800/60 px-2.5 py-1 rounded-md font-medium tracking-wide">
+                                CATEGORY
+                            </span>
+                            <div class="flex items-center gap-2">
+                                <span id="card-index" class="font-mono text-slate-500">CARD 01/60</span>
+                                <button id="master-toggle-btn" class="text-slate-600 hover:text-emerald-400 transition text-lg" title="Toggle Mastered Status">
+                                    <i class="fa-regular fa-circle-check"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Card Center Content (Question & Context) -->
+                        <div class="my-auto py-4">
+                            <div class="flex items-start justify-between gap-3 mb-2">
+                                <h2 id="card-question" class="text-lg sm:text-xl font-bold text-slate-100 leading-snug">
+                                    Loading card context...
+                                </h2>
+                                <button id="audio-question-btn" class="p-2.5 bg-slate-800/80 hover:bg-cyan-950 hover:text-cyan-400 rounded-lg text-slate-400 border border-slate-700 transition flex-shrink-0" title="Listen to Question">
+                                    <i class="fa-solid fa-volume-high text-sm"></i>
+                                </button>
+                            </div>
+                            <p id="card-context" class="text-xs sm:text-sm text-slate-400 bg-slate-950/60 p-3 rounded-lg border border-slate-800/60 italic leading-relaxed">
+                                Cultural context loading...
+                            </p>
+                        </div>
+
+                        <!-- Bottom Prompt -->
+                        <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-hand-pointer text-cyan-400"></i> Click card or Flip button to see vocab & model answer</span>
+                            <span class="font-mono text-amber-400">FRONT</span>
+                        </div>
+                    </div>
+
+                    <!-- BACK OF CARD -->
+                    <div class="card-back bg-slate-950 border border-slate-800 p-6 flex flex-col justify-between">
+                        
+                        <!-- Top Metadata Bar -->
+                        <div class="flex items-center justify-between text-xs pb-3 border-b border-slate-800">
+                            <span class="font-mono text-amber-400 bg-amber-950/60 border border-amber-800/60 px-2.5 py-1 rounded-md font-medium">
+                                VOCABULARY & MODEL RESPONSE
+                            </span>
+                            <button id="audio-vocab-btn" class="p-1.5 bg-slate-800 hover:bg-amber-950 hover:text-amber-400 rounded text-slate-300 border border-slate-700 transition flex items-center gap-1 px-2 text-xs" title="Listen to Vocabulary">
+                                <i class="fa-solid fa-volume-high text-xs"></i> <span>Listen</span>
+                            </button>
+                        </div>
+
+                        <!-- Vocabulary Terms -->
+                        <div class="my-auto py-2 space-y-3 overflow-y-auto max-h-[260px] pr-1">
+                            <div>
+                                <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-book-bookmark text-cyan-400"></i> Key Technical Terms (Spanish):
+                                </h3>
+                                <div id="card-vocab" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                    <!-- Vocabulary items populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Model Answer Stem -->
+                            <div class="pt-2">
+                                <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-comment-dots text-emerald-400"></i> Model Answer Starter / Stem:
+                                </h3>
+                                <p id="card-stem" class="text-xs sm:text-sm font-mono text-emerald-300 bg-emerald-950/30 border border-emerald-900/60 p-2.5 rounded-lg leading-relaxed">
+                                    "I usually begin by checking..."
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Prompt -->
+                        <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                            <span>Practice speaking out loud!</span>
+                            <span class="font-mono text-cyan-400">BACK</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="w-full max-w-2xl mt-5 flex items-center justify-between gap-3">
+                <button id="prev-btn" class="flex-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 py-3 rounded-xl font-medium transition flex items-center justify-center gap-2 text-sm shadow">
+                    <i class="fa-solid fa-arrow-left"></i> Previous
+                </button>
+
+                <button id="flip-btn" class="px-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-3 rounded-xl font-semibold transition flex items-center justify-center gap-2 text-sm shadow-lg shadow-cyan-950">
+                    <i class="fa-solid fa-rotate"></i> Flip Card
+                </button>
+
+                <button id="next-btn" class="flex-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 py-3 rounded-xl font-medium transition flex items-center justify-center gap-2 text-sm shadow">
+                    Next <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="border-t border-slate-900 bg-slate-950 text-slate-500 text-xs py-4 text-center">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span>Electronic Engineering English Flashcards • Designed for Argentine Engineers & Graduates</span>
+            <span class="font-mono text-slate-600">60 Cards • Web Speech API Powered</span>
+        </div>
+    </footer>
+
+    <script>
+        // 60 ELECTRONIC ENGINEERING FLASHCARDS DATA
+        const flashcardsData = [
+            // CATEGORY 1: Embedded Systems & Microcontrollers (Cards 1-10)
+            {
+                id: 1,
+                category: "Embedded Systems & Microcontrollers",
+                question: "Can you describe your experience configuring GPIO pins and interrupts on STM32 microcontrollers?",
+                context: "Common topic in hardware startup interviews in Buenos Aires or Córdoba designing industrial control units.",
+                vocab: [
+                    { en: "GPIO pin", es: "pin de entrada/salida general" },
+                    { en: "Interrupt Service Routine (ISR)", es: "rutina de servicio de interrupción" },
+                    { en: "Pull-up / Pull-down resistor", es: "resistencia de pulso alto/bajo" },
+                    { en: "Debouncing", es: "antirrebote (por software/hardware)" }
+                ],
+                stem: "In my previous project, I configured GPIO interrupts by setting up rising-edge triggers and implementing software debouncing for..."
+            },
+            {
+                id: 2,
+                category: "Embedded Systems & Microcontrollers",
+                question: "How do you optimize power consumption in battery-powered IoT devices using microcontroller low-power modes?",
+                context: "Key question when developing remote weather stations or livestock tracking sensors for agricultural technology (AgTech) in Santa Fe.",
+                vocab: [
+                    { en: "Sleep / Deep Sleep mode", es: "modo de reposo profundo" },
+                    { en: "Wake-up source", es: "fuente de desinterrupción/despertador" },
+                    { en: "Current draw", es: "consumo de corriente" },
+                    { en: "Real-Time Clock (RTC)", es: "reloj de tiempo real" }
+                ],
+                stem: "To minimize current draw, I put the MCU into deep sleep mode and use an RTC timer as a wake-up source every..."
+            },
+            {
+                id: 3,
+                category: "Embedded Systems & Microcontrollers",
+                question: "What steps do you take when debugging microcontroller firmware using SWD or JTAG interfaces?",
+                context: "Standard task in R&D labs testing prototype boards before batch manufacturing.",
+                vocab: [
+                    { en: "Breakpoints", es: "puntos de interrupción" },
+                    { en: "Register inspection", es: "inspección de registros" },
+                    { en: "Watchdog timer", es: "temporizador perro guardián" },
+                    { en: "HardFault handler", es: "manejador de fallas graves" }
+                ],
+                stem: "When a HardFault occurs, I connect via ST-Link using SWD to step through the code and check the stack registers..."
+            },
+            {
+                id: 4,
+                category: "Embedded Systems & Microcontrollers",
+                question: "How do you implement Bare-Metal C vs FreeRTOS in an embedded system project?",
+                context: "Evaluated during technical interviews for embedded software roles in automation companies.",
+                vocab: [
+                    { en: "Bare-metal programming", es: "programación sin sistema operativo" },
+                    { en: "Real-Time Operating System (RTOS)", es: "sistema operativo en tiempo real" },
+                    { en: "Task scheduler", es: "planificador de tareas" },
+                    { en: "Mutex / Semaphore", es: "mutex / semáforo (sincronización)" }
+                ],
+                stem: "I prefer FreeRTOS when dealing with complex concurrent tasks, using semaphores to manage shared peripherals between..."
+            },
+            {
+                id: 5,
+                category: "Embedded Systems & Microcontrollers",
+                question: "What is your process for writing device drivers for external peripherals using C?",
+                context: "Required when interfacing custom sensors in industrial automation hardware.",
+                vocab: [
+                    { en: "Register map", es: "mapa de registros" },
+                    { en: "Bitwise operations", es: "operaciones a nivel de bits" },
+                    { en: "Data buffer", es: "búfer de datos" },
+                    { en: "Abstraction layer (HAL)", es: "capa de abstracción de hardware" }
+                ],
+                stem: "First, I study the component datasheet and its register map, then I write abstraction functions using bitwise masks to..."
+            },
+            {
+                id: 6,
+                category: "Embedded Systems & Microcontrollers",
+                question: "How do you calculate and configure Timer peripherals for PWM generation in motor control?",
+                context: "Used in electric vehicle prototypes or industrial conveyor control systems in Mendoza.",
+                vocab: [
+                    { en: "Duty cycle", es: "ciclo de trabajo" },
+                    { en: "Prescaler", es: "preescalador" },
+                    { en: "Auto-reload register (ARR)", es: "registro de autorrecarga" },
+                    { en: "Pulse Width Modulation (PWM)", es: "modulación por ancho de pulsos" }
+                ],
+                stem: "To generate a 20kHz PWM signal, I set the clock prescaler and auto-reload values based on the internal timer clock frequency..."
+            },
+            {
+                id: 7,
+                category: "Embedded Systems & Microcontrollers",
+                question: "What hardware protection measures do you program into microcontrollers against brownouts?",
+                context: "Essential for industrial equipment operating near noisy power grids or remote areas.",
+                vocab: [
+                    { en: "Brown-out Reset (BOR)", es: "reinicios por caída de tensión" },
+                    { en: "Supply voltage monitoring", es: "monitoreo de voltaje de alimentación" },
+                    { en: "EEPROM / Flash endurance", es: "resistencia de memoria Flash/EEPROM" },
+                    { en: "Power-on Reset (POR)", es: "reseteo al encender" }
+                ],
+                stem: "I enable the MCU's internal Brown-out Reset circuit to force a reset if the supply voltage drops below the safety threshold of..."
+            },
+            {
+                id: 8,
+                category: "Embedded Systems & Microcontrollers",
+                question: "How do you implement firmware updates over-the-air (OTA) in ESP32 embedded designs?",
+                context: "Typical requirement for deployed smart telemetry devices in smart agriculture or logistics.",
+                vocab: [
+                    { en: "Bootloader", es: "gestor de arranque" },
+                    { en: "Dual partition table", es: "tabla de partición doble" },
+                    { en: "Firmware image verification", es: "verificación de imagen de firmware" },
+                    { en: "Rollback mechanism", es: "mecanismo de reversión" }
+                ],
+                stem: "For reliable OTA updates, I configure dual flash partitions so that if cryptographic verification fails, the bootloader rolls back to..."
+            },
+            {
+                id: 9,
+                category: "Embedded Systems & Microcontrollers",
+                question: "How do you manage Direct Memory Access (DMA) transfers to relieve CPU utilization?",
+                context: "Used in audio processing and high-speed data acquisition systems.",
+                vocab: [
+                    { en: "Direct Memory Access (DMA)", es: "acceso directo a memoria" },
+                    { en: "Circular buffer", es: "búfer circular" },
+                    { en: "Transfer complete interrupt", es: "interrupción de transferencia completa" },
+                    { en: "Bus matrix contention", es: "contención de bus de datos" }
+                ],
+                stem: "I set up DMA in circular mode to automatically transfer ADC readings to RAM without clogging CPU execution time..."
+            },
+            {
+                id: 10,
+                category: "Embedded Systems & Microcontrollers",
+                question: "How do you debug timing issues and latency in microcontrollers using logic analyzers?",
+                context: "Crucial for high-precision measurement devices assembled in local technology parks.",
+                vocab: [
+                    { en: "Pin toggling", es: "conmutación de pines (para medir tiempo)" },
+                    { en: "Execution latency", es: "latencia de ejecución" },
+                    { en: "Logic analyzer", es: "analizador lógico" },
+                    { en: "Timing diagram", es: "diagrama de tiempos" }
+                ],
+                stem: "I toggle a dedicated GPIO pin inside the ISR and measure the pulse width on a logic analyzer to check latency..."
+            },
+
+            // CATEGORY 2: PCB Design & Prototyping (Cards 11-20)
+            {
+                id: 11,
+                category: "PCB Design & Prototyping",
+                question: "What design rules do you set up in KiCAD or Altium Designer before laying out a multi-layer board?",
+                context: "Everyday work in local electronic design houses and electronics consultancy firms.",
+                vocab: [
+                    { en: "Clearance and trace width", es: "separación y ancho de pista" },
+                    { en: "Design Rule Check (DRC)", es: "comprobación de reglas de diseño" },
+                    { en: "Via size / annular ring", es: "tamaño de vía y anillo anular" },
+                    { en: "Layer stackup", es: "apilamiento de capas" }
+                ],
+                stem: "Before routing, I define parameters in the DRC based on manufacturer capabilities, such as minimum 6 mil clearance and..."
+            },
+            {
+                id: 12,
+                category: "PCB Design & Prototyping",
+                question: "How do you handle ground plane separation between analog and digital circuits on a PCB?",
+                context: "Important when designing mixed-signal instrumentation boards for oil & gas sensing in Neuquén.",
+                vocab: [
+                    { en: "Analog ground (AGND)", es: "tierra analógica" },
+                    { en: "Digital ground (DGND)", es: "tierra digital" },
+                    { en: "Star ground point", es: "punto de tierra en estrella" },
+                    { en: "Return path noise", es: "ruido en el camino de retorno" }
+                ],
+                stem: "To prevent digital switching noise from coupling into sensitive analog inputs, I keep AGND and DGND separated and connect them at a single..."
+            },
+            {
+                id: 13,
+                category: "PCB Design & Prototyping",
+                question: "What strategies do you use for thermal management on power transistor components?",
+                context: "Crucial for power converters, solar inverters, and industrial motor drives.",
+                vocab: [
+                    { en: "Thermal vias", es: "vías térmicas" },
+                    { en: "Heatsink dissipation", es: "disipación por disipador de calor" },
+                    { en: "Copper pour / plane", es: "plano de cobre" },
+                    { en: "Thermal resistance (Rth)", es: "resistencia térmica" }
+                ],
+                stem: "I place a matrix of stitched thermal vias under the MOSFET pad connected to a bottom copper plane to reduce..."
+            },
+            {
+                id: 14,
+                category: "PCB Design & Prototyping",
+                question: "What precautions do you take when hand soldering SMD components like 0805 or QFP ICs?",
+                context: "Standard skill needed for rapid prototyping in lab environments and rework benches.",
+                vocab: [
+                    { en: "Flux pen / Liquid flux", es: "fundente / lápiz de flux" },
+                    { en: "Solder wick / desoldering braid", es: "malla desoldante" },
+                    { en: "Hot air rework station", es: "estación de retocado por aire caliente" },
+                    { en: "Solder bridges", es: "puentes de soldadura" }
+                ],
+                stem: "I apply liberal flux to the QFP pads, tack down two diagonal corner pins, and use drag soldering to avoid bridges..."
+            },
+            {
+                id: 15,
+                category: "PCB Design & Prototyping",
+                question: "How do you prepare design data files for PCB manufacturing and assembly houses?",
+                context: "Interacting with local board fabrication shops or international fabrication partners.",
+                vocab: [
+                    { en: "Gerber files & Drill maps", es: "archivos Gerber y mapas de perforación" },
+                    { en: "Pick and Place file (CPL)", es: "archivo de posición para máquinas Pick&Place" },
+                    { en: "Bill of Materials (BOM)", es: "lista de materiales" },
+                    { en: "Silkscreen legend", es: "leyenda de serigrafía" }
+                ],
+                stem: "I generate standard Gerber X2 files, along with an IPC-D-356 netlist, BOM with manufacturer part numbers, and..."
+            },
+            {
+                id: 16,
+                category: "PCB Design & Prototyping",
+                question: "How do you handle differential pair routing for USB or Ethernet signals on a PCB?",
+                context: "High-speed board design requirement for industrial gateways and data loggers.",
+                vocab: [
+                    { en: "Controlled impedance", es: "impedancia controlada" },
+                    { en: "Differential impedance (90/100 Ω)", es: "impedancia diferencial" },
+                    { en: "Length matching / skew", es: "acoplamiento de longitud / desalineación" },
+                    { en: "Meander traces", es: "pistas en serpentina / meandros" }
+                ],
+                stem: "I enforce length matching between D+ and D- traces using meanders and ensure 90-ohm differential impedance by calculating..."
+            },
+            {
+                id: 17,
+                category: "PCB Design & Prototyping",
+                question: "What decoupling capacitor guidelines do you follow for IC power pins?",
+                context: "Essential for reliable hardware operation under high noise conditions.",
+                vocab: [
+                    { en: "Decoupling / Bypass capacitor", es: "capacitor de desacople" },
+                    { en: "Equivalent Series Resistance (ESR)", es: "resistencia de serie equivalente" },
+                    { en: "Parasitic inductance", es: "inductancia parásita" },
+                    { en: "Placement proximity", es: "proximidad de ubicación" }
+                ],
+                stem: "I place 0.1uF ceramic capacitors as close as possible to each VCC pin to suppress high-frequency noise before..."
+            },
+            {
+                id: 18,
+                category: "PCB Design & Prototyping",
+                question: "How do you design a PCB layout to minimize Electro-Magnetic Interference (EMI)?",
+                context: "Preparing designs for INTI or international compliance certification.",
+                vocab: [
+                    { en: "Ground loop area", es: "área del bucle de tierra" },
+                    { en: "Shielding can", es: "blindaje metálico/canasta" },
+                    { en: "Ferrite bead filter", es: "filtro de perla de ferrita" },
+                    { en: "Radiated emissions", es: "emisiones radiadas" }
+                ],
+                stem: "To reduce EMI emissions, I minimize current loop areas, keep high-speed traces short, and add ferrite beads on..."
+            },
+            {
+                id: 19,
+                category: "PCB Design & Prototyping",
+                question: "What is your approach to component selection when facing electronic component shortages?",
+                context: "A practical reality in Argentina's import-export market dynamics.",
+                vocab: [
+                    { en: "Pin-compatible alternatives", es: "alternativas compatibles pin a pin" },
+                    { en: "Supply chain availability", es: "disponibilidad en cadena de suministro" },
+                    { en: "Footprint footprint versatility", es: "versatilidad de huella en PCB" },
+                    { en: "Second-source components", es: "componentes de segunda fuente" }
+                ],
+                stem: "I look for pin-compatible drop-in replacements and verify availability with multiple local distributors before finalizing the BOM..."
+            },
+            {
+                id: 20,
+                category: "PCB Design & Prototyping",
+                question: "How do you inspect assembled prototype PCBs for manufacturing defects?",
+                context: "Quality control check upon receiving prototype boards from assembly.",
+                vocab: [
+                    { en: "Visual inspection microscope", es: "microscopio de inspección visual" },
+                    { en: "Cold solder joint", es: "junta de soldadura fría" },
+                    { en: "Short circuit continuity test", es: "prueba de continuidad por cortocircuito" },
+                    { en: "Component tombstoning", es: "levantamiento de componente (tombstoning)" }
+                ],
+                stem: "Before applying power, I do a visual check under the microscope for solder bridges or tombstoning, followed by a multimeter test between power rails..."
+            },
+
+            // CATEGORY 3: Instrumentation & Testing (Cards 21-30)
+            {
+                id: 21,
+                category: "Instrumentation & Testing",
+                question: "How do you configure an oscilloscope trigger to capture a fast transient pulse on a digital signal line?",
+                context: "Testing signal integrity in high-noise industrial environments.",
+                vocab: [
+                    { en: "Edge trigger (Rising/Falling)", es: "disparo por flanco (subida/bajada)" },
+                    { en: "Single Shot acquisition", es: "adquisición de disparo único" },
+                    { en: "Trigger threshold voltage", es: "voltaje de umbral de disparo" },
+                    { en: "Glitch detection", es: "detección de fallas o picos (glitch)" }
+                ],
+                stem: "I set the oscilloscope channel to Single Shot mode, adjust the trigger threshold voltage, and select a falling edge to..."
+            },
+            {
+                id: 22,
+                category: "Instrumentation & Testing",
+                question: "When would you use an AC current clamp meter versus a shunt resistor for measuring current?",
+                context: "Practical decision in high-current monitoring for industrial motors or power distribution panels.",
+                vocab: [
+                    { en: "Current clamp meter", es: "pinza amperométrica" },
+                    { en: "Sense / Shunt resistor", es: "resistencia de derivación (shunt)" },
+                    { en: "Galvanic isolation", es: "aislamiento galvánico" },
+                    { en: "Voltage drop", es: "caída de voltaje" }
+                ],
+                stem: "I use a current clamp when measuring high AC currents safely without breaking the circuit, whereas a shunt resistor is best for precise DC current..."
+            },
+            {
+                id: 23,
+                category: "Instrumentation & Testing",
+                question: "How do you measure frequency response and bandwidth of an operational amplifier circuit?",
+                context: "Analog circuit verification during audio or sensor signal conditioning design.",
+                vocab: [
+                    { en: "Function generator", es: "generador de funciones" },
+                    { en: "Bode plot", es: "diagrama de Bode" },
+                    { en: "Cutoff frequency (-3dB point)", es: "frecuencia de corte" },
+                    { en: "Gain-Bandwidth Product (GBW)", es: "producto ganancia-ancho de banda" }
+                ],
+                stem: "I sweep a sine wave input using a function generator and plot the output amplitude ratio on an oscilloscope to find the -3dB cutoff frequency..."
+            },
+            {
+                id: 24,
+                category: "Instrumentation & Testing",
+                question: "How do you compensate a 10x oscilloscope probe to ensure accurate voltage readings?",
+                context: "Basic bench requirement in electronics production and laboratory testing.",
+                vocab: [
+                    { en: "Probe compensation trimmer", es: "trimer de compensación de punta" },
+                    { en: "Square wave calibration signal", es: "señal de calibración de onda cuadrada" },
+                    { en: "Overcompensated / Undercompensated", es: "sobrecompensado / subcompensado" },
+                    { en: "Capacitive loading", es: "carga capacitiva" }
+                ],
+                stem: "I clip the probe to the 1kHz square wave calibration terminal and turn the trimmer capacitor until the waveform corners are completely flat..."
+            },
+            {
+                id: 25,
+                category: "Instrumentation & Testing",
+                question: "How do you use a Spectrum Analyzer to diagnose RF noise in a wireless module?",
+                context: "Diagnosing cellular, LoRa, or BLE radios in telemetry devices.",
+                vocab: [
+                    { en: "Spectrum Analyzer", es: "analizador de espectro" },
+                    { en: "Spurious emissions", es: "emisiones no deseadas/espurias" },
+                    { en: "Resolution Bandwidth (RBW)", es: "ancho de banda de resolución" },
+                    { en: "Noise floor", es: "piso de ruido" }
+                ],
+                stem: "I connect a near-field probe to the spectrum analyzer to scan the PCB for harmonic peaks exceeding our target noise floor..."
+            },
+            {
+                id: 26,
+                category: "Instrumentation & Testing",
+                question: "How do you safely measure floating high-voltage signals on a switching power supply?",
+                context: "Safety procedure when working on three-phase AC converters or mains equipment.",
+                vocab: [
+                    { en: "Differential high-voltage probe", es: "punta diferencial de alto voltaje" },
+                    { en: "Isolation transformer", es: "transformador de aislamiento" },
+                    { en: "Ground short hazard", es: "riesgo de cortocircuito a tierra" },
+                    { en: "Floating ground", es: "tierra flotante" }
+                ],
+                stem: "To avoid shorting the circuit to earth ground through the scope ground clip, I always use an active high-voltage differential probe..."
+            },
+            {
+                id: 27,
+                category: "Instrumentation & Testing",
+                question: "How do you calibrate an analog sensor input using a precision bench multimeter?",
+                context: "Field or factory calibration of industrial temperature and pressure sensors.",
+                vocab: [
+                    { en: "Multimeter accuracy / digits", es: "precisión / dígitos del multímetro" },
+                    { en: "Linear interpolation", es: "interpolación lineal" },
+                    { en: "Offset and gain error", es: "error de compensación (offset) y ganancia" },
+                    { en: "Reference standard", es: "patrón de referencia" }
+                ],
+                stem: "I apply known reference inputs, measure the sensor output voltage with a 6.5-digit multimeter, and calculate offset and gain correction factors in software..."
+            },
+            {
+                id: 28,
+                category: "Instrumentation & Testing",
+                question: "What is your process for performing Automated Testing using Python and PyVISA?",
+                context: "Modern QA methodology in high-volume electronics assembly plants.",
+                vocab: [
+                    { en: "SCPI commands", es: "comandos SCPI (para instrumentos)" },
+                    { en: "PyVISA library", es: "librería PyVISA para control de instrumentos" },
+                    { en: "Test automated script", es: "script de prueba automatizado" },
+                    { en: "Pass/Fail yield report", es: "reporte de rendimiento Aprobado/Reprobado" }
+                ],
+                stem: "I write Python scripts using PyVISA to query bench instruments via USB/LAN, automatically logging test parameters to a database..."
+            },
+            {
+                id: 29,
+                category: "Instrumentation & Testing",
+                question: "How do you test a battery system under load using a Programmable Electronic Load?",
+                context: "Testing energy storage solutions or lithium battery management systems (BMS).",
+                vocab: [
+                    { en: "Constant Current (CC) mode", es: "modo de corriente constante" },
+                    { en: "Cut-off voltage", es: "voltaje de corte/desconexión" },
+                    { en: "Discharge capacity (mAh)", es: "capacidad de descarga" },
+                    { en: "Thermal runaway", es: "embalamiento térmico" }
+                ],
+                stem: "I configure the electronic load to CC mode at 1C rate and monitor battery cell voltage until it reaches the lower cut-off threshold..."
+            },
+            {
+                id: 30,
+                category: "Instrumentation & Testing",
+                question: "How do you measure signal rise-time and jitter on high-speed digital communications?",
+                context: "Validating custom hardware protocols and FPGA high-speed transceivers.",
+                vocab: [
+                    { en: "Rise time (10% to 90%)", es: "tiempo de subida" },
+                    { en: "Clock jitter", es: "vibración/variación de reloj (jitter)" },
+                    { en: "Eye diagram", es: "diagrama de ojo" },
+                    { en: "Signal distortion", es: "distorsión de señal" }
+                ],
+                stem: "I overlay multiple data bit transitions on an oscilloscope to form an eye diagram, measuring eye height and edge jitter..."
+            },
+
+            // CATEGORY 4: Communication Protocols & IoT (Cards 31-40)
+            {
+                id: 31,
+                category: "Communication Protocols & IoT",
+                question: "What are the main differences between I2C and SPI buses, and when do you choose one over the other?",
+                context: "Fundamental architectural decision in almost all electronic board designs.",
+                vocab: [
+                    { en: "Master/Slave (Host/Target)", es: "Maestro/Esclavo" },
+                    { en: "Clock line (SCL/SCK)", es: "línea de reloj" },
+                    { en: "Pull-up resistor requirements", es: "requerimientos de resistencias pull-up" },
+                    { en: "Throughput speed", es: "velocidad de transferencia" }
+                ],
+                stem: "I choose I2C when pin count is restricted because it only uses two lines, but I select SPI when high data throughput is required..."
+            },
+            {
+                id: 32,
+                category: "Communication Protocols & IoT",
+                question: "How do you troubleshoot CAN Bus communication issues in an automotive or industrial machine?",
+                context: "Widely used in heavy machinery, agricultural equipment, and automotive controllers in Argentina.",
+                vocab: [
+                    { en: "Termination resistor (120 Ω)", es: "resistencia de terminación" },
+                    { en: "CAN_H / CAN_L differential signal", es: "señal diferencial CAN_H / CAN_L" },
+                    { en: "Bus heavy traffic / error frame", es: "tráfico pesado / trama de error en bus" },
+                    { en: "Transceiver IC", es: "circuito integrado transceptor" }
+                ],
+                stem: "First, I measure resistance across CAN_H and CAN_L with the system powered down to verify the two 120-ohm termination resistors equal 60 ohms..."
+            },
+            {
+                id: 33,
+                category: "Communication Protocols & IoT",
+                question: "How do you implement Modbus RTU over RS485 for long-distance industrial communications?",
+                context: "Standard protocol for PLC integration, energy meters, and industrial sensors.",
+                vocab: [
+                    { en: "RS485 differential driver", es: "controlador diferencial RS485" },
+                    { en: "Half-duplex communication", es: "comunicación semidúplex" },
+                    { en: "Slave address & Baud rate", es: "dirección de esclavo y tasa de baudios" },
+                    { en: "CRC checksum", es: "verificación por suma de redundancia cíclica" }
+                ],
+                stem: "I configure the MCU UART for half-duplex RS485 transceiver control using a GPIO pin to switch between transmit and receive modes..."
+            },
+            {
+                id: 34,
+                category: "Communication Protocols & IoT",
+                question: "How do you structure JSON telemetry payloads for MQTT communication with cloud brokers?",
+                context: "IoT system development for smart grid or remote monitoring solutions.",
+                vocab: [
+                    { en: "MQTT broker / topic", es: "servidor/bróker y tema MQTT" },
+                    { en: "Publish / Subscribe", es: "Publicar / Suscribir" },
+                    { en: "Quality of Service (QoS)", es: "Calidad de Servicio" },
+                    { en: "Payload parsing", es: "análisis sintáctico del mensaje" }
+                ],
+                stem: "I structure compact JSON payloads with sensor readings and timestamp fields, publishing to specific sub-topics with QoS level 1..."
+            },
+            {
+                id: 35,
+                category: "Communication Protocols & IoT",
+                question: "What steps do you take when debugging UART framing errors or baud rate mismatches?",
+                context: "Debugging serial interfaces between microcontrollers and Bluetooth/GSM modems.",
+                vocab: [
+                    { en: "Baud rate mismatch", es: "desconexión o desacople en tasa de baudios" },
+                    { en: "Framing error / Parity bit", es: "error de trama / bit de paridad" },
+                    { en: "FTDI USB-to-Serial converter", es: "convertidor USB a Serie FTDI" },
+                    { en: "Buffer overflow", es: "desbordamiento de búfer" }
+                ],
+                stem: "If I receive garbled characters, I verify that both devices share the exact same baud rate and parity settings using a logic analyzer..."
+            },
+            {
+                id: 36,
+                category: "Communication Protocols & IoT",
+                question: "How do you evaluate LoRaWAN signal range and link budget for rural IoT applications?",
+                context: "Deploying environmental sensors in vast agricultural fields (pampa húmeda).",
+                vocab: [
+                    { en: "Received Signal Strength Indicator (RSSI)", es: "indicador de fuerza de señal recibida" },
+                    { en: "Signal-to-Noise Ratio (SNR)", es: "relación señal-ruido" },
+                    { en: "Spreading Factor (SF)", es: "factor de dispersión" },
+                    { en: "Gateway coverage", es: "cobertura de puerta de enlace" }
+                ],
+                stem: "I optimize the Spreading Factor to trade data rate for increased sensitivity, ensuring stable RSSI values over long distances..."
+            },
+            {
+                id: 37,
+                category: "Communication Protocols & IoT",
+                question: "How do you integrate BLE (Bluetooth Low Energy) GATT profiles for mobile app connectivity?",
+                context: "Designing smart medical or consumer electronic hardware controlled via smartphone.",
+                vocab: [
+                    { en: "GATT Service & Characteristic", es: "Servicio y Característica GATT" },
+                    { en: "Advertising packet", es: "paquete de anuncio" },
+                    { en: "Read / Write / Notify permissions", es: "permisos de lectura / escritura / notificación" },
+                    { en: "Pairing & Bonding", es: "emparejamiento y vinculación" },
+                ],
+                stem: "I define custom GATT characteristics with notification properties so the hardware automatically pushes real-time telemetry to the app..."
+            },
+            {
+                id: 38,
+                category: "Communication Protocols & IoT",
+                question: "What safety protocols do you implement in wireless industrial hardware controls?",
+                context: "Preventing accidental motor triggers or equipment failures from dropped radio signals.",
+                vocab: [
+                    { en: "Keep-alive heartbeat packet", es: "paquete de latido o mantenimiento" },
+                    { en: "Fail-safe timeout", es: "tiempo de espera a prueba de fallos" },
+                    { en: "CRC validation", es: "validación por código de redundancia cíclica" },
+                    { en: "Packet loss rate", es: "tasa de pérdida de paquetes" }
+                ],
+                stem: "I implement periodic heartbeat packets; if the receiver stops getting heartbeats for more than 500ms, it triggers a fail-safe shutdown..."
+            },
+            {
+                id: 39,
+                category: "Communication Protocols & IoT",
+                question: "How do you manage cellular modem AT commands in embedded Linux or microcontroller designs?",
+                context: "Smart metering and satellite/4G telemetry units deployed in remote oil fields.",
+                vocab: [
+                    { en: "AT command parser", es: "analizador de comandos AT" },
+                    { en: "Unsolicited Result Codes (URC)", es: "códigos de resultado no solicitados" },
+                    { en: "SIM card APN setup", es: "configuración de APN de tarjeta SIM" },
+                    { en: "Modem reset sequence", es: "secuencia de reinicio del módem" }
+                ],
+                stem: "I write a state-machine parser in C to handle AT responses, managing connection timeouts and automatically re-initializing the SIM APN..."
+            },
+            {
+                id: 40,
+                category: "Communication Protocols & IoT",
+                question: "How do you protect communication buses from Electrostatic Discharge (ESD) transients?",
+                context: "Hardware robustness design for outdoor connectors and harsh industrial environments.",
+                vocab: [
+                    { en: "TVS Diodes (Transient Voltage Suppressor)", es: "diodos de supresión de voltaje transitorio" },
+                    { en: "ESD discharge strike", es: "descarga electrostática" },
+                    { en: "Clamping voltage", es: "voltaje de fijación/sujeción" },
+                    { en: "Optocoupler isolation", es: "aislamiento por optoacoplador" }
+                ],
+                stem: "I place bidirectional TVS diode arrays right next to external communication connectors to clamp ESD surges to ground..."
+            },
+
+            // CATEGORY 5: Power Electronics & Sensors (Cards 41-50)
+            {
+                id: 41,
+                category: "Power Electronics & Sensors",
+                question: "How do you select between a Linear Low-Drop Regulator (LDO) and a Buck Switching Regulator?",
+                context: "Fundamental power tree design decision for energy efficiency and noise targets.",
+                vocab: [
+                    { en: "Linear Regulator (LDO)", es: "regulador lineal de baja caída" },
+                    { en: "Step-Down (Buck) Converter", es: "convertidor reductor (Buck)" },
+                    { en: "Efficiency vs Quiescent Current", es: "eficiencia vs corriente de reposo" },
+                    { en: "Output Ripple Voltage", es: "voltaje de rizado de salida" }
+                ],
+                stem: "I choose a Buck converter when stepping down higher voltages with high efficiency, but use an LDO for low-noise analog rails..."
+            },
+            {
+                id: 42,
+                category: "Power Electronics & Sensors",
+                question: "How do you design a signal conditioning circuit for a bridge strain gauge pressure sensor?",
+                context: "Weigh scale systems, industrial tank level sensors, and structural monitoring.",
+                vocab: [
+                    { en: "Wheatstone bridge", es: "puente de Wheatstone" },
+                    { en: "Instrumentation Amplifier (InAmp)", es: "amplificador de instrumentación" },
+                    { en: "Common-Mode Rejection Ratio (CMRR)", es: "relación de rechazo al modo común" },
+                    { en: "Differential gain", es: "ganancia diferencial" }
+                ],
+                stem: "I feed the microvolt output of the Wheatstone bridge into a high-CMRR instrumentation amplifier followed by a low-pass filter..."
+            },
+            {
+                id: 43,
+                category: "Power Electronics & Sensors",
+                question: "What steps do you take to drive a power MOSFET efficiently in a high-frequency switching inverter?",
+                context: "Designing motor drives, UPS systems, or solar power electronics.",
+                vocab: [
+                    { en: "Gate driver IC", es: "integrado controlador de compuerta" },
+                    { en: "Gate charge (Qg)", es: "carga de compuerta" },
+                    { en: "Rds(on) resistance", es: "resistencia en conducción Rds(on)" },
+                    { en: "Switching loss", es: "pérdida por conmutación" }
+                ],
+                stem: "I use a dedicated high-current gate driver IC to rapidly charge and discharge the MOSFET gate, minimizing switching losses..."
+            },
+            {
+                id: 44,
+                category: "Power Electronics & Sensors",
+                question: "How do you calibrate an NTC thermistor temperature sensing circuit in microcontrollers?",
+                context: "Thermal protection circuits for high-power electronics and lithium chargers.",
+                vocab: [
+                    { en: "NTC Thermistor", es: "termistor NTC" },
+                    { en: "Steinhart-Hart equation", es: "ecuación de Steinhart-Hart" },
+                    { en: "Beta parameter (β)", es: "parámetro Beta" },
+                    { en: "Voltage divider network", es: "red divisora de voltaje" }
+                ],
+                stem: "I calculate temperature from the ADC readings of a voltage divider using the Beta equation model pre-programmed into software..."
+            },
+            {
+                id: 45,
+                category: "Power Electronics & Sensors",
+                question: "What features do you look for when selecting an Analog-to-Digital Converter (ADC) for high-precision audio or instrumentation?",
+                context: "Selecting components for high-accuracy scientific or acoustic equipment.",
+                vocab: [
+                    { en: "Bit Resolution (e.g., 24-bit)", es: "resolución en bits" },
+                    { en: "Sampling rate (SPS)", es: "tasa de muestreo" },
+                    { en: "Effective Number of Bits (ENOB)", es: "número efectivo de bits" },
+                    { en: "Delta-Sigma architecture", es: "arquitectura Delta-Sigma" }
+                ],
+                stem: "For high precision instrumentation, I prioritize a 24-bit Delta-Sigma ADC with low internal noise and high ENOB specs..."
+            },
+            {
+                id: 46,
+                category: "Power Electronics & Sensors",
+                question: "How do you size the inductor and output capacitor in a Buck DC-DC converter circuit?",
+                context: "Power electronics design calculations for stable power delivery.",
+                vocab: [
+                    { en: "Inductor ripple current", es: "corriente de rizado en el inductor" },
+                    { en: "Saturation current (Isat)", es: "corriente de saturación" },
+                    { en: "Capacitor ESR", es: "resistencia de serie equivalente del capacitor" },
+                    { en: "Switching frequency (fsw)", es: "frecuencia de conmutación" }
+                ],
+                stem: "I calculate the inductance value based on target switching frequency and allowable 30% peak-to-peak ripple current, making sure Isat exceeds..."
+            },
+            {
+                id: 47,
+                category: "Power Electronics & Sensors",
+                question: "How do you implement current sensing using a Hall Effect sensor in motor drives?",
+                context: "Electric mobility and industrial automation current measurement.",
+                vocab: [
+                    { en: "Hall Effect transducer", es: "transductor de efecto Hall" },
+                    { en: "Galvanic isolation", es: "aislamiento galvánico" },
+                    { en: "Sensitivity (mV/A)", es: "sensibilidad" },
+                    { en: "Zero-current offset voltage", es: "voltaje de desequilibrio a corriente cero" }
+                ],
+                stem: "I use an isolated Hall Effect IC in series with the motor phase, sampling its proportional voltage output with an MCU analog pin..."
+            },
+            {
+                id: 48,
+                category: "Power Electronics & Sensors",
+                question: "What protection mechanisms do you implement in Lithium-Ion battery management systems (BMS)?",
+                context: "Designing rechargeable battery packs for field electronics and robotics.",
+                vocab: [
+                    { en: "Overcharge / Overdischarge protection", es: "protección de sobrecarga / sobredescarga" },
+                    { en: "Cell balancing (Passive/Active)", es: "balanceo de celdas" },
+                    { en: "Short circuit cutoff", es: "corte por cortocircuito" },
+                    { en: "State of Charge (SOC)", es: "estado de carga" }
+                ],
+                stem: "I integrate dedicated BMS ICs that monitor individual cell voltages to trigger protection MOSFETs if any cell exceeds 4.2V or falls below 2.8V..."
+            },
+            {
+                id: 49,
+                category: "Power Electronics & Sensors",
+                question: "How do you condition signals from industrial 4-20mA transmitter loops?",
+                context: "Interfacing factory floor sensors to microcontrollers or PLCs.",
+                vocab: [
+                    { en: "4-20mA current loop", es: "bucle de corriente 4-20mA" },
+                    { en: "Precision load resistor (e.g., 250 Ω)", es: "resistencia de carga de precisión" },
+                    { en: "Wire break detection", es: "detección de rotura de cable" },
+                    { en: "Loop power supply", es: "fuente de alimentación del bucle" }
+                ],
+                stem: "I pass the 4-20mA current through a high-precision 250-ohm resistor to convert it into a 1V to 5V signal for the microcontroller ADC..."
+            },
+            {
+                id: 50,
+                category: "Power Electronics & Sensors",
+                question: "How do you prevent reverse polarity damage when plugging in external power adapters?",
+                context: "Hardware reliability feature in commercial electronic products.",
+                vocab: [
+                    { en: "Reverse polarity protection", es: "protección contra polaridad inversa" },
+                    { en: "P-Channel MOSFET switch", es: "interruptor MOSFET de canal P" },
+                    { en: "Schottky diode drop", es: "caída de voltaje en diodo Schottky" },
+                    { en: "Inrush current limit", es: "límite de corriente de irrupción" }
+                ],
+                stem: "Instead of a simple Schottky diode with power loss, I use a high-side P-channel MOSFET to provide reverse polarity protection with minimal voltage drop..."
+            },
+
+            // CATEGORY 6: Hardware Troubleshooting & QA (Cards 51-60)
+            {
+                id: 51,
+                category: "Hardware Troubleshooting & QA",
+                question: "What systematic methodology do you follow when a newly assembled PCB prototype does not power up?",
+                context: "Critical problem-solving scenario during initial prototype bring-up.",
+                vocab: [
+                    { en: "Board bring-up", es: "puesta en marcha de la placa" },
+                    { en: "Current-limited power supply", es: "fuente de poder con límite de corriente" },
+                    { en: "Thermal camera inspection", es: "inspección con cámara térmica" },
+                    { en: "Short to ground", es: "cortocircuito a tierra" }
+                ],
+                stem: "I start by powering the board with a current-limited DC supply set to 100mA, checking for hot spots with a thermal camera if it hits the limit..."
+            },
+            {
+                id: 52,
+                category: "Hardware Troubleshooting & QA",
+                question: "How do you diagnose intermittent reset issues occurring on a microcontroller board in the field?",
+                context: "Field service and reliability engineering in industrial environments.",
+                vocab: [
+                    { en: "Intermittent reset", es: "reinicio intermitente" },
+                    { en: "Power supply glitch / dip", es: "caída / pico en la fuente de alimentación" },
+                    { en: "Electromagnetic interference (EMI)", es: "interferencia electromagnética" },
+                    { en: "Watchdog timeout reset", es: "reinicio por tiempo límite de perro guardián" }
+                ],
+                stem: "I log reset cause registers upon boot-up to determine whether the reset was triggered by a Brown-out, Watchdog timeout, or external pin..."
+            },
+            {
+                id: 53,
+                category: "Hardware Troubleshooting & QA",
+                question: "How do you perform Root Cause Analysis (RCA) when an electronic product fails in customer production?",
+                context: "Quality engineering communication with clients and management.",
+                vocab: [
+                    { en: "Root Cause Analysis (RCA)", es: "análisis de causa raíz" },
+                    { en: "Corrective Action Plan (CAPA)", es: "plan de acción correctiva" },
+                    { en: "Component stress failure", es: "falla por estrés en componente" },
+                    { en: "8D Problem Solving Report", es: "informe 8D de resolución de problemas" }
+                ],
+                stem: "I gather field failure telemetry, reproduce the failure condition in the laboratory, and document the root cause using an 8D report format..."
+            },
+            {
+                id: 54,
+                category: "Hardware Troubleshooting & QA",
+                question: "What is your procedure for burn-in thermal testing of electronic assemblies?",
+                context: "Stress-testing boards prior to high-reliability deployment.",
+                vocab: [
+                    { en: "Burn-in thermal chamber", es: "cámara de estrés térmico" },
+                    { en: "Thermal cycling (-20°C to 70°C)", es: "ciclado térmico" },
+                    { en: "Mean Time Between Failures (MTBF)", es: "tiempo medio entre fallas" },
+                    { en: "Infrared thermal check", es: "verificación térmica por infrarrojo" }
+                ],
+                stem: "We run fully powered assemblies inside a thermal chamber at 60°C for 48 hours to induce early life failures before shipping to clients..."
+            },
+            {
+                id: 55,
+                category: "Hardware Troubleshooting & QA",
+                question: "How do you troubleshoot excessive signal ringing or overshoot on high-speed SPI lines?",
+                context: "Resolving signal integrity issues on custom digital designs.",
+                vocab: [
+                    { en: "Signal ringing & overshoot", es: "sobrepico y oscilación parasita en la señal" },
+                    { en: "Series termination resistor", es: "resistencia de terminación en serie" },
+                    { en: "Impedance mismatch", es: "desacople de impedancia" },
+                    { en: "Transmission line reflection", es: "reflexión en línea de transmisión" }
+                ],
+                stem: "To dampen high-frequency ringing caused by line inductance, I add 22 to 33-ohm series termination resistors close to the clock driver pin..."
+            },
+            {
+                id: 56,
+                category: "Hardware Troubleshooting & QA",
+                question: "How do you verify PCB solder joint reliability in high-vibration applications like motors or vehicles?",
+                context: "Mechanical & electrical durability testing for automotive or agricultural technology.",
+                vocab: [
+                    { en: "Vibration stress testing", es: "prueba de estrés por vibración" },
+                    { en: "Conformal coating application", es: "aplicación de recubrimiento protector (barniz)" },
+                    { en: "Micro-cracks in solder", es: "microfisuras en la soldadura" },
+                    { en: "Strain relief potting", es: "encapsulado para alivio de tensión" }
+                ],
+                stem: "We subject the boards to mechanical vibration tests while monitoring electrical continuity, and apply conformal coating to secure components..."
+            },
+            {
+                id: 57,
+                category: "Hardware Troubleshooting & QA",
+                question: "How do you isolate noisy ground loops causing audio hum or ADC precision loss?",
+                context: "Resolving unexpected noise issues during product integration.",
+                vocab: [
+                    { en: "Ground loop isolation", es: "aislamiento de bucles de tierra" },
+                    { en: "Common-mode choke", es: "choque de modo común" },
+                    { en: "Optoisolator / Digital Isolator", es: "aislador digital / optoacoplador" },
+                    { en: "Hum and ripple noise", es: "ruido zumbido y rizado" }
+                ],
+                stem: "I break ground loops between subsystem grounds by inserting digital isolators or a common-mode choke filter on power lines..."
+            },
+            {
+                id: 58,
+                category: "Hardware Troubleshooting & QA",
+                question: "What steps do you take when a microcontroller program hangs inside an unhandled interrupt?",
+                context: "Debugging software/hardware boundary issues in C code.",
+                vocab: [
+                    { en: "Unhandled interrupt vector", es: "vector de interrupción no controlado" },
+                    { en: "Default Handler infinite loop", es: "bucle infinito en el controlador por defecto" },
+                    { en: "Interrupt flag clearing", es: "limpieza de bandera de interrupción" },
+                    { en: "Stack overflow trace", es: "traza de desbordamiento de pila" }
+                ],
+                stem: "I check if all enabled hardware interrupt flags are being cleared properly inside the ISR before exiting, to avoid infinite interrupt loops..."
+            },
+            {
+                id: 59,
+                category: "Hardware Troubleshooting & QA",
+                question: "How do you execute Functional Acceptance Testing (FAT) on factory production lines?",
+                context: "Manufacturing quality assurance for local electronics assemblers.",
+                vocab: [
+                    { en: "Factory Acceptance Test (FAT)", es: "Prueba de Aceptación en Fábrica" },
+                    { en: "Test bed / Test jig fixture", es: "jiga / banco de pruebas de producción" },
+                    { en: "Pogo pins interface", es: "interfaz con pines Pogo" },
+                    { en: "Serial number flashing", es: "grabado de número de serie y firmware" }
+                ],
+                stem: "We place the PCB onto a custom test jig with pogo pins, executing automated self-tests to verify all peripherals before flashing production keys..."
+            },
+            {
+                id: 60,
+                category: "Hardware Troubleshooting & QA",
+                question: "How do you document hardware engineering changes using Engineering Change Orders (ECO)?",
+                context: "Standard engineering workflow practice in professional companies.",
+                vocab: [
+                    { en: "Engineering Change Order (ECO)", es: "Orden de Cambio de Ingeniería" },
+                    { en: "Revision control (Rev A to Rev B)", es: "control de revisiones de placa" },
+                    { en: "Rework instructions", es: "instrucciones de retrabajo/modificación" },
+                    { en: "BOM delta update", es: "actualización de cambios en lista de materiales" }
+                ],
+                stem: "When making a schematic fix after prototype testing, I issue an ECO document detailing the wire jumper rework instructions and updating the BOM to Rev B..."
+            }
+        ];
+
+        let filteredCards = [...flashcardsData];
+        let currentIndex = 0;
+        let isFlipped = false;
+        let masteredCardIds = new Set(JSON.parse(localStorage.getItem('masteredEE') || '[]'));
+        let showOnlyUnmastered = false;
+
+        // DOM Elements
+        const flashcardInner = document.getElementById('flashcard-inner');
+        const cardCategory = document.getElementById('card-category');
+        const cardIndex = document.getElementById('card-index');
+        const cardQuestion = document.getElementById('card-question');
+        const cardContext = document.getElementById('card-context');
+        const cardVocab = document.getElementById('card-vocab');
+        const cardStem = document.getElementById('card-stem');
+        const masterToggleBtn = document.getElementById('master-toggle-btn');
+
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const flipBtn = document.getElementById('flip-btn');
+
+        const audioQuestionBtn = document.getElementById('audio-question-btn');
+        const audioVocabBtn = document.getElementById('audio-vocab-btn');
+
+        const searchInput = document.getElementById('search-input');
+        const categorySelect = document.getElementById('category-select');
+        const filterUnmasteredBtn = document.getElementById('filter-unmastered-btn');
+        const resetProgressBtn = document.getElementById('reset-progress-btn');
+
+        const masteryBar = document.getElementById('mastery-bar');
+        const masteryPercentage = document.getElementById('mastery-percentage');
+        const masteredCount = document.getElementById('mastered-count');
+        const totalCardsCount = document.getElementById('total-cards-count');
+
+        function speakText(text, lang = 'en-US') {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop ongoing speech
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = lang;
+                utterance.rate = 0.9; // Slightly slower for technical clarity
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Text-to-speech is not supported on this browser.');
+            }
+        }
+
+        function updateCardDisplay() {
+            if (filteredCards.length === 0) {
+                cardCategory.innerText = "NO CARDS MATCH";
+                cardIndex.innerText = "0/0";
+                cardQuestion.innerText = "No flashcards match your current search/filter parameters.";
+                cardContext.innerText = "Try resetting filters or searching for another term.";
+                cardVocab.innerHTML = `<div class="col-span-2 text-slate-500">No vocabulary items to display.</div>`;
+                cardStem.innerText = "N/A";
+                masterToggleBtn.className = "text-slate-700";
+                return;
+            }
+
+            // Ensure index bounds
+            if (currentIndex >= filteredCards.length) currentIndex = 0;
+            if (currentIndex < 0) currentIndex = filteredCards.length - 1;
+
+            const card = filteredCards[currentIndex];
+
+            // Reset Flip State
+            if (isFlipped) {
+                isFlipped = false;
+                flashcardInner.classList.remove('is-flipped');
+            }
+
+            // Populate Front
+            cardCategory.innerText = card.category.toUpperCase();
+            cardIndex.innerText = `CARD ${currentIndex + 1}/${filteredCards.length}`;
+            cardQuestion.innerText = card.question;
+            cardContext.innerText = `Context: ${card.context}`;
+
+            // Check Mastered status
+            const isMastered = masteredCardIds.has(card.id);
+            if (isMastered) {
+                masterToggleBtn.className = "text-emerald-400 hover:text-emerald-300 transition text-lg";
+                masterToggleBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+            } else {
+                masterToggleBtn.className = "text-slate-600 hover:text-emerald-400 transition text-lg";
+                masterToggleBtn.innerHTML = `<i class="fa-regular fa-circle-check"></i>`;
+            }
+
+            // Populate Back (Vocab)
+            cardVocab.innerHTML = card.vocab.map(item => `
+                <div class="bg-slate-900 border border-slate-800 p-2 rounded flex flex-col gap-0.5">
+                    <span class="font-semibold text-cyan-300 font-mono text-xs">${item.en}</span>
+                    <span class="text-slate-400 text-[11px]">${item.es}</span>
+                </div>
+            `).join('');
+
+            // Populate Back (Model Stem)
+            cardStem.innerText = `"${card.stem}"`;
+
+            updateProgressStats();
+        }
+
+        function updateProgressStats() {
+            const total = flashcardsData.length;
+            const count = masteredCardIds.size;
+            const percentage = Math.round((count / total) * 100);
+
+            masteredCount.innerText = count;
+            totalCardsCount.innerText = total;
+            masteryBar.style.width = `${percentage}%`;
+            masteryPercentage.innerText = `${percentage}%`;
+
+            localStorage.setItem('masteredEE', JSON.stringify([...masteredCardIds]));
+        }
+
+        function toggleMasteryCurrentCard() {
+            if (filteredCards.length === 0) return;
+            const card = filteredCards[currentIndex];
+            if (masteredCardIds.has(card.id)) {
+                masteredCardIds.delete(card.id);
+            } else {
+                masteredCardIds.add(card.id);
+            }
+            updateCardDisplay();
+        }
+
+        function applyFilters() {
+            const query = searchInput.value.toLowerCase().trim();
+            const selectedCat = categorySelect.value;
+
+            filteredCards = flashcardsData.filter(card => {
+                // Category Filter
+                const matchesCategory = (selectedCat === "ALL") || (card.category === selectedCat);
+
+                // Unmastered Filter
+                const matchesUnmastered = !showOnlyUnmastered || !masteredCardIds.has(card.id);
+
+                // Search Query Filter
+                const matchesSearch = query === "" || 
+                    card.question.toLowerCase().includes(query) ||
+                    card.context.toLowerCase().includes(query) ||
+                    card.stem.toLowerCase().includes(query) ||
+                    card.vocab.some(v => v.en.toLowerCase().includes(query) || v.es.toLowerCase().includes(query));
+
+                return matchesCategory && matchesUnmastered && matchesSearch;
+            });
+
+            currentIndex = 0;
+            updateCardDisplay();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            
+            // Flip Event
+            flashcardInner.addEventListener('click', (e) => {
+                // Don't flip if buttons inside card were clicked
+                if (e.target.closest('button')) return;
+                isFlipped = !isFlipped;
+                flashcardInner.classList.toggle('is-flipped', isFlipped);
+            });
+
+            flipBtn.addEventListener('click', () => {
+                isFlipped = !isFlipped;
+                flashcardInner.classList.toggle('is-flipped', isFlipped);
+            });
+
+            // Navigation Buttons
+            prevBtn.addEventListener('click', () => {
+                if (filteredCards.length === 0) return;
+                currentIndex = (currentIndex - 1 + filteredCards.length) % filteredCards.length;
+                updateCardDisplay();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (filteredCards.length === 0) return;
+                currentIndex = (currentIndex + 1) % filteredCards.length;
+                updateCardDisplay();
+            });
+
+            // Mastery Toggle
+            masterToggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleMasteryCurrentCard();
+            });
+
+            // Keyboard Navigation Shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+                if (e.key === 'ArrowRight') {
+                    nextBtn.click();
+                } else if (e.key === 'ArrowLeft') {
+                    prevBtn.click();
+                } else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    flipBtn.click();
+                } else if (e.key.toLowerCase() === 'm') {
+                    toggleMasteryCurrentCard();
+                }
+            });
+
+            // Text to Speech Controls
+            audioQuestionBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (filteredCards.length === 0) return;
+                speakText(filteredCards[currentIndex].question);
+            });
+
+            audioVocabBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (filteredCards.length === 0) return;
+                const card = filteredCards[currentIndex];
+                const vocabText = card.vocab.map(v => v.en).join(', ');
+                const textToRead = `Key vocabulary: ${vocabText}. Sentence starter: ${card.stem}`;
+                speakText(textToRead);
+            });
+
+            // Filter Controls
+            searchInput.addEventListener('input', applyFilters);
+            categorySelect.addEventListener('change', applyFilters);
+
+            filterUnmasteredBtn.addEventListener('click', () => {
+                showOnlyUnmastered = !showOnlyUnmastered;
+                if (showOnlyUnmastered) {
+                    filterUnmasteredBtn.classList.add('bg-cyan-950', 'border-cyan-500', 'text-cyan-400');
+                    filterUnmasteredBtn.innerHTML = `<i class="fa-solid fa-circle-dot"></i> <span>Unmastered Only</span>`;
+                } else {
+                    filterUnmasteredBtn.classList.remove('bg-cyan-950', 'border-cyan-500', 'text-cyan-400');
+                    filterUnmasteredBtn.innerHTML = `<i class="fa-regular fa-circle"></i> <span>Unmastered Only</span>`;
+                }
+                applyFilters();
+            });
+
+            resetProgressBtn.addEventListener('click', () => {
+                if (confirm("Reset all card mastery progress?")) {
+                    masteredCardIds.clear();
+                    localStorage.removeItem('masteredEE');
+                    updateCardDisplay();
+                }
+            });
+
+            // Initial Display Load
+            updateCardDisplay();
+        });
+    </script>
+</body>
+</html>

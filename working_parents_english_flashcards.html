@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2 English for Working Parents</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        family: {
+                            bg: '#0f172a',
+                            card: '#1e293b',
+                            amber: '#f59e0b',
+                            teal: '#14b8a6',
+                            rose: '#f43f5e',
+                            indigo: '#6366f1',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 3D Flip Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased flex flex-col justify-between">
+
+    <!-- Header Navbar -->
+    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3.5 sm:px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <div class="flex items-center space-x-3 w-full md:w-auto justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-amber-400">
+                        <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg sm:text-xl font-bold text-white tracking-wide flex items-center gap-2">
+                            Family & Work English <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">A2 Level</span>
+                        </h1>
+                        <p class="text-xs text-slate-400">For Working Parents in Argentina</p>
+                    </div>
+                </div>
+
+                <!-- View Toggle Buttons -->
+                <div class="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700/60">
+                    <button id="view-single-btn" class="p-1.5 rounded-lg text-amber-400 bg-slate-700 transition-colors" title="Single Card Mode">
+                        <i data-lucide="square" class="w-4 h-4"></i>
+                    </button>
+                    <button id="view-grid-btn" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-colors" title="Grid Mode">
+                        <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats & Progress -->
+            <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+                <div class="flex items-center gap-3 bg-slate-800/80 border border-slate-700/60 px-3.5 py-1.5 rounded-xl">
+                    <div class="text-xs">
+                        <span class="text-slate-400 block text-[10px] uppercase font-mono">Mastered</span>
+                        <span id="progress-text" class="font-bold text-amber-400 font-mono">0/60 Cards</span>
+                    </div>
+                    <div class="w-24 bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-amber-500 to-teal-400 h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <button id="reset-progress-btn" class="text-xs text-slate-400 hover:text-rose-400 transition-colors flex items-center gap-1 p-2 bg-slate-800/40 rounded-xl hover:bg-rose-500/10 border border-slate-800" title="Reset all progress">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    <span class="hidden sm:inline">Reset</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 flex-grow w-full">
+        
+        <!-- Controls & Filters Section -->
+        <div class="mb-6 space-y-4">
+            <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+                
+                <!-- Search Input -->
+                <div class="relative flex-1">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="search-input" placeholder="Search keywords (e.g. school, mate, colectivo, dinner, doctor)..." class="w-full pl-10 pr-4 py-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors">
+                </div>
+
+                <!-- Action Controls -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
+                    <button id="shuffle-btn" class="flex items-center gap-2 px-3.5 py-2.5 bg-amber-500/10 text-amber-300 border border-amber-500/30 rounded-xl text-sm font-medium hover:bg-amber-500/20 transition-all active:scale-95 whitespace-nowrap">
+                        <i data-lucide="shuffle" class="w-4 h-4"></i>
+                        <span>Shuffle</span>
+                    </button>
+                    <button id="toggle-filter-mastered" class="flex items-center gap-2 px-3.5 py-2.5 bg-slate-900 border border-slate-800 text-slate-300 rounded-xl text-sm font-medium hover:bg-slate-800 transition-all whitespace-nowrap">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                        <span id="mastered-filter-label">Show All</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none text-xs sm:text-sm" id="category-filters">
+                <!-- Javascript will populate category buttons here -->
+            </div>
+        </div>
+
+        <!-- SINGLE CARD VIEW MODE -->
+        <div id="single-view-container" class="max-w-2xl mx-auto space-y-6">
+            
+            <!-- Interactive Card -->
+            <div class="perspective-1000 h-[420px] sm:h-[390px] w-full">
+                <div id="single-card-inner" class="relative w-full h-full duration-500 transform-style-3d cursor-pointer group">
+                    <!-- Dynamic Single Card Content JS Rendered Here -->
+                </div>
+            </div>
+
+            <!-- Navigation Bar for Single View Mode -->
+            <div class="flex items-center justify-between bg-slate-900/80 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-lg">
+                <button id="prev-card-btn" class="flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-medium transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Previous</span>
+                </button>
+
+                <div class="text-center font-mono text-xs sm:text-sm text-slate-400" id="card-counter">
+                    Card 1 of 60
+                </div>
+
+                <button id="next-card-btn" class="flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-medium transition-colors">
+                    <span>Next</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- GRID VIEW MODE (Hidden by default) -->
+        <div id="grid-view-container" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Cards will be dynamically inserted here in Grid Mode -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-16 px-4">
+            <div class="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-800 text-slate-500">
+                <i data-lucide="search-x" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-base font-semibold text-slate-300">No flashcards found</h3>
+            <p class="text-xs text-slate-500 mt-1">Try changing your search text or category filter.</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950/80 py-4 px-4 text-center text-xs text-slate-500">
+        <p>Family & Work English Flashcards • A2 Level for Argentine Working Parents • Web Speech TTS Enabled</p>
+    </footer>
+
+    <script>
+        const FLASHCARDS_DATA = [
+            // 1. Morning Routine & School Runs (10 Cards)
+            {
+                id: 1,
+                category: "Morning Routine & School Runs",
+                question: "What time do you usually wake up on school days?",
+                hint: "Talk about your alarm clock and morning wake-up time.",
+                words: [
+                    { en: "wake up", es: "despertarse" },
+                    { en: "alarm clock", es: "despertador" },
+                    { en: "early", es: "temprano" },
+                    { en: "school day", es: "día de escuela" }
+                ],
+                starter: "I usually wake up at 6:30 AM on school days."
+            },
+            {
+                id: 2,
+                category: "Morning Routine & School Runs",
+                question: "Who prepares breakfast for the kids in your house?",
+                hint: "Say who makes milk, tea or toast in the morning.",
+                words: [
+                    { en: "prepare", es: "preparar" },
+                    { en: "toast with dulce de leche", es: "tostadas con dulce de leche" },
+                    { en: "chocolate milk", es: "leche chocolatada" },
+                    { en: "mate", es: "mate" }
+                ],
+                starter: "I prepare chocolate milk and toast for my kids every morning."
+            },
+            {
+                id: 3,
+                category: "Morning Routine & School Runs",
+                question: "How do your children go to school?",
+                hint: "Mention car, colectivo, walking, or school bus.",
+                words: [
+                    { en: "by bus (colectivo)", es: "en colectivo" },
+                    { en: "by car", es: "en auto" },
+                    { en: "walk", es: "caminar" },
+                    { en: "on time", es: "a tiempo" }
+                ],
+                starter: "My children go to school by car, but sometimes we walk."
+            },
+            {
+                id: 4,
+                category: "Morning Routine & School Runs",
+                question: "Is your morning routine calm or stressful?",
+                hint: "Describe if you have enough time or if you hurry.",
+                words: [
+                    { en: "calm", es: "tranquila" },
+                    { en: "stressful", es: "estresante" },
+                    { en: "in a hurry", es: "apurado/a" },
+                    { en: "find shoes", es: "encontrar las zapatillas" }
+                ],
+                starter: "It is a bit stressful because we are always in a hurry!"
+            },
+            {
+                id: 5,
+                category: "Morning Routine & School Runs",
+                question: "What do your kids wear to school?",
+                hint: "Talk about school uniforms or casual clothes.",
+                words: [
+                    { en: "school uniform", es: "uniforme escolar" },
+                    { en: "white apron (guardapolvo)", es: "guardapolvo blanco" },
+                    { en: "sneakers", es: "zapatillas" },
+                    { en: "backpack", es: "mochila" }
+                ],
+                starter: "They wear a white apron (guardapolvo) and comfortable sneakers."
+            },
+            {
+                id: 6,
+                category: "Morning Routine & School Runs",
+                question: "Do you read the school WhatsApp group in the morning?",
+                hint: "Mention messages from other parents or teachers.",
+                words: [
+                    { en: "parents group", es: "grupo de padres" },
+                    { en: "messages", es: "mensajes" },
+                    { en: "announcements", es: "comunicados" },
+                    { en: "mute notifications", es: "silenciar notificaciones" }
+                ],
+                starter: "Yes, I check the WhatsApp group for school announcements."
+            },
+            {
+                id: 7,
+                category: "Morning Routine & School Runs",
+                question: "What snacks do you put in their school backpack?",
+                hint: "Mention cookies, fruits, or water bottle.",
+                words: [
+                    { en: "snack", es: "merienda / snack" },
+                    { en: "water bottle", es: "botella de agua" },
+                    { en: "fruit", es: "fruta" },
+                    { en: "biscuits (galletitas)", es: "galletitas" }
+                ],
+                starter: "I put an apple and a bottle of water in their backpack."
+            },
+            {
+                id: 8,
+                category: "Morning Routine & School Runs",
+                question: "Who picks up the children from school in the afternoon?",
+                hint: "Talk about you, your partner, or grandparents.",
+                words: [
+                    { en: "pick up", es: "buscar / retirar" },
+                    { en: "grandparents", es: "los abuelos" },
+                    { en: "after school", es: "después de la escuela" },
+                    { en: "turn", es: "turno" }
+                ],
+                starter: "My mother (their grandmother) picks them up three days a week."
+            },
+            {
+                id: 9,
+                category: "Morning Routine & School Runs",
+                question: "What do you do if your child feels sick in the morning?",
+                hint: "Explain if you stay home or call a doctor.",
+                words: [
+                    { en: "stay home", es: "quedarse en casa" },
+                    { en: "fever", es: "fiebre" },
+                    { en: "inform teacher", es: "avisar a la maestra" },
+                    { en: "take medicine", es: "tomar remedio" }
+                ],
+                starter: "If my child has a fever, they stay home and I inform the teacher."
+            },
+            {
+                id: 10,
+                category: "Morning Routine & School Runs",
+                question: "Do you have time to drink mate before leaving home?",
+                hint: "Mention if you drink mate early or at work.",
+                words: [
+                    { en: "drink mate", es: "tomar mate" },
+                    { en: "hot water thermos", es: "termo de agua caliente" },
+                    { en: "quick mate", es: "un mate rápido" },
+                    { en: "quiet moment", es: "momento tranquilo" }
+                ],
+                starter: "Yes! I always drink two or three quick mates at 6:45 AM."
+            },
+
+            // 2. Work & Schedule Balance (10 Cards)
+            {
+                id: 11,
+                category: "Work & Schedule Balance",
+                question: "What are your working hours during the week?",
+                hint: "State when your shift starts and ends.",
+                words: [
+                    { en: "work shift", es: "turno de trabajo" },
+                    { en: "full-time job", es: "trabajo de jornada completa" },
+                    { en: "start / finish", es: "empezar / terminar" },
+                    { en: "flexible hours", es: "horario flexible" }
+                ],
+                starter: "I work from 9:00 AM to 5:00 PM from Monday to Friday."
+            },
+            {
+                id: 12,
+                category: "Work & Schedule Balance",
+                question: "Do you work in an office, from home, or on-site?",
+                hint: "Describe your workspace model.",
+                words: [
+                    { en: "home office", es: "trabajo desde casa" },
+                    { en: "office building", es: "edificio de oficinas" },
+                    { en: "hybrid mode", es: "modalidad híbrida" },
+                    { en: "commute", es: "viaje al trabajo" }
+                ],
+                starter: "I work in an office three days and two days from home."
+            },
+            {
+                id: 13,
+                category: "Work & Schedule Balance",
+                question: "How do you balance your work duties and family time?",
+                hint: "Talk about organizing schedules and setting limits.",
+                words: [
+                    { en: "work-life balance", es: "equilibrio trabajo-familia" },
+                    { en: "organize schedule", es: "organizar horarios" },
+                    { en: "priority", es: "prioridad" },
+                    { en: "turn off laptop", es: "apagar la computadora" }
+                ],
+                starter: "I try to turn off my work laptop at 6 PM to spend time with my kids."
+            },
+            {
+                id: 14,
+                category: "Work & Schedule Balance",
+                question: "What do you do during your lunch break at work?",
+                words: [
+                    { en: "lunch break", es: "pausa de almuerzo" },
+                    { en: "tupperware / lunchbox", es: "vianda" },
+                    { en: "co-workers", es: "compañeros de trabajo" },
+                    { en: "short walk", es: "caminata corta" }
+                ],
+                starter: "I eat my lunchbox food and chat with my co-workers."
+            },
+            {
+                id: 15,
+                category: "Work & Schedule Balance",
+                question: "How do you ask your boss for permission to attend a school event?",
+                words: [
+                    { en: "permission", es: "permiso" },
+                    { en: "school act / performance", es: "acto escolar" },
+                    { en: "arrive late", es: "llegar tarde" },
+                    { en: "make up hours", es: "recuperar horas" }
+                ],
+                starter: "I ask my boss if I can attend the school act and make up hours later."
+            },
+            {
+                id: 16,
+                category: "Work & Schedule Balance",
+                question: "Do you answer work emails or messages at night?",
+                words: [
+                    { en: "work emails", es: "emails de trabajo" },
+                    { en: "urgent", es: "urgente" },
+                    { en: "disconnect", es: "desconectarse" },
+                    { en: "family time", es: "tiempo familiar" }
+                ],
+                starter: "No, I try not to read emails at night unless it is urgent."
+            },
+            {
+                id: 17,
+                category: "Work & Schedule Balance",
+                question: "What makes you feel tired after a long workday?",
+                words: [
+                    { en: "traffic jam", es: "embotellamiento" },
+                    { en: "long meetings", es: "reuniones largas" },
+                    { en: "screen time", es: "tiempo frente a la pantalla" },
+                    { en: "mental energy", es: "energía mental" }
+                ],
+                starter: "Long meetings and heavy traffic make me feel tired."
+            },
+            {
+                id: 18,
+                category: "Work & Schedule Balance",
+                question: "Who takes care of the kids when you work late?",
+                words: [
+                    { en: "babysitter", es: "niñera" },
+                    { en: "partner / spouse", es: "pareja / cónyuge" },
+                    { en: "relative", es: "pariente / familiar" },
+                    { en: "after school care", es: "permanencia escolar" }
+                ],
+                starter: "My partner takes care of the kids when I work late."
+            },
+            {
+                id: 19,
+                category: "Work & Schedule Balance",
+                question: "How do you organize urgent errands on weekdays?",
+                words: [
+                    { en: "errands", es: "trámites / mandados" },
+                    { en: "bank", es: "banco" },
+                    { en: "online app", es: "aplicación móvil" },
+                    { en: "lunchtime", es: "hora de almuerzo" }
+                ],
+                starter: "I usually do personal errands online or during lunchtime."
+            },
+            {
+                id: 20,
+                category: "Work & Schedule Balance",
+                question: "What is your favorite moment of the working day?",
+                words: [
+                    { en: "coffee break", es: "pausa para el café" },
+                    { en: "finish work", es: "terminar de trabajar" },
+                    { en: "reunion with kids", es: "reencuentro con los chicos" },
+                    { en: "accomplishment", es: "logro" }
+                ],
+                starter: "My favorite moment is when I finish work and hug my kids."
+            },
+
+            // 3. Meals & Grocery Shopping (10 Cards)
+            {
+                id: 21,
+                category: "Meals & Grocery Shopping",
+                question: "Where do you do your big grocery shopping?",
+                words: [
+                    { en: "supermarket", es: "supermercado" },
+                    { en: "neighborhood store", es: "almacén de barrio" },
+                    { en: "discounts", es: "descuentos" },
+                    { en: "weekly shopping", es: "compras semanales" }
+                ],
+                starter: "I do my weekly grocery shopping at the big supermarket on Saturday."
+            },
+            {
+                id: 22,
+                category: "Meals & Grocery Shopping",
+                question: "What quick dinner do you cook on busy weeknights?",
+                words: [
+                    { en: "milanesas with puree", es: "milanesas con puré" },
+                    { en: "pasta / noodles", es: "fideos / pasta" },
+                    { en: "empanadas", es: "empanadas" },
+                    { en: "quick meal", es: "comida rápida" }
+                ],
+                starter: "I usually cook milanesas with mashed potatoes or pasta."
+            },
+            {
+                id: 23,
+                category: "Meals & Grocery Shopping",
+                question: "Do your children help you set the table or cook?",
+                words: [
+                    { en: "set the table", es: "poner la mesa" },
+                    { en: "clear the table", es: "levantar la mesa" },
+                    { en: "chop vegetables", es: "cortar verduras" },
+                    { en: "help out", es: "dar una mano" }
+                ],
+                starter: "Yes, my kids set the table and put napkins every evening."
+            },
+            {
+                id: 24,
+                category: "Meals & Grocery Shopping",
+                question: "How do you save money on food purchases?",
+                words: [
+                    { en: "promotions", es: "promociones" },
+                    { en: "bank discounts", es: "descuentos bancarios" },
+                    { en: "shopping list", es: "lista de compras" },
+                    { en: "compare prices", es: "comparar precios" }
+                ],
+                starter: "I use bank app discounts and always bring a shopping list."
+            },
+            {
+                id: 25,
+                category: "Meals & Grocery Shopping",
+                question: "What is a favorite dish that your whole family loves?",
+                words: [
+                    { en: "homemade pizza", es: "pizza casera" },
+                    { en: "asado", es: "asado" },
+                    { en: "stew (guiso)", es: "guiso" },
+                    { en: "tasty", es: "rico / sabroso" }
+                ],
+                starter: "Our family favorite dish is homemade pizza on Friday night."
+            },
+            {
+                id: 26,
+                category: "Meals & Grocery Shopping",
+                question: "Do you order takeaway food when you don't want to cook?",
+                words: [
+                    { en: "takeaway food", es: "comida para llevar / delivery" },
+                    { en: "delivery app", es: "aplicación de delivery" },
+                    { en: "empanadas", es: "empanadas" },
+                    { en: "treat", es: "gusto / premio" }
+                ],
+                starter: "Yes, we order empanadas by delivery app on busy days."
+            },
+            {
+                id: 27,
+                category: "Meals & Grocery Shopping",
+                question: "What fruits and vegetables do you buy every week?",
+                words: [
+                    { en: "apples and bananas", es: "manzanas y bananas" },
+                    { en: "tomatoes and lettuce", es: "tomates y lechuga" },
+                    { en: "potatoes", es: "papas" },
+                    { en: "fresh produce", es: "productos frescos" }
+                ],
+                starter: "I always buy apples, bananas, tomatoes, and potatoes."
+            },
+            {
+                id: 28,
+                category: "Meals & Grocery Shopping",
+                question: "What time does your family usually have dinner?",
+                words: [
+                    { en: "late dinner", es: "cena tardía" },
+                    { en: "around 9 PM", es: "alrededor de las 9 PM" },
+                    { en: "together at table", es: "juntos en la mesa" },
+                    { en: "talk about day", es: "hablar del día" }
+                ],
+                starter: "We usually have dinner together around 9:00 PM."
+            },
+            {
+                id: 29,
+                category: "Meals & Grocery Shopping",
+                question: "Who washes the dishes after dinner?",
+                words: [
+                    { en: "wash dishes", es: "lavar los platos" },
+                    { en: "dishwasher", es: "lavavajillas" },
+                    { en: "take turns", es: "turnarse" },
+                    { en: "sponge and soap", es: "esponja y detergente" }
+                ],
+                starter: "My partner and I take turns to wash the dishes."
+            },
+            {
+                id: 30,
+                category: "Meals & Grocery Shopping",
+                question: "Do your kids like eating vegetables or are they picky?",
+                words: [
+                    { en: "picky eater", es: "mañoso/a con la comida" },
+                    { en: "healthy food", es: "comida saludable" },
+                    { en: "try new food", es: "probar comida nueva" },
+                    { en: "carrots", es: "zanahorias" }
+                ],
+                starter: "My daughter loves carrots, but my son is a bit picky with vegetables."
+            },
+
+            // 4. Kids' Activities & Homework (10 Cards)
+            {
+                id: 31,
+                category: "Kids' Activities & Homework",
+                question: "How do you help your children with their English or Math homework?",
+                words: [
+                    { en: "explain exercise", es: "explicar ejercicio" },
+                    { en: "patience", es: "paciencia" },
+                    { en: "textbook", es: "libro de texto" },
+                    { en: "online video", es: "video de internet" }
+                ],
+                starter: "I sit with them and explain the exercises patiently."
+            },
+            {
+                id: 32,
+                category: "Kids' Activities & Homework",
+                question: "What after-school activities do your kids do?",
+                words: [
+                    { en: "football (soccer)", es: "fútbol" },
+                    { en: "swimming", es: "natación" },
+                    { en: "dance class", es: "clase de danza" },
+                    { en: "English academy", es: "instituto de inglés" }
+                ],
+                starter: "My son plays football and my daughter goes to swimming classes."
+            },
+            {
+                id: 33,
+                category: "Kids' Activities & Homework",
+                question: "How much screen time (TV or tablet) do your kids have per day?",
+                words: [
+                    { en: "screen time", es: "tiempo de pantalla" },
+                    { en: "one hour", es: "una hora" },
+                    { en: "play video games", es: "jugar videojuegos" },
+                    { en: "limit", es: "límite" }
+                ],
+                starter: "I limit their screen time to one hour after finishing homework."
+            },
+            {
+                id: 34,
+                category: "Kids' Activities & Homework",
+                question: "Do you read bedtime stories to your kids before sleeping?",
+                words: [
+                    { en: "bedtime story", es: "cuento para dormir" },
+                    { en: "read a book", es: "leer un libro" },
+                    { en: "turn off lights", es: "apagar las luces" },
+                    { en: "relax", es: "relajarse" }
+                ],
+                starter: "Yes, we read a short story book every night before sleep."
+            },
+            {
+                id: 35,
+                category: "Kids' Activities & Homework",
+                question: "What games do your children like playing indoors?",
+                words: [
+                    { en: "board games", es: "juegos de mesa" },
+                    { en: "lego blocks", es: "bloques lego" },
+                    { en: "drawing / coloring", es: "dibujar / colorear" },
+                    { en: "hide and seek", es: "escondidas" }
+                ],
+                starter: "They love playing board games like UNO or building Lego blocks."
+            },
+            {
+                id: 36,
+                category: "Kids' Activities & Homework",
+                question: "How do you manage children's birthday parties?",
+                words: [
+                    { en: "birthday party", es: "fiesta de cumpleaños" },
+                    { en: "event salon (salón)", es: "salón de fiestas" },
+                    { en: "invitations", es: "invitaciones" },
+                    { en: "cake", es: "torta" }
+                ],
+                starter: "We invite close friends to our house or rent a small party room."
+            },
+            {
+                id: 37,
+                category: "Kids' Activities & Homework",
+                question: "What do you do when your children argue or fight?",
+                words: [
+                    { en: "argue", es: "discutir" },
+                    { en: "share toys", es: "compartir juguetes" },
+                    { en: "talk calmly", es: "hablar con calma" },
+                    { en: "take a break", es: "hacer una pausa" }
+                ],
+                starter: "I tell them to talk calmly and share their toys."
+            },
+            {
+                id: 38,
+                category: "Kids' Activities & Homework",
+                question: "Is it difficult to organize study time before school exams?",
+                words: [
+                    { en: "school exams", es: "exámenes escolares" },
+                    { en: "study plan", es: "plan de estudio" },
+                    { en: "practice exercises", es: "ejercicios de práctica" },
+                    { en: "focus", es: "concentrarse" }
+                ],
+                starter: "Yes, it is hard to keep them focused for more than 30 minutes."
+            },
+            {
+                id: 39,
+                category: "Kids' Activities & Homework",
+                question: "Do your kids like outdoor sports in the park?",
+                words: [
+                    { en: "ride a bicycle", es: "andar en bicicleta" },
+                    { en: "roller skates", es: "patines" },
+                    { en: "playground", es: "juegos del parque" },
+                    { en: "fresh air", es: "aire fresco" }
+                ],
+                starter: "Yes! They love riding bicycles and playing at the playground."
+            },
+            {
+                id: 40,
+                category: "Kids' Activities & Homework",
+                question: "What do your children want to be when they grow up?",
+                words: [
+                    { en: "grow up", es: "crecer" },
+                    { en: "doctor", es: "médico/a" },
+                    { en: "footballer", es: "futbolista" },
+                    { en: "teacher", es: "profesor/a" }
+                ],
+                starter: "My son wants to be a professional footballer!"
+            },
+
+            // 5. Health, Doctor & Free Time (10 Cards)
+            {
+                id: 41,
+                category: "Health, Doctor & Free Time",
+                question: "Where is the nearest pediatric clinic or health center?",
+                words: [
+                    { en: "pediatrician", es: "pediatra" },
+                    { en: "health clinic (obra social)", es: "clínica / centro de salud" },
+                    { en: "emergency room", es: "guardia médica" },
+                    { en: "close to home", es: "cerca de casa" }
+                ],
+                starter: "The nearest pediatric center is five blocks from our house."
+            },
+            {
+                id: 42,
+                category: "Health, Doctor & Free Time",
+                question: "How do you book a medical appointment for your child?",
+                words: [
+                    { en: "book appointment", es: "sacar turno" },
+                    { en: "medical app", es: "aplicación médica" },
+                    { en: "phone call", es: "llamada telefónica" },
+                    { en: "check-up", es: "control médico" }
+                ],
+                starter: "I book medical appointments using my medical insurance app."
+            },
+            {
+                id: 43,
+                category: "Health, Doctor & Free Time",
+                question: "What do you do for exercise or health care in your free time?",
+                words: [
+                    { en: "go to the gym", es: "ir al gimnasio" },
+                    { en: "go for a walk", es: "salir a caminar" },
+                    { en: "drink water", es: "tomar agua" },
+                    { en: "stretch", es: "estirar" }
+                ],
+                starter: "I try to go for a 30-minute walk three times a week."
+            },
+            {
+                id: 44,
+                category: "Health, Doctor & Free Time",
+                question: "What is your favorite activity when you have 1 hour of quiet time?",
+                words: [
+                    { en: "watch a series", es: "mirar una serie" },
+                    { en: "read a book", es: "leer un libro" },
+                    { en: "drink warm mate", es: "tomar mate caliente" },
+                    { en: "listen to music", es: "escuchar música" }
+                ],
+                starter: "I love drinking warm mate and watching a TV series in silence."
+            },
+            {
+                id: 45,
+                category: "Health, Doctor & Free Time",
+                question: "How do you feel when you get a sudden call from school?",
+                words: [
+                    { en: "worried", es: "preocupado/a" },
+                    { en: "nervous", es: "nervioso/a" },
+                    { en: "stomach pain", es: "dolor de panza" },
+                    { en: "minor injury", es: "golpe menor" }
+                ],
+                starter: "I feel a bit nervous, but usually it is just a minor issue."
+            },
+            {
+                id: 46,
+                category: "Health, Doctor & Free Time",
+                question: "Do you keep a basic medicine box at home?",
+                words: [
+                    { en: "medicine cabinet", es: "botiquín" },
+                    { en: "thermometer", es: "termómetro" },
+                    { en: "ibuprofen syrup", es: "jarabe de ibuprofeno" },
+                    { en: "bandages", es: "curitas / vendas" }
+                ],
+                starter: "Yes, I have ibuprofen syrup, a thermometer, and bandages."
+            },
+            {
+                id: 47,
+                category: "Health, Doctor & Free Time",
+                question: "How many hours of sleep do you get on a normal night?",
+                words: [
+                    { en: "seven hours", es: "siete horas" },
+                    { en: "sleep well", es: "dormir bien" },
+                    { en: "wake up during night", es: "despertarse a la noche" },
+                    { en: "rested", es: "descansado/a" }
+                ],
+                starter: "I usually sleep around 6 or 7 hours every night."
+            },
+            {
+                id: 48,
+                category: "Health, Doctor & Free Time",
+                question: "What do you do to reduce stress after a tough week?",
+                words: [
+                    { en: "reduce stress", es: "reducir el estrés" },
+                    { en: "chat with friends", es: "charlar con amigos" },
+                    { en: "take a shower", es: "tomar una ducha" },
+                    { en: "nature walk", es: "caminata al aire libre" }
+                ],
+                starter: "I chat with friends and go for a walk in the park."
+            },
+            {
+                id: 49,
+                category: "Health, Doctor & Free Time",
+                question: "Do you take your children for their annual dentist check-up?",
+                words: [
+                    { en: "dentist", es: "dentista" },
+                    { en: "teeth cleaning", es: "limpieza dental" },
+                    { en: "cavities", es: "caries" },
+                    { en: "annual check-up", es: "control anual" }
+                ],
+                starter: "Yes, we visit the pediatric dentist twice a year."
+            },
+            {
+                id: 50,
+                category: "Health, Doctor & Free Time",
+                question: "What podcasts or music do you listen to during travel time?",
+                words: [
+                    { en: "rock music", es: "música rock" },
+                    { en: "radio station", es: "estación de radio" },
+                    { en: "headphones", es: "auriculares" },
+                    { en: "relaxing music", es: "música relajante" }
+                ],
+                starter: "I listen to national Argentine rock music on the colectivo."
+            },
+
+            // 6. Weekends & Family Time (10 Cards)
+            {
+                id: 51,
+                category: "Weekends & Family Time",
+                question: "What is your favorite Sunday family activity?",
+                words: [
+                    { en: "Sunday asado", es: "asado del domingo" },
+                    { en: "visit grandparents", es: "visitar a los abuelos" },
+                    { en: "go to the plaza", es: "ir a la plaza" },
+                    { en: "eat ice cream", es: "comer helado" }
+                ],
+                starter: "Our favorite Sunday activity is having asado with grandparents."
+            },
+            {
+                id: 52,
+                category: "Weekends & Family Time",
+                question: "Who is the main asador (grill master) in your house?",
+                words: [
+                    { en: "grill / charcoal", es: "parrilla / carbón" },
+                    { en: "asador master", es: "maestro asador" },
+                    { en: "chimichurri sauce", es: "salsa chimichurri" },
+                    { en: "salads", es: "ensaladas" }
+                ],
+                starter: "My partner (or my father) is the main asador in our house!"
+            },
+            {
+                id: 53,
+                category: "Weekends & Family Time",
+                question: "Do you visit the local plaza or park on Saturday afternoons?",
+                words: [
+                    { en: "local park", es: "parque local / plaza" },
+                    { en: "mate set", es: "equipo de mate" },
+                    { en: "playground", es: "juegos infantiles" },
+                    { en: "sunny day", es: "día soleado" }
+                ],
+                starter: "Yes, on sunny Saturdays we take our mate set and go to the plaza."
+            },
+            {
+                id: 54,
+                category: "Weekends & Family Time",
+                question: "Where do you go when you take a short weekend road trip?",
+                words: [
+                    { en: "short road trip", es: "escapada de fin de semana" },
+                    { en: "nearby town", es: "pueblo cercano" },
+                    { en: "river / lake", es: "río / lago" },
+                    { en: "countryside", es: "campo" }
+                ],
+                starter: "We like taking a short trip to a quiet river spot near our city."
+            },
+            {
+                id: 55,
+                category: "Weekends & Family Time",
+                question: "What time do you wake up on Sunday morning?",
+                words: [
+                    { en: "sleep late", es: "dormir hasta tarde" },
+                    { en: "relaxed morning", es: "mañana relajada" },
+                    { en: "pajamas", es: "pijama" },
+                    { en: "facturas (pastries)", es: "facturas" }
+                ],
+                starter: "We sleep late and wake up around 9:30 AM in our pajamas."
+            },
+            {
+                id: 56,
+                category: "Weekends & Family Time",
+                question: "Do you buy facturas (pastries) on Sunday morning?",
+                words: [
+                    { en: "bakery", es: "panadería" },
+                    { en: "medialunas", es: "medialunas" },
+                    { en: "dulce de leche", es: "dulce de leche" },
+                    { en: "hot mate", es: "mate caliente" }
+                ],
+                starter: "Yes, I go to the local bakery and buy medialunas for breakfast."
+            },
+            {
+                id: 57,
+                category: "Weekends & Family Time",
+                question: "How do you organize cleaning the house on weekends?",
+                words: [
+                    { en: "clean the house", es: "limpiar la casa" },
+                    { en: "do laundry", es: "lavar la ropa" },
+                    { en: "teamwork", es: "trabajo en equipo" },
+                    { en: "vacuum / sweep", es: "pasar la aspiradora / barrer" }
+                ],
+                starter: "We all clean together on Saturday morning so Sunday is free."
+            },
+            {
+                id: 58,
+                category: "Weekends & Family Time",
+                question: "Do your children meet their cousins on the weekend?",
+                words: [
+                    { en: "cousins", es: "primos" },
+                    { en: "uncles and aunts", es: "tíos y tías" },
+                    { en: "family gathering", es: "reunión familiar" },
+                    { en: "play together", es: "jugar juntos" }
+                ],
+                starter: "Yes, they love playing with their cousins at their aunt's house."
+            },
+            {
+                id: 59,
+                category: "Weekends & Family Time",
+                question: "What movies do you watch together as a family?",
+                words: [
+                    { en: "animated movie", es: "película animada" },
+                    { en: "popcorn", es: "pochoclos" },
+                    { en: "sofa / couch", es: "sillón / sofá" },
+                    { en: "family film", es: "película familiar" }
+                ],
+                starter: "We make popcorn and watch animated movies on the couch."
+            },
+            {
+                id: 60,
+                category: "Weekends & Family Time",
+                question: "How do you feel on Sunday night before starting the work week?",
+                words: [
+                    { en: "ready for week", es: "listo/a para la semana" },
+                    { en: "a bit tired", es: "un poco cansado/a" },
+                    { en: "prepare clothes", es: "preparar la ropa" },
+                    { en: "grateful", es: "agradecido/a" }
+                ],
+                starter: "I feel grateful for family time and prepare school backpacks for Monday."
+            }
+        ];
+
+        const CATEGORIES = [
+            "All Categories",
+            "Morning Routine & School Runs",
+            "Work & Schedule Balance",
+            "Meals & Grocery Shopping",
+            "Kids' Activities & Homework",
+            "Health, Doctor & Free Time",
+            "Weekends & Family Time"
+        ];
+    </script>
+
+    <script>
+        // State variables
+        let currentCategory = "All Categories";
+        let searchQuery = "";
+        let showOnlyMastered = false;
+        let viewMode = "single"; // "single" or "grid"
+        let currentSingleIndex = 0;
+        let cardsData = [...FLASHCARDS_DATA];
+
+        // Mastered LocalStorage
+        let masteredCardIds = new Set(JSON.parse(localStorage.getItem("parents_mastered_cards") || "[]"));
+
+        // Elements
+        const categoryFiltersContainer = document.getElementById("category-filters");
+        const searchInput = document.getElementById("search-input");
+        const shuffleBtn = document.getElementById("shuffle-btn");
+        const toggleFilterMasteredBtn = document.getElementById("toggle-filter-mastered");
+        const masteredFilterLabel = document.getElementById("mastered-filter-label");
+        const progressText = document.getElementById("progress-text");
+        const progressBar = document.getElementById("progress-bar");
+        const resetProgressBtn = document.getElementById("reset-progress-btn");
+
+        const viewSingleBtn = document.getElementById("view-single-btn");
+        const viewGridBtn = document.getElementById("view-grid-btn");
+        const singleViewContainer = document.getElementById("single-view-container");
+        const gridViewContainer = document.getElementById("grid-view-container");
+        const emptyState = document.getElementById("empty-state");
+
+        const singleCardInner = document.getElementById("single-card-inner");
+        const prevCardBtn = document.getElementById("prev-card-btn");
+        const nextCardBtn = document.getElementById("next-card-btn");
+        const cardCounter = document.getElementById("card-counter");
+
+        // Speech Synthesis setup
+        const synth = window.speechSynthesis;
+
+        function speakText(text) {
+            if (!synth) {
+                alert("Text-to-speech is not supported in this browser.");
+                return;
+            }
+            synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = "en-US";
+            utterance.rate = 0.85; // Slightly relaxed speech rate for learners
+            synth.speak(utterance);
+        }
+
+        function initApp() {
+            renderCategoryButtons();
+            updateProgress();
+            renderViews();
+
+            // Event Listeners
+            searchInput.addEventListener("input", (e) => {
+                searchQuery = e.target.value.toLowerCase().trim();
+                currentSingleIndex = 0;
+                renderViews();
+            });
+
+            shuffleBtn.addEventListener("click", () => {
+                shuffleArray(cardsData);
+                currentSingleIndex = 0;
+                renderViews();
+            });
+
+            toggleFilterMasteredBtn.addEventListener("click", () => {
+                showOnlyMastered = !showOnlyMastered;
+                masteredFilterLabel.textContent = showOnlyMastered ? "Mastered Only" : "Show All";
+                toggleFilterMasteredBtn.classList.toggle("bg-emerald-500/20", showOnlyMastered);
+                toggleFilterMasteredBtn.classList.toggle("border-emerald-500/50", showOnlyMastered);
+                currentSingleIndex = 0;
+                renderViews();
+            });
+
+            resetProgressBtn.addEventListener("click", () => {
+                if (confirm("Reset all mastered flashcards progress?")) {
+                    masteredCardIds.clear();
+                    saveMasteredState();
+                    updateProgress();
+                    renderViews();
+                }
+            });
+
+            viewSingleBtn.addEventListener("click", () => setViewMode("single"));
+            viewGridBtn.addEventListener("click", () => setViewMode("grid"));
+
+            prevCardBtn.addEventListener("click", () => navigateSingle(-1));
+            nextCardBtn.addEventListener("click", () => navigateSingle(1));
+
+            lucide.createIcons();
+        }
+
+        function setViewMode(mode) {
+            viewMode = mode;
+            if (mode === "single") {
+                viewSingleBtn.className = "p-1.5 rounded-lg text-amber-400 bg-slate-700 transition-colors";
+                viewGridBtn.className = "p-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-colors";
+                singleViewContainer.classList.remove("hidden");
+                gridViewContainer.classList.add("hidden");
+            } else {
+                viewGridBtn.className = "p-1.5 rounded-lg text-amber-400 bg-slate-700 transition-colors";
+                viewSingleBtn.className = "p-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-colors";
+                singleViewContainer.classList.add("hidden");
+                gridViewContainer.classList.remove("hidden");
+            }
+            renderViews();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function saveMasteredState() {
+            localStorage.setItem("parents_mastered_cards", JSON.stringify([...masteredCardIds]));
+        }
+
+        function updateProgress() {
+            const total = FLASHCARDS_DATA.length;
+            const count = masteredCardIds.size;
+            const percentage = Math.round((count / total) * 100);
+            
+            progressText.textContent = `${count}/${total} Cards`;
+            progressBar.style.width = `${percentage}%`;
+        }
+
+        function getFilteredCards() {
+            return cardsData.filter(card => {
+                const matchesCategory = (currentCategory === "All Categories") || (card.category === currentCategory);
+                
+                const matchesSearch = searchQuery === "" || 
+                    card.question.toLowerCase().includes(searchQuery) ||
+                    card.starter.toLowerCase().includes(searchQuery) ||
+                    card.hint.toLowerCase().includes(searchQuery) ||
+                    card.words.some(w => w.en.toLowerCase().includes(searchQuery) || w.es.toLowerCase().includes(searchQuery));
+
+                const matchesMastered = !showOnlyMastered || masteredCardIds.has(card.id);
+
+                return matchesCategory && matchesSearch && matchesMastered;
+            });
+        }
+
+        function renderCategoryButtons() {
+            categoryFiltersContainer.innerHTML = CATEGORIES.map(cat => {
+                const isActive = cat === currentCategory;
+                const activeClasses = isActive 
+                    ? "bg-amber-500 text-slate-950 font-bold shadow-lg shadow-amber-500/20" 
+                    : "bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800";
+                return `
+                    <button 
+                        onclick="selectCategory('${cat}')" 
+                        class="px-3.5 py-1.5 rounded-xl transition-all whitespace-nowrap text-xs font-medium ${activeClasses}">
+                        ${cat}
+                    </button>
+                `;
+            }).join("");
+        }
+
+        window.selectCategory = function(cat) {
+            currentCategory = cat;
+            currentSingleIndex = 0;
+            renderCategoryButtons();
+            renderViews();
+        }
+
+        function navigateSingle(direction) {
+            const filtered = getFilteredCards();
+            if (filtered.length === 0) return;
+
+            currentSingleIndex = (currentSingleIndex + direction + filtered.length) % filtered.length;
+            renderSingleCard(filtered);
+        }
+
+        function renderViews() {
+            const filtered = getFilteredCards();
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove("hidden");
+                singleViewContainer.classList.add("hidden");
+                gridViewContainer.classList.add("hidden");
+                return;
+            } else {
+                emptyState.classList.add("hidden");
+                if (viewMode === "single") singleViewContainer.classList.remove("hidden");
+                if (viewMode === "grid") gridViewContainer.classList.remove("hidden");
+            }
+
+            if (currentSingleIndex >= filtered.length) {
+                currentSingleIndex = 0;
+            }
+
+            renderSingleCard(filtered);
+            renderGridCards(filtered);
+        }
+
+        function renderSingleCard(filtered) {
+            const card = filtered[currentSingleIndex];
+            const isMastered = masteredCardIds.has(card.id);
+
+            cardCounter.textContent = `Card ${currentSingleIndex + 1} of ${filtered.length}`;
+
+            singleCardInner.className = "relative w-full h-full duration-500 transform-style-3d cursor-pointer group";
+
+            singleCardInner.innerHTML = `
+                <!-- FRONT OF CARD -->
+                <div class="absolute inset-0 w-full h-full bg-slate-900 border ${isMastered ? 'border-emerald-500/60' : 'border-slate-800'} rounded-3xl p-6 flex flex-col justify-between backface-hidden shadow-2xl hover:border-amber-500/50 transition-colors">
+                    
+                    <!-- Header -->
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="text-[11px] font-mono px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-semibold">
+                            ${card.category}
+                        </span>
+                        
+                        <div class="flex items-center gap-2" onclick="event.stopPropagation()">
+                            <button 
+                                onclick="toggleMastered(${card.id})" 
+                                class="p-2 rounded-xl transition-colors ${isMastered ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 hover:text-slate-300 bg-slate-800'}" 
+                                title="${isMastered ? 'Mark as learning' : 'Mark as mastered'}">
+                                <i data-lucide="${isMastered ? 'check-circle-2' : 'circle'}" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question Content -->
+                    <div class="my-auto text-center px-2 py-2">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-mono mb-2">Daily Life Question</p>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-white leading-snug">
+                            "${card.question}"
+                        </h2>
+                        <p class="text-xs text-amber-200/80 mt-3 italic">
+                            💡 ${card.hint}
+                        </p>
+                    </div>
+
+                    <!-- Card Front Footer -->
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-800 text-xs text-slate-400">
+                        <button 
+                            onclick="event.stopPropagation(); speakText('${card.question.replace(/'/g, "\\'")}')" 
+                            class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition-colors font-medium">
+                            <i data-lucide="volume-2" class="w-4 h-4"></i>
+                            <span>Listen</span>
+                        </button>
+                        <span class="text-slate-500 flex items-center gap-1.5 text-xs font-medium">
+                            Click to see answer <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- BACK OF CARD -->
+                <div class="absolute inset-0 w-full h-full bg-slate-900 border border-amber-500/40 rounded-3xl p-6 flex flex-col justify-between backface-hidden rotate-y-180 shadow-2xl bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950">
+                    
+                    <!-- Words Section -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono uppercase tracking-wider text-amber-400 flex items-center gap-1 font-semibold">
+                                <i data-lucide="book-open" class="w-4 h-4"></i> Useful Vocabulary
+                            </span>
+                            <span class="text-[10px] text-slate-500 font-mono">A2 Level</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            ${card.words.map(w => `
+                                <div class="bg-slate-800/80 border border-slate-700/60 p-2 rounded-xl text-xs">
+                                    <div class="font-bold text-slate-100">${w.en}</div>
+                                    <div class="text-[11px] text-amber-300/90 font-medium">${w.es}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Sentence Starter Section -->
+                    <div class="bg-slate-800/50 border border-amber-500/20 rounded-2xl p-3.5 my-2">
+                        <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wide block mb-1 font-semibold">
+                            How to start your answer:
+                        </span>
+                        <p class="text-xs sm:text-sm text-slate-100 font-medium leading-relaxed">
+                            "${card.starter}"
+                        </p>
+                    </div>
+
+                    <!-- Card Back Footer -->
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs text-slate-400" onclick="event.stopPropagation()">
+                        <button 
+                            onclick="speakText('${card.starter.replace(/'/g, "\\'")}')" 
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors font-medium">
+                            <i data-lucide="volume-2" class="w-4 h-4"></i>
+                            <span>Listen Answer</span>
+                        </button>
+
+                        <button 
+                            onclick="flipSingleCard()" 
+                            class="text-slate-400 hover:text-slate-200 text-xs flex items-center gap-1 py-1.5 px-2.5 rounded-xl bg-slate-800">
+                            <span>Flip back</span>
+                            <i data-lucide="undo-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+
+                </div>
+            `;
+
+            // Reset flip state when card renders
+            singleCardInner.classList.remove("rotate-y-180");
+
+            // Click listener for card flip
+            singleCardInner.onclick = () => {
+                singleCardInner.classList.toggle("rotate-y-180");
+            };
+
+            lucide.createIcons();
+        }
+
+        window.flipSingleCard = function() {
+            singleCardInner.classList.toggle("rotate-y-180");
+        }
+
+        function renderGridCards(filtered) {
+            gridViewContainer.innerHTML = "";
+
+            filtered.forEach(card => {
+                const isMastered = masteredCardIds.has(card.id);
+                const cardEl = document.createElement("div");
+                cardEl.className = "perspective-1000 h-[380px] w-full";
+
+                cardEl.innerHTML = `
+                    <div id="grid-card-inner-${card.id}" class="relative w-full h-full duration-500 transform-style-3d cursor-pointer group">
+                        
+                        <!-- FRONT OF CARD -->
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border ${isMastered ? 'border-emerald-500/60' : 'border-slate-800'} rounded-2xl p-5 flex flex-col justify-between backface-hidden shadow-xl hover:border-amber-500/50 transition-colors">
+                            
+                            <!-- Card Header -->
+                            <div class="flex items-start justify-between gap-2">
+                                <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-slate-800 text-amber-300 border border-slate-700 font-semibold">
+                                    ${card.category}
+                                </span>
+                                
+                                <button 
+                                    onclick="event.stopPropagation(); toggleMastered(${card.id})" 
+                                    class="p-1.5 rounded-lg transition-colors ${isMastered ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 hover:text-slate-300 bg-slate-800'}" 
+                                    title="${isMastered ? 'Mark as learning' : 'Mark as mastered'}">
+                                    <i data-lucide="${isMastered ? 'check-circle-2' : 'circle'}" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+
+                            <!-- Question Content -->
+                            <div class="my-auto py-2 text-center px-1">
+                                <h3 class="text-base font-bold text-slate-100 leading-snug">
+                                    "${card.question}"
+                                </h3>
+                                <p class="text-[11px] text-amber-200/70 mt-2 italic">
+                                    ${card.hint}
+                                </p>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="flex items-center justify-between pt-2.5 border-t border-slate-800 text-xs text-slate-400">
+                                <button 
+                                    onclick="event.stopPropagation(); speakText('${card.question.replace(/'/g, "\\'")}')" 
+                                    class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition-colors text-[11px]">
+                                    <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+                                    <span>Listen</span>
+                                </button>
+                                <span class="text-slate-500 text-[10px] flex items-center gap-1">
+                                    Flip <i data-lucide="rotate-cw" class="w-3 h-3"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- BACK OF CARD -->
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border border-amber-500/40 rounded-2xl p-4 flex flex-col justify-between backface-hidden rotate-y-180 shadow-2xl">
+                            
+                            <div class="space-y-2">
+                                <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-semibold block">
+                                    Useful Vocabulary
+                                </span>
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    ${card.words.map(w => `
+                                        <div class="bg-slate-800 p-1.5 rounded-lg text-[11px]">
+                                            <div class="font-bold text-slate-200">${w.en}</div>
+                                            <div class="text-amber-300/80 text-[10px]">${w.es}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800/60 border border-amber-500/20 rounded-xl p-2.5 my-1">
+                                <span class="text-[9px] font-mono text-emerald-400 uppercase tracking-wide block mb-0.5">
+                                    Start Answer:
+                                </span>
+                                <p class="text-xs text-slate-200 font-medium">
+                                    "${card.starter}"
+                                </p>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-[11px]" onclick="event.stopPropagation()">
+                                <button 
+                                    onclick="speakText('${card.starter.replace(/'/g, "\\'")}')" 
+                                    class="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20">
+                                    <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+                                    <span>Listen</span>
+                                </button>
+                                <button 
+                                    onclick="flipGridCard(${card.id})" 
+                                    class="text-slate-400 hover:text-slate-200 px-2 py-1 bg-slate-800 rounded-lg">
+                                    Back
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+
+                const gridInner = cardEl.querySelector(`#grid-card-inner-${card.id}`);
+                cardEl.addEventListener("click", () => {
+                    gridInner.classList.toggle("rotate-y-180");
+                });
+
+                gridViewContainer.appendChild(cardEl);
+            });
+
+            lucide.createIcons();
+        }
+
+        window.flipGridCard = function(id) {
+            const gridInner = document.getElementById(`grid-card-inner-${id}`);
+            if (gridInner) {
+                gridInner.classList.toggle("rotate-y-180");
+            }
+        }
+
+        window.toggleMastered = function(id) {
+            if (masteredCardIds.has(id)) {
+                masteredCardIds.delete(id);
+            } else {
+                masteredCardIds.add(id);
+            }
+            saveMasteredState();
+            updateProgress();
+            renderViews();
+        }
+
+        window.onload = function() {
+            initApp();
+        };
+    </script>
+</body>
+</html>

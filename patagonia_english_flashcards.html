@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2 English Speaking Flashcards - Patagonia Edition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .perspective {
+      perspective: 1000px;
+    }
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 font-sans flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="bg-teal-700 text-white shadow-md py-4 px-6">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold flex items-center gap-2">
+          <i class="fa-solid fa-mountain-sun"></i> Patagonia A2 Conversation Flashcards
+        </h1>
+        <p class="text-teal-100 text-xs md:text-sm">Designed for adult learners in Argentina</p>
+      </div>
+      <div id="counter" class="bg-teal-800 px-3 py-1 rounded-full text-xs font-semibold tracking-wider">
+        1 / 60
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-3xl w-full mx-auto px-4 py-6 flex-grow flex flex-col items-center justify-center">
+    
+    <!-- Category Filter -->
+    <div class="w-full mb-4 flex flex-wrap gap-2 justify-center">
+      <select id="categorySelect" class="bg-white border border-slate-300 text-slate-700 py-2 px-4 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 w-full sm:w-auto">
+        <option value="all">All Categories (60 Questions)</option>
+        <option value="routine">1. Daily Life & Patagonia Routine</option>
+        <option value="food">2. Food, Traditions & Social Life</option>
+        <option value="memories">3. Memories & Past Experiences</option>
+        <option value="tech">4. Modern Life, Tech & Work</option>
+        <option value="travel">5. Travel, Nature & Future Plans</option>
+        <option value="dilemmas">6. Personal Tastes & Dilemmas</option>
+      </select>
+      
+      <button id="shuffleBtn" class="bg-amber-600 hover:bg-amber-700 text-white py-2 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center gap-2 transition">
+        <i class="fa-solid fa-shuffle"></i> Shuffle
+      </button>
+    </div>
+
+    <!-- Flashcard Container -->
+    <div class="w-full perspective min-h-[380px] sm:min-h-[340px]">
+      <div id="flashcard" class="relative w-full h-full min-h-[380px] sm:min-h-[340px] transform-style-3d transition-transform duration-500 cursor-pointer shadow-xl rounded-2xl bg-white border border-slate-200">
+        
+        <!-- FRONT (Question) -->
+        <div class="absolute inset-0 w-full h-full backface-hidden rounded-2xl p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-white to-slate-50">
+          <div>
+            <div class="flex justify-between items-start mb-4">
+              <span id="cardCategory" class="text-xs font-bold uppercase tracking-wider text-teal-600 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200">
+                Category
+              </span>
+              <button id="speakFrontBtn" class="text-slate-400 hover:text-teal-600 p-2 text-lg transition" title="Listen to question">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+            
+            <h2 id="cardQuestion" class="text-xl sm:text-2xl font-bold text-slate-800 leading-relaxed mt-2">
+              Question goes here...
+            </h2>
+          </div>
+
+          <div class="pt-4 border-t border-slate-100 flex justify-between items-center text-xs text-slate-400">
+            <span><i class="fa-solid fa-hand-pointer mr-1"></i> Click anywhere to flip for key vocabulary</span>
+            <span class="font-semibold text-teal-600">FRONT</span>
+          </div>
+        </div>
+
+        <!-- BACK (Vocabulary Prompts) -->
+        <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-2xl p-6 sm:p-8 flex flex-col justify-between bg-slate-900 text-white">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-400 bg-amber-950/80 px-2.5 py-1 rounded-md border border-amber-800">
+                Suggested Vocabulary
+              </span>
+              <span class="text-xs text-slate-400">Words to include in your answer:</span>
+            </div>
+
+            <!-- Vocabulary Chips -->
+            <div id="vocabList" class="flex flex-wrap gap-2 my-4">
+              <!-- Vocab tags injected via JS -->
+            </div>
+
+            <div class="mt-4 bg-slate-800/80 p-3 rounded-lg border border-slate-700">
+              <p class="text-xs text-slate-300 italic">
+                <i class="fa-regular fa-lightbulb text-amber-400 mr-1"></i> 
+                <strong>Teacher Tip:</strong> Challenge students to use at least 2 of these words plus <em>"because..."</em> in their answer.
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+            <span><i class="fa-solid fa-rotate-left mr-1"></i> Click to flip back to question</span>
+            <span class="font-semibold text-amber-400">BACK</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="flex items-center justify-between w-full mt-6 px-2">
+      <button id="prevBtn" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-semibold py-2.5 px-5 rounded-xl shadow-sm flex items-center gap-2 transition disabled:opacity-40 disabled:cursor-not-allowed">
+        <i class="fa-solid fa-arrow-left"></i> Previous
+      </button>
+
+      <button id="flipBtn" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2.5 px-6 rounded-xl shadow-md transition flex items-center gap-2">
+        <i class="fa-solid fa-repeat"></i> Flip Card
+      </button>
+
+      <button id="nextBtn" class="bg-teal-700 hover:bg-teal-800 text-white font-semibold py-2.5 px-5 rounded-xl shadow-sm flex items-center gap-2 transition disabled:opacity-40 disabled:cursor-not-allowed">
+        Next <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-200 text-slate-600 text-center py-3 text-xs border-t border-slate-300">
+    Patagonia Adult Learners A2 Speaking Cards &bull; Designed for Conversational Fluency
+  </footer>
+
+  <script>
+    const flashcardsData = [
+      // Category 1: Routine
+      { category: "Daily Life & Routine", catKey: "routine", question: "How do you adapt your daily routine when the wind is very strong outside?", vocab: ["windy / gusts", "stay indoors", "close windows", "wear a heavy jacket", "avoid driving", "protect my eyes"] },
+      { category: "Daily Life & Routine", catKey: "routine", question: "What is your favorite season in Patagonia and why do you like it?", vocab: ["spring / autumn", "mild weather", "blooming flowers", "colorful trees", "less wind", "outdoor walks"] },
+      { category: "Daily Life & Routine", catKey: "routine", question: "How many cups of tea or mates do you drink on a cold winter day?", vocab: ["hot thermos", "bitter / sweet mate", "herbal tea", "keep warm", "drink regularly", "share with family"] },
+      { category: "Daily Life & Routine", catKey: "routine", question: "Do you prefer spending a quiet weekend at home or taking a road trip nearby?", vocab: ["relax at home", "scenic drive", "pack snacks", "peaceful countryside", "visit a nearby town", "avoid crowd"] },
+      { category: "Daily Life & Routine", catKey: "routine", question: "What do you usually do on a rainy afternoon in your town?", vocab: ["watch movies", "bake tortas fritas", "read a good book", "listen to the rain", "cozy atmosphere", "stay in bed"] },
+      { category: "Daily Life & Routine", catKey: "routine", question: "Is it easy or difficult to drive in your town during the winter?", vocab: ["icy roads", "frost / snow", "drive slowly", "be careful", "slippery asphalt", "clear windscreen"] },
+      { category: "Daily Life & Routine", catKey: "routine", question: "What time do you usually wake up on Sunday mornings?", vocab: ["sleep in", "early bird", "alarm clock", "slow breakfast", "stay in pajamas", "around 9 AM"] },
+      { category: "Daily Life & Routine", catKey: "routine", question: "Do you like doing outdoor activities like walking, fishing, or camping?", vocab: ["fresh air", "river bank", "hiking trail", "pack a tent", "nature lover", "peace and quiet"] },
+      { category: "Daily Life & Routine", catKey: "routine", question: "How do you prepare your home for the cold winter months?", vocab: ["gas heater / fireplace", "firewood", "check insulation", "warm blankets", "thermal curtains", "draft stopper"] },
+      { category: "Daily Life & Routine", catKey: "routine", question: "What is your favorite place in your region to relax for a few hours?", vocab: ["lake shore", "public park", "cozy café", "riverbank", "quiet spot", "beautiful view"] },
+
+      // Category 2: Food & Social
+      { category: "Food & Social Life", catKey: "food", question: "Who is the best asador in your family or group of friends?", vocab: ["firewood / charcoal", "slow cooking", "perfect meat", "chimichurri", "secret recipe", "grill master"] },
+      { category: "Food & Social Life", catKey: "food", question: "What special dish do you love to cook when you have guests at home?", vocab: ["homemade pasta", "lamb stew", "empanadas", "fresh salad", "cook with care", "host dinner"] },
+      { category: "Food & Social Life", catKey: "food", question: "Do you prefer buying food at big supermarkets or local corner shops?", vocab: ["convenient", "fresh produce", "support local business", "better prices", "friendly butcher", "quick errand"] },
+      { category: "Food & Social Life", catKey: "food", question: "What is your favorite sweet treat to have with mate or coffee in the afternoon?", vocab: ["pastries / facturas", "dulce de leche", "homemade cake", "scones", "biscuits", "sweet tooth"] },
+      { category: "Food & Social Life", catKey: "food", question: "Do you prefer eating home-cooked meals or going out to a restaurant?", vocab: ["healthier", "save money", "good service", "try new flavors", "no washing up", "family recipe"] },
+      { category: "Food & Social Life", catKey: "food", question: "How do you organize a Sunday asado with your family? Who helps you?", vocab: ["buy meat early", "prepare salads", "set the table", "share costs", "bring dessert", "spend hours together"] },
+      { category: "Food & Social Life", catKey: "food", question: "Do you like trying food from other countries, or do you prefer traditional Argentine food?", vocab: ["spicy food", "exotic flavors", "traditional dishes", "simple ingredients", "curious about culture", "stick to classics"] },
+      { category: "Food & Social Life", catKey: "food", question: "What do you usually cook when you don't have much time?", vocab: ["scrambled eggs", "quick omelet", "pasta with butter", "grilled chicken", "ready-made sauce", "simple meal"] },
+      { category: "Food & Social Life", catKey: "food", question: "What fruit or vegetable do you always have in your kitchen?", vocab: ["apples / pears", "onions / garlic", "potatoes", "fresh lemons", "tomatoes", "essential ingredient"] },
+      { category: "Food & Social Life", catKey: "food", question: "Do you like eating out at a local brewery or a quiet café?", vocab: ["craft beer", "artisan burgers", "warm coffee", "noisy atmosphere", "chat with friends", "relaxing music"] },
+
+      // Category 3: Memories
+      { category: "Memories & Past", catKey: "memories", question: "Where did you usually go on vacation when you were a child?", vocab: ["atlantic coast", "mountain cabin", "visit grandparents", "family car trips", "camp by the river", "simple times"] },
+      { category: "Memories & Past", catKey: "memories", question: "How was your town different 20 or 30 years ago compared to today?", vocab: ["dirt roads", "fewer inhabitants", "safer Streets", "more nature", "less traffic", "big changes"] },
+      { category: "Memories & Past", catKey: "memories", question: "What was your favorite song or band when you were 20 years old?", vocab: ["national rock", "folk music", "cassette tapes", "vinyl records", "dance halls", "nostalgic lyrics"] },
+      { category: "Memories & Past", catKey: "memories", question: "Did you have a favorite family tradition when you were growing up?", vocab: ["Sunday lunches", "holiday gatherings", "baking bread", "storytelling", "playing cards", "unforgettable moments"] },
+      { category: "Memories & Past", catKey: "memories", question: "What was your very first job, and what did you learn from it?", vocab: ["hard work", "first salary", "responsibility", "helpful boss", "young age", "valuable lesson"] },
+      { category: "Memories & Past", catKey: "memories", question: "Can you describe a memorable trip you took in Argentina?", vocab: ["long journey", "breathtaking scenery", "local culture", "friendly locals", "flat tire", "great memories"] },
+      { category: "Memories & Past", catKey: "memories", question: "How did people in your town communicate before smartphones existed?", vocab: ["landline telephone", "written letters", "visiting houses", "public phone booth", "patience", "face-to-face"] },
+      { category: "Memories & Past", catKey: "memories", question: "Did you play any games in the street with your neighbors when you were young?", vocab: ["hide and seek", "street soccer", "hopscotch", "ride bicycles", "until sunset", "safe neighborhood"] },
+      { category: "Memories & Past", catKey: "memories", question: "What is a happy memory you have from a winter holiday?", vocab: ["playing in the snow", "hot chocolate", "family board games", "cozy nights", "snowball fight", "warm stove"] },
+      { category: "Memories & Past", catKey: "memories", question: "Who was an important person or mentor in your youth?", vocab: ["school teacher", "wise grandparent", "older sibling", "kind neighbor", "give advice", "inspire me"] },
+
+      // Category 4: Tech & Work
+      { category: "Modern Life & Tech", catKey: "tech", question: "Do you use WhatsApp audio messages or do you prefer calling people?", vocab: ["voice notes", "direct call", "faster communication", "background noise", "type text", "convenient"] },
+      { category: "Modern Life & Tech", catKey: "tech", question: "What is the most useful app on your smartphone every day?", vocab: ["weather forecast", "online banking", "GPS navigation", "messaging app", "social media", "saves time"] },
+      { category: "Modern Life & Tech", catKey: "tech", question: "How many hours a day do you watch TV or videos on your phone?", vocab: ["evening news", "streaming series", "short clips", "screen time", "limit usage", "relaxing distraction"] },
+      { category: "Modern Life & Tech", catKey: "tech", question: "Do you like shopping online or do you prefer seeing the product in person first?", vocab: ["try it on", "delivery home", "touch the fabric", "secure payment", "compare prices", "store assistant"] },
+      { category: "Modern Life & Tech", catKey: "tech", question: "What is something modern that you find difficult or confusing to use?", vocab: ["digital passwords", "online bureaucracy", "touchscreens", "smart appliances", "ask for help", "complicated settings"] },
+      { category: "Modern Life & Tech", catKey: "tech", question: "Do you prefer working/doing chores in the morning or in the afternoon?", vocab: ["more energy", "fresh mind", "afternoon slump", "get it done early", "night owl", "daily checklist"] },
+      { category: "Modern Life & Tech", catKey: "tech", question: "How do you protect your eyes or skin when working outside in the sun or wind?", vocab: ["sunglasses", "sunscreen", "moisturizer", "cap / hat", "lip balm", "dry skin"] },
+      { category: "Modern Life & Tech", catKey: "tech", question: "Do you read the news on paper, on the internet, or watch it on TV?", vocab: ["newspaper headlines", "online portal", "TV news channel", "stay informed", "fake news", "morning routine"] },
+      { category: "Modern Life & Tech", catKey: "tech", question: "What is a good habit you started in the last few years?", vocab: ["drinking more water", "daily walking", "reading books", "sleeping early", "eating vegetables", "feeling better"] },
+      { category: "Modern Life & Tech", catKey: "tech", question: "How do you feel when you leave your mobile phone at home by mistake?", vocab: ["anxious / nervous", "relieved / free", "disconnected", "forgetful", "not a big deal", "go back to get it"] },
+
+      // Category 5: Travel & Future
+      { category: "Travel & Future Plans", catKey: "travel", question: "If you could travel to any place in Argentina next month, where would you go?", vocab: ["Iguazú Falls", "Salta & Jujuy", "Tierra del Fuego", "Mendoza wineries", "explore nature", "bucket list"] },
+      { category: "Travel & Future Plans", catKey: "travel", question: "Do you prefer going to the mountain/lake region or to the Atlantic coast?", vocab: ["fresh water lakes", "pine forests", "ocean waves", "sandy beaches", "mountain trail", "seafood vs trout"] },
+      { category: "Travel & Future Plans", catKey: "travel", question: "Are you planning any home improvements or garden projects this year?", vocab: ["paint walls", "plant flowers / trees", "build a deck", "renovate kitchen", "fix the roof", "DIY project"] },
+      { category: "Travel & Future Plans", catKey: "travel", question: "What is a place in the Patagonia region that you haven't visited yet?", vocab: ["Glacier Perito Moreno", "Bariloche", "Ruta 40", "Valdés Peninsula", "San Martín de los Andes", "plan a trip"] },
+      { category: "Travel & Future Plans", catKey: "travel", question: "What new skill or activity would you like to learn in the next two years?", vocab: ["speak fluent English", "gardening / pottery", "play an instrument", "woodworking", "photography", "take a course"] },
+      { category: "Travel & Future Plans", catKey: "travel", question: "Do you prefer traveling by car, bus, or airplane? Why?", vocab: ["stop anytime", "scenic view", "fast travel", "comfortable seats", "long distance", "fear of flying"] },
+      { category: "Travel & Future Plans", catKey: "travel", question: "What is the most beautiful lake or river you have ever seen?", vocab: ["crystal clear water", "turquoise colors", "surrounded by mountains", "peaceful nature", "unspoiled view", "cold water"] },
+      { category: "Travel & Future Plans", catKey: "travel", question: "Are you going to travel anywhere special for your next holidays?", vocab: ["family reunion", "rent a cabin", "book a hotel", "weekend getaway", "staycation", "going to visit..."] },
+      { category: "Travel & Future Plans", catKey: "travel", question: "If you win a free weekend at a spa or hotel, who are you taking with you?", vocab: ["my partner", "best friend", "my daughter/son", "enjoy massages", "relaxing jacuzzi", "deserve a break"] },
+      { category: "Travel & Future Plans", catKey: "travel", question: "What is a small personal dream you want to fulfill in the future?", vocab: ["write a book", "build a small greenhouse", "travel abroad", "learn to dance", "quiet life", "achieve a goal"] },
+
+      // Category 6: Personal Tastes
+      { category: "Personal Tastes & Dilemmas", catKey: "dilemmas", question: "Would you prefer a small house with a big garden or a big house with no garden?", vocab: ["plant vegetables", "outdoor space", "less cleaning", "cozy home", "mow the lawn", "have pets outside"] },
+      { category: "Personal Tastes & Dilemmas", catKey: "dilemmas", question: "Do you prefer living in a quiet small town or a big city with many activities?", vocab: ["peaceful streets", "know your neighbors", "cultural events", "traffic jams", "safety", "everything nearby"] },
+      { category: "Personal Tastes & Dilemmas", catKey: "dilemmas", question: "Is it better to wake up very early or to stay up late at night?", vocab: ["quiet morning", "productive early", "night energy", "watch midnight movies", "feel tired", "sleep routine"] },
+      { category: "Personal Tastes & Dilemmas", catKey: "dilemmas", question: "Do you prefer warm, hot summer days or fresh, cold winter days?", vocab: ["heavy coats", "sunbathing", "air conditioning", "cozy fireplace", "sweat", "enjoying the breeze"] },
+      { category: "Personal Tastes & Dilemmas", catKey: "dilemmas", question: "If you have a free afternoon, do you prefer reading a book or watching a movie?", vocab: ["turn off phone", "imagination", "cinema popcorn", "relax on sofa", "gripping story", "chapter by chapter"] },
+      { category: "Personal Tastes & Dilemmas", catKey: "dilemmas", question: "Do you like driving on long open roads with music or in silence?", vocab: ["favorite playlist", "sing along", "engine sound", "clear my head", "endless horizon", "road trip vibes"] },
+      { category: "Personal Tastes & Dilemmas", catKey: "dilemmas", question: "What is your favorite animal or pet, and why do you like it?", vocab: ["loyal dog", "independent cat", "companion", "rescue animal", "playful behavior", "soft fur"] },
+      { category: "Personal Tastes & Dilemmas", catKey: "dilemmas", question: "Do you prefer watching movies at the cinema or comfortably on your couch?", vocab: ["big screen", "loud sound", "pause anytime", "wear comfy clothes", "expensive tickets", "home theater"] },
+      { category: "Personal Tastes & Dilemmas", catKey: "dilemmas", question: "What is one thing you always pack in your bag when you go on a day trip?", vocab: ["thermos and mate", "water bottle", "sunglasses", "windbreaker jacket", "power bank", "snacks"] },
+      { category: "Personal Tastes & Dilemmas", catKey: "dilemmas", question: "What makes an ideal weekend for you at this stage of your life?", vocab: ["no rushing", "good food", "quality time", "family & friends", "nature connection", "rested mind"] }
+    ];
+
+    let currentList = [...flashcardsData];
+    let currentIndex = 0;
+    let isFlipped = false;
+
+    // DOM Elements
+    const flashcard = document.getElementById('flashcard');
+    const cardCategory = document.getElementById('cardCategory');
+    const cardQuestion = document.getElementById('cardQuestion');
+    const vocabList = document.getElementById('vocabList');
+    const counter = document.getElementById('counter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const flipBtn = document.getElementById('flipBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const categorySelect = document.getElementById('categorySelect');
+    const speakFrontBtn = document.getElementById('speakFrontBtn');
+
+    // Update Card UI
+    function renderCard() {
+      if (isFlipped) {
+        flashcard.classList.remove('rotate-y-180');
+        isFlipped = false;
+      }
+
+      setTimeout(() => {
+        const item = currentList[currentIndex];
+        cardCategory.textContent = item.category;
+        cardQuestion.textContent = item.question;
+
+        // Render Vocab Chips
+        vocabList.innerHTML = '';
+        item.vocab.forEach(word => {
+          const chip = document.createElement('span');
+          chip.className = 'bg-slate-800 text-amber-300 border border-amber-500/30 text-xs px-3 py-1.5 rounded-full font-medium shadow-sm';
+          chip.textContent = word;
+          vocabList.appendChild(chip);
+        });
+
+        // Update counter & controls
+        counter.textContent = `${currentIndex + 1} / ${currentList.length}`;
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === currentList.length - 1;
+      }, isFlipped ? 200 : 0);
+    }
+
+    // Flip Event
+    function toggleFlip() {
+      isFlipped = !isFlipped;
+      flashcard.classList.toggle('rotate-y-180');
+    }
+
+    flashcard.addEventListener('click', (e) => {
+      // Don't flip if clicking audio button
+      if (e.target.closest('#speakFrontBtn')) return;
+      toggleFlip();
+    });
+
+    flipBtn.addEventListener('click', toggleFlip);
+
+    // Navigation
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderCard();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < currentList.length - 1) {
+        currentIndex++;
+        renderCard();
+      }
+    });
+
+    // Shuffle
+    shuffleBtn.addEventListener('click', () => {
+      for (let i = currentList.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [currentList[i], currentList[j]] = [currentList[j], currentList[i]];
+      }
+      currentIndex = 0;
+      renderCard();
+    });
+
+    // Filter by Category
+    categorySelect.addEventListener('change', (e) => {
+      const cat = e.target.value;
+      if (cat === 'all') {
+        currentList = [...flashcardsData];
+      } else {
+        currentList = flashcardsData.filter(item => item.catKey === cat);
+      }
+      currentIndex = 0;
+      renderCard();
+    });
+
+    // Speech Synthesis
+    speakFrontBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Stop ongoing speech
+        const text = currentList[currentIndex].question;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9; // Slightly slower for A2 learners
+        window.speechSynthesis.speak(utterance);
+      }
+    });
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' && currentIndex < currentList.length - 1) {
+        currentIndex++;
+        renderCard();
+      } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        currentIndex--;
+        renderCard();
+      } else if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        toggleFlip();
+      }
+    });
+
+    // Initial render
+    renderCard();
+  </script>
+</body>
+</html>

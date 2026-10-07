@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shadowing Practice Flashcards</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f4f4f9;
+      margin: 0;
+      perspective: 1000px;
+    }
+    .card-container {
+      width: 380px;
+      height: 220px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      perspective: 1000px;
+    }
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+    .card.flipped {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+      border-radius: 12px;
+      font-size: 1.3rem;
+      color: #333;
+      background: #ffffff;
+    }
+    .card-back {
+      background: #e8f0fe;
+      color: #1a73e8;
+      transform: rotateY(180deg);
+      font-size: 1.1rem;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .secondary-btn {
+      background-color: #6c757d;
+    }
+    .secondary-btn:hover {
+      background-color: #5a6268;
+    }
+    .counter {
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card-container" onclick="flipCard()">
+    <div class="card" id="cardElement">
+      <div class="card-face card-front" id="cardFront">Loading...</div>
+      <div class="card-face card-back">💡 <em>Shadowing Tip:</em> Repeat aloud, matching rhythm, intonation, and pauses.</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="prevBtn" onclick="prevCard(event)">Previous</button>
+    <span class="counter" id="counter">1 / 100</span>
+    <button id="nextBtn" onclick="nextCard(event)">Next</button>
+  </div>
+
+  <div class="controls">
+    <button class="secondary-btn" onclick="shuffleCards()">Shuffle Cards</button>
+  </div>
+
+  <script>
+    const originalSentences = [
+      "Hello, how are you today.", "I’m fine, thank you.", "What’s your name.", "My name is Tom.", "Nice to meet you.",
+      "See you later.", "Good morning, everyone.", "It’s a sunny day.", "I wake up at seven.", "I brush my teeth every morning.",
+      "I eat breakfast at eight.", "I go to work by bus.", "She walks to school.", "He likes coffee.", "We study English every day.",
+      "They play soccer after school.", "I read a book before bed.", "The store opens at nine.", "The teacher is kind.", "The students are happy.",
+      "I have two brothers.", "My sister is tall.", "My mother cooks dinner.", "My father drives a car.", "I live in a small house.",
+      "The house has three rooms.", "There is a cat in the garden.", "There are many flowers.", "I like apples.", "She likes bananas.",
+      "We eat rice for lunch.", "He drinks water.", "I’m hungry.", "I’m tired.", "I’m happy today.",
+      "It’s cold outside.", "It’s hot in summer.", "It’s raining now.", "The sun is bright.", "The sky is blue.",
+      "I see a bird.", "The bird is small.", "The dog runs fast.", "The cat sleeps on the sofa.", "I have a new phone.",
+      "My bag is heavy.", "This book is interesting.", "That movie is funny.", "I like music.", "She sings very well.",
+      "He plays the guitar.", "We dance together.", "I can speak English.", "I can’t swim.", "Can you help me.",
+      "Please sit down.", "Stand up, please.", "Open the window.", "Close the door.", "Turn on the light.",
+      "Turn off the TV.", "Let’s go shopping.", "I need some milk.", "I want a loaf of bread.", "How much is this.",
+      "It’s five dollars.", "That’s too expensive.", "It’s very cheap.", "I’ll take it.", "Thank you very much.",
+      "You’re welcome.", "Excuse me.", "Sorry, I’m late.", "No problem.", "What time is it.",
+      "It’s ten o’clock.", "It’s half past two.", "It’s quarter to five.", "Today is Monday.", "Tomorrow is Tuesday.",
+      "Yesterday was Sunday.", "I work from nine to five.", "I study at home.", "I clean my room.", "I wash the dishes.",
+      "I cook dinner.", "I listen to music.", "I watch TV.", "I talk to my friends.", "I go to bed at eleven.",
+      "I sleep eight hours.", "I feel good today.", "The food tastes great.", "The water is cold.", "The coffee is hot.",
+      "The pizza smells delicious.", "The store is near my house.", "The park is far from here.", "I love my family.", "I’m learning English."
+    ];
+
+    let sentences = [...originalSentences];
+    let currentIndex = 0;
+
+    function updateCard() {
+      document.getElementById('cardFront').innerText = sentences[currentIndex];
+      document.getElementById('counter').innerText = `${currentIndex + 1} / ${sentences.length}`;
+      document.getElementById('prevBtn').disabled = currentIndex === 0;
+      document.getElementById('nextBtn').disabled = currentIndex === sentences.length - 1;
+      document.getElementById('cardElement').classList.remove('flipped');
+    }
+
+    function flipCard() {
+      document.getElementById('cardElement').classList.toggle('flipped');
+    }
+
+    function nextCard(event) {
+      event.stopPropagation();
+      if (currentIndex < sentences.length - 1) {
+        currentIndex++;
+        updateCard();
+      }
+    }
+
+    function prevCard(event) {
+      event.stopPropagation();
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCard();
+      }
+    }
+
+    function shuffleCards() {
+      for (let i = sentences.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [sentences[i], sentences[j]] = [sentences[j], sentences[i]];
+      }
+      currentIndex = 0;
+      updateCard();
+    }
+
+    updateCard();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2 English Pronunciation & Listening Master</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* Custom smooth scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .recording-pulse {
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Top Header -->
+    <header class="bg-indigo-600 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-inner">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">A2 English Pronunciation Coach</h1>
+                    <p class="text-xs text-indigo-200">Interactive Listening & Speech Practice for A2 Learners</p>
+                </div>
+            </div>
+
+            <!-- Global Progress Tracker -->
+            <div class="flex items-center gap-4 bg-indigo-700/60 px-4 py-2 rounded-2xl border border-indigo-500/30">
+                <div class="text-right">
+                    <div class="text-xs text-indigo-200 uppercase font-semibold tracking-wider">Overall Mastery</div>
+                    <div class="text-sm font-bold text-white"><span id="mastered-count">0</span> / <span id="total-count">42</span> Mastered</div>
+                </div>
+                <div class="w-16 h-16 relative flex items-center justify-center">
+                    <svg class="w-12 h-12 transform -rotate-90">
+                        <circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="4" class="text-indigo-900/40" fill="transparent"/>
+                        <circle id="progress-circle" cx="24" cy="24" r="18" stroke="currentColor" stroke-width="4" class="text-emerald-400" fill="transparent" stroke-dasharray="113" stroke-dashoffset="113" stroke-linecap="round"/>
+                    </svg>
+                    <span id="progress-percent" class="absolute text-[10px] font-extrabold text-white">0%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- Controls & Filters Section -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 mb-8 space-y-5">
+            
+            <!-- Speech Settings Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-2 text-slate-700 font-semibold text-sm">
+                    <i class="fa-solid fa-sliders text-indigo-600"></i>
+                    <span>Audio & Voice Settings</span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-6 text-xs text-slate-600">
+                    <!-- Speed Control -->
+                    <div class="flex items-center gap-2">
+                        <label for="speed-range" class="font-medium flex items-center gap-1">
+                            <i class="fa-solid fa-gauge-high text-slate-400"></i> Speed:
+                            <span id="speed-val" class="font-bold text-indigo-600 w-8">1.0x</span>
+                        </label>
+                        <input id="speed-range" type="range" min="0.5" max="1.5" step="0.1" value="1.0" class="w-24 accent-indigo-600 cursor-pointer">
+                    </div>
+
+                    <!-- Voice Selector -->
+                    <div class="flex items-center gap-2">
+                        <label for="voice-select" class="font-medium flex items-center gap-1">
+                            <i class="fa-solid fa-user-gear text-slate-400"></i> Accent/Voice:
+                        </label>
+                        <select id="voice-select" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="">Default English Voice</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Categories -->
+            <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+                <!-- Search Bar -->
+                <div class="relative w-full md:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" id="search-input" placeholder="Search sentence or keyword..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                </div>
+
+                <!-- Category Tabs -->
+                <div class="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none" id="category-tabs">
+                    <!-- Dynamic categories injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Browser Compatibility Alert (Hidden if supported) -->
+        <div id="speech-support-alert" class="hidden bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl mb-6 text-amber-800 text-sm flex items-start gap-3">
+            <i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg mt-0.5"></i>
+            <div>
+                <span class="font-bold">Speech Recognition Notice:</span> Your browser does not fully support the Web Speech API (speech recognition). For the best pronunciation checking experience, please use <strong>Google Chrome</strong>, <strong>Microsoft Edge</strong>, or <strong>Safari</strong> on desktop/mobile.
+            </div>
+        </div>
+
+        <!-- Sentence Cards Container -->
+        <div id="sentences-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Dynamic sentence cards will be rendered here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-16 bg-white rounded-2xl border border-slate-200">
+            <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
+            <h3 class="text-lg font-semibold text-slate-600">No sentences found</h3>
+            <p class="text-sm text-slate-400">Try adjusting your search query or selected category filter.</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs mt-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© 2026 Interactive A2 English Language Studio. Built with Web Speech API & Tailwind CSS.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Database of 42 Practical A2 Level English Sentences
+        const sentencesData = [
+            // Category: Daily Greetings & Basics
+            {
+                id: 1,
+                category: "Greetings",
+                english: "Good morning! How are you doing today?",
+                spanish: "¡Buenos días! ¿Cómo estás hoy?",
+                vocab: [
+                    { word: "doing", translation: "pasando / haciendo" },
+                    { word: "today", translation: "hoy" }
+                ]
+            },
+            {
+                id: 2,
+                category: "Greetings",
+                english: "Nice to meet you. My name is Alex.",
+                spanish: "Gusto en conocerte. Mi nombre es Alex.",
+                vocab: [
+                    { word: "meet", translation: "conocer" },
+                    { word: "name", translation: "nombre" }
+                ]
+            },
+            {
+                id: 3,
+                category: "Greetings",
+                english: "I am sorry, I do not understand.",
+                spanish: "Lo siento, no entiendo.",
+                vocab: [
+                    { word: "sorry", translation: "disculpa / lo siento" },
+                    { word: "understand", translation: "entender" }
+                ]
+            },
+            {
+                id: 4,
+                category: "Greetings",
+                english: "Could you speak a little slower, please?",
+                spanish: "¿Podrías hablar un poco más despacio, por favor?",
+                vocab: [
+                    { word: "slower", translation: "más despacio" },
+                    { word: "please", translation: "por favor" }
+                ]
+            },
+            {
+                id: 5,
+                category: "Greetings",
+                english: "Have a great weekend with your family!",
+                spanish: "¡Que tengas un excelente fin de semana con tu familia!",
+                vocab: [
+                    { word: "weekend", translation: "fin de semana" },
+                    { word: "family", translation: "familia" }
+                ]
+            },
+            {
+                id: 6,
+                category: "Greetings",
+                english: "Thank you very much for your help.",
+                spanish: "Muchas gracias por tu ayuda.",
+                vocab: [
+                    { word: "thank", translation: "agradecer" },
+                    { word: "help", translation: "ayuda" }
+                ]
+            },
+            {
+                id: 7,
+                category: "Greetings",
+                english: "See you tomorrow morning at eight o'clock.",
+                spanish: "Nos vemos mañana por la mañana a las ocho en punto.",
+                vocab: [
+                    { word: "tomorrow", translation: "mañana" },
+                    { word: "morning", translation: "mañana (parte del día)" }
+                ]
+            },
+
+            // Category: Ordering Food & Drinks
+            {
+                id: 8,
+                category: "Ordering Food",
+                english: "I would like a cup of coffee, please.",
+                spanish: "Me gustaría una taza de café, por favor.",
+                vocab: [
+                    { word: "would like", translation: "gustaría" },
+                    { word: "coffee", translation: "café" }
+                ]
+            },
+            {
+                id: 9,
+                category: "Ordering Food",
+                english: "Can we see the dinner menu?",
+                spanish: "¿Podemos ver el menú de la cena?",
+                vocab: [
+                    { word: "see", translation: "ver" },
+                    { word: "menu", translation: "menú / carta" }
+                ]
+            },
+            {
+                id: 10,
+                category: "Ordering Food",
+                english: "Is this dish vegetarian or vegan?",
+                spanish: "¿Este platillo es vegetariano o vegano?",
+                vocab: [
+                    { word: "dish", translation: "platillo / plato" },
+                    { word: "vegetarian", translation: "vegetariano" }
+                ]
+            },
+            {
+                id: 11,
+                category: "Ordering Food",
+                english: "Could we have the bill, please?",
+                spanish: "¿Nos podría traer la cuenta, por favor?",
+                vocab: [
+                    { word: "bill", translation: "la cuenta" },
+                    { word: "could", translation: "podría" }
+                ]
+            },
+            {
+                id: 12,
+                category: "Ordering Food",
+                english: "This chicken salad is delicious.",
+                spanish: "Esta ensalada de pollo está deliciosa.",
+                vocab: [
+                    { word: "chicken", translation: "pollo" },
+                    { word: "delicious", translation: "delicioso" }
+                ]
+            },
+            {
+                id: 13,
+                category: "Ordering Food",
+                english: "Can I get a bottle of water?",
+                spanish: "¿Puedo pedir una botella de agua?",
+                vocab: [
+                    { word: "bottle", translation: "botella" },
+                    { word: "water", translation: "agua" }
+                ]
+            },
+            {
+                id: 14,
+                category: "Ordering Food",
+                english: "We are ready to order our food.",
+                spanish: "Estamos listos para pedir nuestra comida.",
+                vocab: [
+                    { word: "ready", translation: "listos" },
+                    { word: "order", translation: "ordenar / pedir" }
+                ]
+            },
+
+            // Category: Shopping & Money
+            {
+                id: 15,
+                category: "Shopping",
+                english: "How much does this shirt cost?",
+                spanish: "¿Cuánto cuesta esta camisa?",
+                vocab: [
+                    { word: "cost", translation: "costar / precio" },
+                    { word: "shirt", translation: "camisa" }
+                ]
+            },
+            {
+                id: 16,
+                category: "Shopping",
+                english: "Do you have this shoes in size nine?",
+                spanish: "¿Tiene estos zapatos en talla nueve?",
+                vocab: [
+                    { word: "shoes", translation: "zapatos" },
+                    { word: "size", translation: "talla / tamaño" }
+                ]
+            },
+            {
+                id: 17,
+                category: "Shopping",
+                english: "Can I pay by credit card?",
+                spanish: "¿Puedo pagar con tarjeta de crédito?",
+                vocab: [
+                    { word: "pay", translation: "pagar" },
+                    { word: "credit card", translation: "tarjeta de crédito" }
+                ]
+            },
+            {
+                id: 18,
+                category: "Shopping",
+                english: "Where is the fitting room?",
+                spanish: "¿Dónde está el probador de ropa?",
+                vocab: [
+                    { word: "fitting room", translation: "probador" }
+                ]
+            },
+            {
+                id: 19,
+                category: "Shopping",
+                english: "Is there a discount on this coat?",
+                spanish: "¿Hay algún descuento en este abrigo?",
+                vocab: [
+                    { word: "discount", translation: "descuento" },
+                    { word: "coat", translation: "abrigo" }
+                ]
+            },
+            {
+                id: 20,
+                category: "Shopping",
+                english: "I will take this jacket.",
+                spanish: "Me llevaré esta chaqueta.",
+                vocab: [
+                    { word: "take", translation: "tomar / llevar" },
+                    { word: "jacket", translation: "chaqueta" }
+                ]
+            },
+            {
+                id: 21,
+                category: "Shopping",
+                english: "Do you sell batteries here?",
+                spanish: "¿Venden baterías aquí?",
+                vocab: [
+                    { word: "sell", translation: "vender" },
+                    { word: "batteries", translation: "baterías" }
+                ]
+            },
+
+            // Category: Asking Directions & Travel
+            {
+                id: 22,
+                category: "Directions",
+                english: "Excuse me, where is the train station?",
+                spanish: "Disculpe, ¿dónde está la estación de tren?",
+                vocab: [
+                    { word: "station", translation: "estación" },
+                    { word: "excuse me", translation: "disculpe" }
+                ]
+            },
+            {
+                id: 23,
+                category: "Directions",
+                english: "Turn left at the next street corner.",
+                spanish: "Gira a la izquierda en la próxima esquina.",
+                vocab: [
+                    { word: "turn left", translation: "girar a la izquierda" },
+                    { word: "corner", translation: "esquina" }
+                ]
+            },
+            {
+                id: 24,
+                category: "Directions",
+                english: "Is the supermarket far from here?",
+                spanish: "¿El supermercado está lejos de aquí?",
+                vocab: [
+                    { word: "far", translation: "lejos" },
+                    { word: "supermarket", translation: "supermercado" }
+                ]
+            },
+            {
+                id: 25,
+                category: "Directions",
+                english: "Go straight for two blocks.",
+                spanish: "Sigue derecho por dos cuadras.",
+                vocab: [
+                    { word: "straight", translation: "derecho / recto" },
+                    { word: "blocks", translation: "cuadras / manzanas" }
+                ]
+            },
+            {
+                id: 26,
+                category: "Directions",
+                english: "What time does the bus leave?",
+                spanish: "¿A qué hora sale el autobús?",
+                vocab: [
+                    { word: "time", translation: "hora" },
+                    { word: "leave", translation: "salir / partir" }
+                ]
+            },
+            {
+                id: 27,
+                category: "Directions",
+                english: "I am looking for the main square.",
+                spanish: "Estoy buscando la plaza principal.",
+                vocab: [
+                    { word: "looking for", translation: "buscando" },
+                    { word: "main square", translation: "plaza principal" }
+                ]
+            },
+            {
+                id: 28,
+                category: "Directions",
+                english: "How do I get to the airport?",
+                spanish: "¿Cómo llego al aeropuerto?",
+                vocab: [
+                    { word: "get to", translation: "llegar a" },
+                    { word: "airport", translation: "aeropuerto" }
+                ]
+            },
+
+            // Category: At Work & Daily Routine
+            {
+                id: 29,
+                category: "Work Routine",
+                english: "I usually wake up at seven o'clock.",
+                spanish: "Usualmente me despierto a las siete en punto.",
+                vocab: [
+                    { word: "usually", translation: "usualmente" },
+                    { word: "wake up", translation: "despertar" }
+                ]
+            },
+            {
+                id: 30,
+                category: "Work Routine",
+                english: "We have an important meeting at two PM.",
+                spanish: "Tenemos una reunión importante a las dos PM.",
+                vocab: [
+                    { word: "important", translation: "importante" },
+                    { word: "meeting", translation: "reunión" }
+                ]
+            },
+            {
+                id: 31,
+                category: "Work Routine",
+                english: "Can you send me an email today?",
+                spanish: "¿Me puedes enviar un correo electrónico hoy?",
+                vocab: [
+                    { word: "send", translation: "enviar" },
+                    { word: "email", translation: "correo electrónico" }
+                ]
+            },
+            {
+                id: 32,
+                category: "Work Routine",
+                english: "I finish work at six in the evening.",
+                spanish: "Termino de trabajar a las seis de la tarde.",
+                vocab: [
+                    { word: "finish", translation: "terminar" },
+                    { word: "evening", translation: "tarde / noche" }
+                ]
+            },
+            {
+                id: 33,
+                category: "Work Routine",
+                english: "My colleague is helpful and friendly.",
+                spanish: "Mi compañero de trabajo es servicial y amigable.",
+                vocab: [
+                    { word: "colleague", translation: "compañero de trabajo" },
+                    { word: "friendly", translation: "amigable" }
+                ]
+            },
+            {
+                id: 34,
+                category: "Work Routine",
+                english: "I take the subway to go to work.",
+                spanish: "Tomo el metro para ir al trabajo.",
+                vocab: [
+                    { word: "subway", translation: "metro / subterráneo" },
+                    { word: "work", translation: "trabajo" }
+                ]
+            },
+            {
+                id: 35,
+                category: "Work Routine",
+                english: "Let's take a short coffee break.",
+                spanish: "Tomemos un breve descanso para el café.",
+                vocab: [
+                    { word: "short", translation: "corto / breve" },
+                    { word: "break", translation: "descanso" }
+                ]
+            },
+
+            // Category: Emergencies & Health
+            {
+                id: 36,
+                category: "Emergencies",
+                english: "Can you help me, please?",
+                spanish: "¿Puedes ayudarme, por favor?",
+                vocab: [
+                    { word: "help", translation: "ayudar" },
+                    { word: "please", translation: "por favor" }
+                ]
+            },
+            {
+                id: 37,
+                category: "Emergencies",
+                english: "I do not feel well today.",
+                spanish: "No me siento bien hoy.",
+                vocab: [
+                    { word: "feel well", translation: "sentirse bien" }
+                ]
+            },
+            {
+                id: 38,
+                category: "Emergencies",
+                english: "Where is the nearest pharmacy?",
+                spanish: "¿Dónde está la farmacia más cercana?",
+                vocab: [
+                    { word: "nearest", translation: "más cercana" },
+                    { word: "pharmacy", translation: "farmacia" }
+                ]
+            },
+            {
+                id: 39,
+                category: "Emergencies",
+                english: "I lost my passport and wallet.",
+                spanish: "Perdí mi pasaporte y mi billetera.",
+                vocab: [
+                    { word: "lost", translation: "perdí" },
+                    { word: "wallet", translation: "billetera" }
+                ]
+            },
+            {
+                id: 40,
+                category: "Emergencies",
+                english: "Please call a doctor right now.",
+                spanish: "Por favor llame a un médico ahora mismo.",
+                vocab: [
+                    { word: "call", translation: "llamar" },
+                    { word: "doctor", translation: "médico / doctor" }
+                ]
+            },
+            {
+                id: 41,
+                category: "Emergencies",
+                english: "I have a headache and a fever.",
+                spanish: "Tengo dolor de cabeza y fiebre.",
+                vocab: [
+                    { word: "headache", translation: "dolor de cabeza" },
+                    { word: "fever", translation: "fiebre" }
+                ]
+            },
+            {
+                id: 42,
+                category: "Emergencies",
+                english: "Where is the emergency exit?",
+                spanish: "¿Dónde está la salida de emergencia?",
+                vocab: [
+                    { word: "emergency", translation: "emergencia" },
+                    { word: "exit", translation: "salida" }
+                ]
+            }
+        ];
+
+        // State variables
+        let selectedCategory = "All";
+        let searchQuery = "";
+        let synth = window.speechSynthesis;
+        let voices = [];
+        let activeRecognition = null;
+        let currentlyRecordingId = null;
+        let userScores = {}; // Key: sentence id, Value: score percentage
+
+        // DOM Elements
+        const gridEl = document.getElementById('sentences-grid');
+        const emptyStateEl = document.getElementById('empty-state');
+        const categoryTabsEl = document.getElementById('category-tabs');
+        const searchInput = document.getElementById('search-input');
+        const speedRange = document.getElementById('speed-range');
+        const speedVal = document.getElementById('speed-val');
+        const voiceSelect = document.getElementById('voice-select');
+        const masteredCountEl = document.getElementById('mastered-count');
+        const totalCountEl = document.getElementById('total-count');
+        const progressCircle = document.getElementById('progress-circle');
+        const progressPercent = document.getElementById('progress-percent');
+        const speechAlert = document.getElementById('speech-support-alert');
+
+        // Check Speech Recognition Support
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            speechAlert.classList.remove('hidden');
+        }
+
+        // Initialize voices for Synthesis
+        function populateVoices() {
+            if (!synth) return;
+            voices = synth.getVoices().filter(v => v.lang.startsWith('en'));
+            voiceSelect.innerHTML = '<option value="">Default English Voice</option>';
+            
+            voices.forEach((voice, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${voice.name} (${voice.lang})`;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        if (synth) {
+            populateVoices();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = populateVoices;
+            }
+        }
+
+        // Setup Categories UI
+        function initCategories() {
+            const categories = ["All", ...new Set(sentencesData.map(item => item.category))];
+            categoryTabsEl.innerHTML = categories.map(cat => `
+                <button 
+                    onclick="filterCategory('${cat}')" 
+                    class="category-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${cat === selectedCategory ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}"
+                    data-category="${cat}"
+                >
+                    ${cat === 'All' ? '<i class="fa-solid fa-layer-group mr-1.5"></i>' : ''}${cat}
+                </button>
+            `).join('');
+        }
+
+        function filterCategory(cat) {
+            selectedCategory = cat;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                if (btn.dataset.category === cat) {
+                    btn.className = "category-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-indigo-600 text-white shadow-sm";
+                } else {
+                    btn.className = "category-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-slate-100 text-slate-600 hover:bg-slate-200";
+                }
+            });
+            renderSentences();
+        }
+
+        // Render Sentence Cards
+        function renderSentences() {
+            const filtered = sentencesData.filter(item => {
+                const matchesCat = selectedCategory === "All" || item.category === selectedCategory;
+                const matchesSearch = item.english.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      item.spanish.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                gridEl.innerHTML = '';
+                emptyStateEl.classList.remove('hidden');
+                return;
+            }
+
+            emptyStateEl.classList.add('hidden');
+            gridEl.innerHTML = filtered.map(item => {
+                const score = userScores[item.id];
+                const isMastered = score >= 80;
+
+                return `
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/90 hover:shadow-md transition-all flex flex-col justify-between relative overflow-hidden group">
+                    
+                    <!-- Header Bar -->
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-600">
+                                <i class="fa-solid fa-tag text-[10px] text-indigo-500"></i> ${item.category}
+                            </span>
+                            
+                            <!-- Mastered Badge / Score -->
+                            <div id="badge-container-${item.id}">
+                                ${score !== undefined ? `
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold ${score >= 80 ? 'bg-emerald-100 text-emerald-700' : score >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}">
+                                        <i class="fa-solid ${score >= 80 ? 'fa-circle-check' : 'fa-chart-pie'}"></i> ${score}% Accuracy
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Target English Sentence -->
+                        <div class="mb-2">
+                            <h3 class="text-lg font-bold text-slate-900 leading-snug tracking-tight">
+                                ${item.english}
+                            </h3>
+                            <p class="text-sm text-slate-500 italic mt-0.5">${item.spanish}</p>
+                        </div>
+
+                        <!-- Vocabulary Hints -->
+                        <div class="mt-4 pt-3 border-t border-slate-100">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1.5">Key Vocabulary</span>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${item.vocab.map(v => `
+                                    <span class="inline-block bg-indigo-50/70 border border-indigo-100 text-indigo-800 text-xs px-2 py-0.5 rounded-md">
+                                        <strong class="font-semibold">${v.word}:</strong> ${v.translation}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Speech Feedback Box (Hidden by default) -->
+                    <div id="feedback-box-${item.id}" class="hidden my-4 p-3.5 rounded-xl text-xs bg-slate-50 border border-slate-200">
+                        <div class="font-bold text-slate-700 mb-1 flex items-center justify-between">
+                            <span>You said:</span>
+                            <span id="feedback-score-${item.id}" class="font-extrabold"></span>
+                        </div>
+                        <p id="transcript-result-${item.id}" class="text-slate-600 leading-relaxed font-mono text-[13px] bg-white p-2 rounded-lg border border-slate-200/60 mb-2"></p>
+                        <div id="encouragement-${item.id}" class="font-medium text-slate-700"></div>
+                    </div>
+
+                    <!-- Action Buttons Footer -->
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                        <!-- Play TTS Button -->
+                        <button 
+                            onclick="playTTS('${escapeQuotes(item.english)}')" 
+                            class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-xs sm:text-sm transition-colors active:scale-98"
+                        >
+                            <i class="fa-solid fa-volume-high text-indigo-600"></i> Listen Audio
+                        </button>
+
+                        <!-- Speak / Practice Button -->
+                        <button 
+                            id="mic-btn-${item.id}"
+                            onclick="toggleSpeechRecognition(${item.id}, '${escapeQuotes(item.english)}')" 
+                            class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm shadow-sm hover:shadow transition-all active:scale-98"
+                        >
+                            <i id="mic-icon-${item.id}" class="fa-solid fa-microphone"></i> 
+                            <span id="mic-text-${item.id}">Check Pronunciation</span>
+                        </button>
+                    </div>
+
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Helper to safely escape quotes in HTML strings
+        function escapeQuotes(str) {
+            return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        // Text to Speech Functionality
+        function playTTS(text) {
+            if (!synth) return;
+            
+            // Stop any ongoing speech
+            synth.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = parseFloat(speedRange.value);
+            
+            const selectedVoiceIdx = voiceSelect.value;
+            if (selectedVoiceIdx !== "" && voices[selectedVoiceIdx]) {
+                utterance.voice = voices[selectedVoiceIdx];
+            } else {
+                // Fallback to default US/UK English voice
+                const defaultVoice = voices.find(v => v.lang.startsWith('en-US') || v.lang.startsWith('en-GB'));
+                if (defaultVoice) utterance.voice = defaultVoice;
+            }
+
+            synth.speak(utterance);
+        }
+
+        // Speech Recognition & Pronunciation Evaluation
+        function toggleSpeechRecognition(id, targetSentence) {
+            if (!SpeechRecognition) {
+                alert("Speech recognition is not supported in your browser. Please try Google Chrome or MS Edge.");
+                return;
+            }
+
+            const micBtn = document.getElementById(`mic-btn-${id}`);
+            const micIcon = document.getElementById(`mic-icon-${id}`);
+            const micText = document.getElementById(`mic-text-${id}`);
+
+            // If currently recording this card, stop it
+            if (currentlyRecordingId === id && activeRecognition) {
+                activeRecognition.stop();
+                return;
+            }
+
+            // If another card is recording, stop that first
+            if (activeRecognition) {
+                activeRecognition.stop();
+            }
+
+            // Setup new recognition
+            activeRecognition = new SpeechRecognition();
+            activeRecognition.lang = 'en-US';
+            activeRecognition.continuous = false;
+            activeRecognition.interimResults = false;
+
+            activeRecognition.onstart = () => {
+                currentlyRecordingId = id;
+                micBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+                micBtn.classList.add('bg-rose-600', 'hover:bg-rose-700', 'recording-pulse');
+                micIcon.className = "fa-solid fa-circle-stop";
+                micText.textContent = "Listening... Speak now";
+            };
+
+            activeRecognition.onresult = (event) => {
+                const userTranscript = event.results[0][0].transcript;
+                evaluatePronunciation(id, targetSentence, userTranscript);
+            };
+
+            activeRecognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+                resetMicButton(id);
+                if (event.error === 'no-speech') {
+                    showTemporaryNotice(id, "No speech detected. Please check your mic and try again.");
+                }
+            };
+
+            activeRecognition.onend = () => {
+                resetMicButton(id);
+                activeRecognition = null;
+                currentlyRecordingId = null;
+            };
+
+            activeRecognition.start();
+        }
+
+        function resetMicButton(id) {
+            const micBtn = document.getElementById(`mic-btn-${id}`);
+            const micIcon = document.getElementById(`mic-icon-${id}`);
+            const micText = document.getElementById(`mic-text-${id}`);
+            if (micBtn) {
+                micBtn.classList.remove('bg-rose-600', 'hover:bg-rose-700', 'recording-pulse');
+                micBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+                micIcon.className = "fa-solid fa-microphone";
+                micText.textContent = "Check Pronunciation";
+            }
+        }
+
+        function showTemporaryNotice(id, msg) {
+            const feedbackBox = document.getElementById(`feedback-box-${id}`);
+            const encouragement = document.getElementById(`encouragement-${id}`);
+            feedbackBox.classList.remove('hidden');
+            encouragement.innerHTML = `<span class="text-rose-600 font-semibold"><i class="fa-solid fa-circle-exclamation mr-1"></i> ${msg}</span>`;
+        }
+
+        // Word-by-Word Pronunciation Evaluator
+        function evaluatePronunciation(id, targetSentence, spokenTranscript) {
+            const feedbackBox = document.getElementById(`feedback-box-${id}`);
+            const transcriptResult = document.getElementById(`transcript-result-${id}`);
+            const feedbackScore = document.getElementById(`feedback-score-${id}`);
+            const encouragement = document.getElementById(`encouragement-${id}`);
+            const badgeContainer = document.getElementById(`badge-container-${id}`);
+
+            // Clean string helper (remove punctuation & lower-case)
+            const clean = str => str.toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()?'"]/g, "").trim();
+
+            const targetWords = targetSentence.split(/\s+/);
+            const cleanTargetWords = targetWords.map(clean);
+            const spokenWords = spokenTranscript.split(/\s+/);
+            const cleanSpokenWords = spokenWords.map(clean);
+
+            let correctCount = 0;
+            let highlightedHtml = [];
+
+            // Simple diff / match calculation
+            spokenWords.forEach((word, idx) => {
+                const cleanedSpoken = clean(word);
+                // Check if target sentence contains this word near similar location
+                const targetMatchIdx = cleanTargetWords.indexOf(cleanedSpoken);
+                
+                if (targetMatchIdx !== -1) {
+                    correctCount++;
+                    highlightedHtml.push(`<span class="text-emerald-700 bg-emerald-100 font-bold px-1 rounded">${word}</span>`);
+                } else {
+                    highlightedHtml.push(`<span class="text-rose-700 bg-rose-100 line-through font-bold px-1 rounded">${word}</span>`);
+                }
+            });
+
+            // Calculate percentage based on target sentence word count
+            const accuracyScore = Math.min(100, Math.round((correctCount / cleanTargetWords.length) * 100));
+
+            // Save user score
+            userScores[id] = accuracyScore;
+            updateOverallProgress();
+
+            // Render Results
+            feedbackBox.classList.remove('hidden');
+            transcriptResult.innerHTML = highlightedHtml.join(' ');
+            feedbackScore.textContent = `${accuracyScore}% Match`;
+            feedbackScore.className = accuracyScore >= 80 ? "text-emerald-600 font-bold" : accuracyScore >= 50 ? "text-amber-600 font-bold" : "text-rose-600 font-bold";
+
+            // Encouragement message
+            if (accuracyScore >= 85) {
+                encouragement.innerHTML = `<span class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Excellent pronunciation! Great job!</span>`;
+            } else if (accuracyScore >= 60) {
+                encouragement.innerHTML = `<span class="text-amber-600 font-bold"><i class="fa-solid fa-thumbs-up"></i> Good effort! Listen to the audio again and retry.</span>`;
+            } else {
+                encouragement.innerHTML = `<span class="text-rose-600 font-bold"><i class="fa-solid fa-rotate-right"></i> Keep practicing! Click "Listen Audio" and try again.</span>`;
+            }
+
+            // Update Badge dynamically
+            badgeContainer.innerHTML = `
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold ${accuracyScore >= 80 ? 'bg-emerald-100 text-emerald-700' : accuracyScore >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}">
+                    <i class="fa-solid ${accuracyScore >= 80 ? 'fa-circle-check' : 'fa-chart-pie'}"></i> ${accuracyScore}% Accuracy
+                </span>
+            `;
+        }
+
+        // Overall Progress Calculator
+        function updateOverallProgress() {
+            const total = sentencesData.length;
+            const scores = Object.values(userScores);
+            const mastered = scores.filter(score => score >= 80).length;
+            const percentage = Math.round((mastered / total) * 100);
+
+            masteredCountEl.textContent = mastered;
+            totalCountEl.textContent = total;
+            progressPercent.textContent = `${percentage}%`;
+
+            // Circumference for r=18 is ~113
+            const strokeDashoffset = 113 - (113 * percentage) / 100;
+            progressCircle.style.strokeDashoffset = strokeDashoffset;
+        }
+
+        // Event Listeners
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderSentences();
+        });
+
+        speedRange.addEventListener('input', (e) => {
+            speedVal.textContent = `${parseFloat(e.target.value).toFixed(1)}x`;
+        });
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            initCategories();
+            renderSentences();
+            updateOverallProgress();
+        });
+    </script>
+</body>
+</html>

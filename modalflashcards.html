@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Modal Verbs Flashcards – A2 Level</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #e9eef7;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #1f3b82;
+    }
+
+    .subtitle {
+      margin-bottom: 25px;
+      color: #4b5563;
+    }
+
+    .flashcard {
+      background: #ffffff;
+      width: 620px;
+      min-height: 320px;
+      padding: 24px;
+      border-radius: 18px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .image-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f3f4f6;
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    .image-box img {
+      max-width: 200px;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .content-box h2 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: #1f2937;
+    }
+
+    .content-box ul {
+      margin: 8px 0 0 18px;
+      padding: 0;
+      color: #374151;
+    }
+
+    .content-box li {
+      margin-bottom: 6px;
+    }
+
+    .buttons {
+      margin-top: 24px;
+      display: flex;
+      gap: 12px;
+    }
+
+    button {
+      padding: 12px 22px;
+      font-size: 16px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    button.secondary {
+      background: #6b7280;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .counter {
+      margin-top: 10px;
+      color: #4b5563;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Modal Verbs Flashcards</h1>
+<p class="subtitle">A2 level – Practice CAN, HAVE TO, SHOULD, MUST, MIGHT</p>
+
+<div class="flashcard" id="flashcard">
+  <div class="image-box">
+    <img id="card-image" src="" alt="Flashcard image" />
+  </div>
+  <div class="content-box">
+    <h2 id="card-title">Click “Next Card” to start</h2>
+    <ul id="card-questions">
+      <li>Practice modal verbs with simple, real-life questions.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="buttons">
+  <button onclick="prevCard()" class="secondary">Previous Card</button>
+  <button onclick="nextCard()">Next Card</button>
+</div>
+
+<div class="counter" id="card-counter">Card 0 of 21</div>
+
+<script>
+const cards = [
+  {
+    title: "Daily Routine – CAN",
+    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4",
+    questions: [
+      "What can you do very well in the morning?",
+      "What can’t you do before breakfast?",
+      "Can you study at night?"
+    ]
+  },
+  {
+    title: "Work and Study – HAVE TO",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+    questions: [
+      "Do you have to wake up early for work or school?",
+      "Do you have to wear a uniform?",
+      "Do you have to use a computer every day?"
+    ]
+  },
+  {
+    title: "Health – SHOULD",
+    image: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528",
+    questions: [
+      "What should people eat to be healthy?",
+      "Should you drink more water?",
+      "Should students sleep more hours?"
+    ]
+  },
+  {
+    title: "Rules – MUST",
+    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b",
+    questions: [
+      "What rules must students follow in class?",
+      "Must people wear seatbelts in cars?",
+      "Must you be quiet in the library?"
+    ]
+  },
+  {
+    title: "Future Plans – MIGHT",
+    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+    questions: [
+      "What might you do next weekend?",
+      "Might you travel this year?",
+      "Might you start a new hobby soon?"
+    ]
+  },
+  {
+    title: "Free Time – CAN",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
+    questions: [
+      "What can you do to relax after work or school?",
+      "Can you play any sports?",
+      "Can you cook something delicious?"
+    ]
+  },
+  {
+    title: "Responsibilities – HAVE TO",
+    image: "https://images.unsplash.com/photo-1506784365847-bbad939e9335",
+    questions: [
+      "Do you have to help at home?",
+      "Do you have to pay any bills?",
+      "Do you have to study every day?"
+    ]
+  },
+  {
+    title: "Advice for Friends – SHOULD",
+    image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
+    questions: [
+      "What should your friend do to feel better when they are sad?",
+      "Should your friend study more English?",
+      "Should people use their phones less?"
+    ]
+  },
+  {
+    title: "Public Places – MUST",
+    image: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb",
+    questions: [
+      "What must people do on a bus or train?",
+      "Must people pay for tickets?",
+      "Must you follow special rules at your job?"
+    ]
+  },
+  {
+    title: "Weekend – MIGHT",
+    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
+    questions: [
+      "What might you do on Saturday night?",
+      "Might you visit your family?",
+      "Might you stay at home and rest?"
+    ]
+  },
+  {
+    title: "School – CAN",
+    image: "https://images.unsplash.com/photo-1588072432836-e10032774350",
+    questions: [
+      "What can you learn at school?",
+      "Can you ask the teacher questions?",
+      "Can you use your phone in class?"
+    ]
+  },
+  {
+    title: "Home – HAVE TO",
+    image: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+    questions: [
+      "Do you have to clean your room?",
+      "Do you have to cook sometimes?",
+      "Do you have to take care of any pets?"
+    ]
+  },
+  {
+    title: "Exercise – SHOULD",
+    image: "https://images.unsplash.com/photo-1554284126-aa88f22d8b74",
+    questions: [
+      "How often should people exercise?",
+      "Should you walk more during the week?",
+      "Should students do sports at school?"
+    ]
+  },
+  {
+    title: "Safety – MUST",
+    image: "https://images.unsplash.com/photo-1504215680853-026ed2a45def",
+    questions: [
+      "What must drivers do on the road?",
+      "Must cyclists wear helmets?",
+      "Must people follow safety rules at work?"
+    ]
+  },
+  {
+    title: "Travel – MIGHT",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+    questions: [
+      "Where might you travel in the future?",
+      "Might you travel alone?",
+      "Might you travel to another country to study?"
+    ]
+  },
+  {
+    title: "Technology – CAN",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+    questions: [
+      "What can you do with your phone?",
+      "Can you use Excel or Word?",
+      "Can you learn English online?"
+    ]
+  },
+  {
+    title: "Daily Obligations – HAVE TO",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+    questions: [
+      "Do you have to work on weekends?",
+      "Do you have to take public transport?",
+      "Do you have to be on time every day?"
+    ]
+  },
+  {
+    title: "Healthy Habits – SHOULD",
+    image: "https://images.unsplash.com/photo-1514996937319-344454492b37",
+    questions: [
+      "What should people do before sleeping?",
+      "Should you drink coffee at night?",
+      "Should children eat less sugar?"
+    ]
+  },
+  {
+    title: "Important Rules – MUST",
+    image: "https://images.unsplash.com/photo-1521790361543-f645cf042ec4",
+    questions: [
+      "What must people do in a hospital?",
+      "Must visitors be quiet?",
+      "Must workers follow strict rules?"
+    ]
+  },
+  {
+    title: "Possibilities – MIGHT",
+    image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429",
+    questions: [
+      "What might happen if you are very busy?",
+      "Might you change your job in the future?",
+      "Might you move to another city?"
+    ]
+  },
+  {
+    title: "Hobbies – CAN / SHOULD",
+    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97",
+    questions: [
+      "What hobbies can help you relax?",
+      "Should people have hobbies?",
+      "Can you start a new hobby this month?"
+    ]
+  }
+];
+
+let currentIndex = 0;
+
+function renderCard(index) {
+  const card = cards[index];
+  document.getElementById("card-title").textContent = card.title;
+  document.getElementById("card-image").src = card.image;
+  document.getElementById("card-image").alt = card.title;
+
+  const questionsEl = document.getElementById("card-questions");
+  questionsEl.innerHTML = "";
+  card.questions.forEach(q => {
+    const li = document.createElement("li");
+    li.textContent = q;
+    questionsEl.appendChild(li);
+  });
+
+  document.getElementById("card-counter").textContent =
+    `Card ${index + 1} of ${cards.length}`;
+}
+
+function nextCard() {
+  currentIndex = (currentIndex + 1) % cards.length;
+  renderCard(currentIndex);
+}
+
+function prevCard() {
+  currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+  renderCard(currentIndex);
+}
+
+renderCard(currentIndex);
+</script>
+
+</body>
+</html>
+:x
+
