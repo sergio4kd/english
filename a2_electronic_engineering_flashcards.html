@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2 Electronic Engineering Workplace Flashcards</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        pcb: {
+                            bg: '#0b1120',
+                            card: '#162238',
+                            border: '#1e3a5f',
+                            glow: '#00f2fe',
+                            accent: '#00d2ff',
+                            green: '#10b981',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom 3D Flip Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b1120;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e3a5f;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00d2ff;
+        }
+        /* PCB Line background grid pattern */
+        .pcb-grid {
+            background-color: #0b1120;
+            background-image: 
+                radial-gradient(#1e3a5f 1px, transparent 1px), 
+                radial-gradient(#1e3a5f 1px, #0b1120 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+        }
+    </style>
+</head>
+<body class="pcb-grid text-slate-200 min-h-screen font-sans antialiased flex flex-col justify-between">
+
+    <!-- Header Navbar -->
+    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-pcb-border px-4 py-3 sm:px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-cyan-500/10 border border-cyan-500/30 rounded-xl text-cyan-400">
+                    <i data-lucide="cpu" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-white tracking-wide flex items-center gap-2">
+                        ElectroCards <span class="text-xs font-semibold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">A2 Level</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">English for Electronic Engineers in Argentina</p>
+                </div>
+            </div>
+
+            <!-- Stats & Progress -->
+            <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+                <div class="flex items-center gap-3 bg-slate-800/80 border border-slate-700/60 px-3 py-1.5 rounded-xl">
+                    <div class="text-xs">
+                        <span class="text-slate-400 block text-[10px] uppercase font-mono">Progress</span>
+                        <span id="progress-text" class="font-bold text-cyan-400 font-mono">0/60 Mastered</span>
+                    </div>
+                    <div class="w-24 bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <button id="reset-progress-btn" class="text-xs text-slate-400 hover:text-rose-400 transition-colors flex items-center gap-1 p-2 bg-slate-800/40 rounded-lg hover:bg-rose-500/10" title="Reset all progress">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    <span class="hidden sm:inline">Reset</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 flex-grow w-full">
+        
+        <!-- Controls & Filters Section -->
+        <div class="mb-6 space-y-4">
+            <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+                
+                <!-- Search Input -->
+                <div class="relative flex-1">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="search-input" placeholder="Search simple terms, cards or Spanish words..." class="w-full pl-9 pr-4 py-2 bg-slate-800/80 border border-slate-700/80 rounded-xl text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-cyan-500 transition-colors">
+                </div>
+
+                <!-- Action Controls -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
+                    <button id="shuffle-btn" class="flex items-center gap-2 px-3.5 py-2 bg-cyan-600/20 text-cyan-300 border border-cyan-500/40 rounded-xl text-sm font-medium hover:bg-cyan-500/30 transition-all active:scale-95 whitespace-nowrap">
+                        <i data-lucide="shuffle" class="w-4 h-4"></i>
+                        <span>Shuffle</span>
+                    </button>
+                    <button id="toggle-filter-mastered" class="flex items-center gap-2 px-3.5 py-2 bg-slate-800 border border-slate-700 text-slate-300 rounded-xl text-sm font-medium hover:bg-slate-700 transition-all whitespace-nowrap">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+                        <span id="mastered-filter-label">Show All</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none text-xs sm:text-sm" id="category-filters">
+                <!-- Javascript will populate category buttons here -->
+            </div>
+        </div>
+
+        <!-- Flashcard Grid -->
+        <div id="flashcards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Cards will be dynamically inserted here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-16 px-4">
+            <div class="w-16 h-16 bg-slate-800/80 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-700 text-slate-400">
+                <i data-lucide="search-x" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-base font-semibold text-slate-200">No cards found</h3>
+            <p class="text-xs text-slate-400 mt-1">Try changing your search term or category filter.</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-pcb-border bg-slate-950/80 py-4 px-4 text-center text-xs text-slate-500">
+        <p>ElectroCards A2 • Designed for Entry-Level Electronic Engineers in Argentina • Web Speech Audio Enabled</p>
+    </footer>
+
+    <script>
+        // strictly A2 Level Content (Present Simple, Past Simple, basic modals can/must/should, simple vocab & phrases)
+        const FLASHCARDS_DATA = [
+            // 1. Workbench & Tools (10 Cards)
+            {
+                id: 1,
+                category: "Workbench & Tools",
+                question: "How do you measure voltage with a multimeter?",
+                words: [
+                    { en: "multimeter", es: "multímetro" },
+                    { en: "dial", es: "perilla / selector" },
+                    { en: "probes", es: "puntas de prueba" },
+                    { en: "DC voltage", es: "voltaje continuo" }
+                ],
+                starter: "Turn the dial to DC voltage and connect the black probe to ground."
+            },
+            {
+                id: 2,
+                category: "Workbench & Tools",
+                question: "What temperature do you use on your soldering iron?",
+                words: [
+                    { en: "soldering iron", es: "soldador" },
+                    { en: "heat up", es: "calentar" },
+                    { en: "solder wire", es: "estaño" },
+                    { en: "tip", es: "punta" }
+                ],
+                starter: "I set my soldering iron to 350 degrees Celsius for standard components."
+            },
+            {
+                id: 3,
+                category: "Workbench & Tools",
+                question: "When should you use an oscilloscope?",
+                words: [
+                    { en: "oscilloscope", es: "osciloscopio" },
+                    { en: "signal", es: "señal" },
+                    { en: "waveform", es: "forma de onda" },
+                    { en: "frequency", es: "frecuencia" }
+                ],
+                starter: "I use an oscilloscope to check signals and see waveforms."
+            },
+            {
+                id: 4,
+                category: "Workbench & Tools",
+                question: "Why do you wear an ESD wrist strap?",
+                words: [
+                    { en: "ESD wrist strap", es: "pulsera antiestática" },
+                    { en: "static electricity", es: "electricidad estática" },
+                    { en: "protect", es: "proteger" },
+                    { en: "ground", es: "tierra" }
+                ],
+                starter: "I wear an ESD strap to protect electronic chips from static electricity."
+            },
+            {
+                id: 5,
+                category: "Workbench & Tools",
+                question: "How do you remove plastic coating from a cable?",
+                words: [
+                    { en: "wire stripper", es: "pelacables" },
+                    { en: "copper wire", es: "cable de cobre" },
+                    { en: "cut", es: "cortar" },
+                    { en: "strip", es: "pelar" }
+                ],
+                starter: "I use a wire stripper to remove the plastic and show the wire."
+            },
+            {
+                id: 6,
+                category: "Workbench & Tools",
+                question: "Where is the desoldering pump on your bench?",
+                words: [
+                    { en: "desoldering pump", es: "extractor de estaño" },
+                    { en: "remove solder", es: "sacar estaño" },
+                    { en: "clean", es: "limpiar" },
+                    { en: "pad", es: "pad / pista" }
+                ],
+                starter: "The desoldering pump is next to the soldering stand on my bench."
+            },
+            {
+                id: 7,
+                category: "Workbench & Tools",
+                question: "What tool do you use to hold small components?",
+                words: [
+                    { en: "tweezers", es: "pinzas pequeñas" },
+                    { en: "hold", es: "sostener" },
+                    { en: "small part", es: "pieza pequeña" },
+                    { en: "SMD component", es: "componente SMD" }
+                ],
+                starter: "I use fine metal tweezers to hold small SMD components."
+            },
+            {
+                id: 8,
+                category: "Workbench & Tools",
+                question: "How do you turn on the bench power supply?",
+                words: [
+                    { en: "power supply", es: "fuente de alimentación" },
+                    { en: "power button", es: "botón de encendido" },
+                    { en: "current limit", es: "límite de corriente" },
+                    { en: "output", es: "salida" }
+                ],
+                starter: "Press the power button and set the current limit first."
+            },
+            {
+                id: 9,
+                category: "Workbench & Tools",
+                question: "Is the heat gun ready to shrink the tube?",
+                words: [
+                    { en: "heat gun", es: "pistola de calor" },
+                    { en: "heat shrink tube", es: "tubo termocontraíble" },
+                    { en: "warm up", es: "calentarse" },
+                    { en: "isolate", es: "aislar" }
+                ],
+                starter: "Yes, the heat gun is hot now. We can shrink the tube."
+            },
+            {
+                id: 10,
+                category: "Workbench & Tools",
+                question: "Where can I find a magnifying glass for small boards?",
+                words: [
+                    { en: "magnifying glass", es: "lupa" },
+                    { en: "inspect", es: "inspeccionar" },
+                    { en: "solder joint", es: "punto de soldadura" },
+                    { en: "light", es: "luz" }
+                ],
+                starter: "There is a magnifying glass with a lamp near the assembly table."
+            },
+
+            // 2. Components & Circuits (10 Cards)
+            {
+                id: 11,
+                category: "Components & Circuits",
+                question: "What is the function of a resistor?",
+                words: [
+                    { en: "resistor", es: "resistencia" },
+                    { en: "limit current", es: "limitar la corriente" },
+                    { en: "Ohms", es: "Ohmios" },
+                    { en: "color code", es: "código de colores" }
+                ],
+                starter: "A resistor limits the electric current in a circuit."
+            },
+            {
+                id: 12,
+                category: "Components & Circuits",
+                question: "How do you know the orientation of a capacitor?",
+                words: [
+                    { en: "capacitor", es: "capacitor / condensador" },
+                    { en: "negative line", es: "línea negativa" },
+                    { en: "long pin", es: "pin largo (positivo)" },
+                    { en: "polarity", es: "polaridad" }
+                ],
+                starter: "The long pin is positive and the stripe shows the negative pin."
+            },
+            {
+                id: 13,
+                category: "Components & Circuits",
+                question: "Why is the LED not turning on?",
+                words: [
+                    { en: "LED", es: "diodo LED" },
+                    { en: "anode / cathode", es: "ánodo / cátodo" },
+                    { en: "backward", es: "al revés" },
+                    { en: "burn out", es: "quemarse" }
+                ],
+                starter: "Maybe the LED is backward or connected without a resistor."
+            },
+            {
+                id: 14,
+                category: "Components & Circuits",
+                question: "Which microcontroller are you using for this project?",
+                words: [
+                    { en: "microcontroller", es: "microcontrolador" },
+                    { en: "chip", es: "chip / integrado" },
+                    { en: "program", es: "programar" },
+                    { en: "GPIO pins", es: "pines de entrada/salida" }
+                ],
+                starter: "I am using an ESP32 microcontroller with Wi-Fi."
+            },
+            {
+                id: 15,
+                category: "Components & Circuits",
+                question: "What voltage does this sensor need?",
+                words: [
+                    { en: "sensor", es: "sensor" },
+                    { en: "3.3 Volts", es: "3.3 Voltios" },
+                    { en: "power pin", es: "pin de alimentación (VCC)" },
+                    { en: "input", es: "entrada" }
+                ],
+                starter: "This sensor needs 3.3 Volts to work correctly."
+            },
+            {
+                id: 16,
+                category: "Components & Circuits",
+                question: "Does this circuit use AC or DC power?",
+                words: [
+                    { en: "AC current", es: "corriente alterna" },
+                    { en: "DC current", es: "corriente continua" },
+                    { en: "battery", es: "batería" },
+                    { en: "adapter", es: "adaptador" }
+                ],
+                starter: "It uses 5 Volts DC power from a USB cable."
+            },
+            {
+                id: 17,
+                category: "Components & Circuits",
+                question: "What is a diode used for?",
+                words: [
+                    { en: "diode", es: "diodo" },
+                    { en: "one direction", es: "una sola dirección" },
+                    { en: "protect", es: "proteger" },
+                    { en: "reverse current", es: "corriente inversa" }
+                ],
+                starter: "A diode lets electricity flow in only one direction."
+            },
+            {
+                id: 18,
+                category: "Components & Circuits",
+                question: "Where is the fuse in this circuit?",
+                words: [
+                    { en: "fuse", es: "fusible" },
+                    { en: "blow / break", es: "quemarse / cortarse" },
+                    { en: "high current", es: "corriente alta" },
+                    { en: "safety", es: "seguridad" }
+                ],
+                starter: "The fuse is near the main power connector."
+            },
+            {
+                id: 19,
+                category: "Components & Circuits",
+                question: "What does this transistor switch?",
+                words: [
+                    { en: "transistor", es: "transistor" },
+                    { en: "switch", es: "interruptor / llave" },
+                    { en: "relay", es: "relé" },
+                    { en: "small signal", es: "señal pequeña" }
+                ],
+                starter: "This transistor switches the small DC relay on and off."
+            },
+            {
+                id: 20,
+                category: "Components & Circuits",
+                question: "Is this board double-sided?",
+                words: [
+                    { en: "PCB board", es: "placa de circuito impreso" },
+                    { en: "top layer", es: "capa superior" },
+                    { en: "bottom layer", es: "capa inferior" },
+                    { en: "copper track", es: "pista de cobre" }
+                ],
+                starter: "Yes, it is a double-sided PCB board with copper on both sides."
+            },
+
+            // 3. Testing & Troubleshooting (10 Cards)
+            {
+                id: 21,
+                category: "Testing & Troubleshooting",
+                question: "Can you read this circuit schematic?",
+                words: [
+                    { en: "schematic", es: "esquema eléctrico" },
+                    { en: "symbol", es: "símbolo" },
+                    { en: "connection", es: "conexión" },
+                    { en: "diagram", es: "diagrama" }
+                ],
+                starter: "Yes, I can follow the symbols and connections in the schematic."
+            },
+            {
+                id: 22,
+                category: "Testing & Troubleshooting",
+                question: "How do you check for a short circuit?",
+                words: [
+                    { en: "short circuit", es: "cortocircuito" },
+                    { en: "continuity mode", es: "modo continuidad" },
+                    { en: "beep sound", es: "sonido de pitido" },
+                    { en: "zero Ohms", es: "cero Ohmios" }
+                ],
+                starter: "I use continuity mode on my multimeter and listen for a beep."
+            },
+            {
+                id: 23,
+                category: "Testing & Troubleshooting",
+                question: "Why is this microchip getting hot?",
+                words: [
+                    { en: "overheating", es: "recalentamiento" },
+                    { en: "wrong pin", es: "pin equivocado" },
+                    { en: "high voltage", es: "alto voltaje" },
+                    { en: "turn off", es: "apagar" }
+                ],
+                starter: "Turn off power! It is getting hot because voltage is too high."
+            },
+            {
+                id: 24,
+                category: "Testing & Troubleshooting",
+                question: "How do you test if a wire is broken inside?",
+                words: [
+                    { en: "broken wire", es: "cable cortado" },
+                    { en: "test continuity", es: "probar continuidad" },
+                    { en: "end to end", es: "de extremo a extremo" },
+                    { en: "flexible", es: "flexible" }
+                ],
+                starter: "I put multimeter probes on both ends to test continuity."
+            },
+            {
+                id: 25,
+                category: "Testing & Troubleshooting",
+                question: "What is wrong with this prototype board?",
+                words: [
+                    { en: "bad solder joint", es: "falsa soldadura" },
+                    { en: "missing part", es: "pieza faltante" },
+                    { en: "wrong value", es: "valor incorrecto" },
+                    { en: "no output", es: "sin salida" }
+                ],
+                starter: "There is a bad solder joint on pin 3, so there is no signal."
+            },
+            {
+                id: 26,
+                category: "Testing & Troubleshooting",
+                question: "Did you test the input voltage on the board?",
+                words: [
+                    { en: "input voltage", es: "voltaje de entrada" },
+                    { en: "measure", es: "medir" },
+                    { en: "stable", es: "estable" },
+                    { en: "drop", es: "caída / bajar" }
+                ],
+                starter: "Yes, I measured it. The input voltage is 12 Volts and stable."
+            },
+            {
+                id: 27,
+                category: "Testing & Troubleshooting",
+                question: "Why is the serial communication not working?",
+                words: [
+                    { en: "baud rate", es: "velocidad en baudios" },
+                    { en: "TX and RX", es: "transmisión y recepción" },
+                    { en: "swapped wires", es: "cables invertidos" },
+                    { en: "port", es: "puerto" }
+                ],
+                starter: "Maybe the TX and RX wires are swapped or baud rate is wrong."
+            },
+            {
+                id: 28,
+                category: "Testing & Troubleshooting",
+                question: "How can we fix this noisy signal?",
+                words: [
+                    { en: "noise", es: "ruido eléctrico" },
+                    { en: "filter capacitor", es: "capacitor de filtro" },
+                    { en: "shielded wire", es: "cable blindado" },
+                    { en: "clean signal", es: "señal limpia" }
+                ],
+                starter: "We can add a small filter capacitor to remove noise."
+            },
+            {
+                id: 29,
+                category: "Testing & Troubleshooting",
+                question: "What should you do when a component burns?",
+                words: [
+                    { en: "disconnect power", es: "desconectar energía" },
+                    { en: "replace part", es: "reemplazar pieza" },
+                    { en: "check cause", es: "revisar causa" },
+                    { en: "smoke", es: "humo" }
+                ],
+                starter: "First, disconnect power immediately, then check why it burned."
+            },
+            {
+                id: 30,
+                category: "Testing & Troubleshooting",
+                question: "How do you know if the firmware code has an error?",
+                words: [
+                    { en: "compiler error", es: "error de compilación" },
+                    { en: "serial log", es: "registro serie" },
+                    { en: "bug", es: "falla / bug" },
+                    { en: "debug mode", es: "modo depuración" }
+                ],
+                starter: "I check the serial log on my computer to see error messages."
+            },
+
+            // 4. Workplace Communication & Teamwork (10 Cards)
+            {
+                id: 31,
+                category: "Workplace Communication & Teamwork",
+                question: "How do you ask a senior engineer for help politely?",
+                words: [
+                    { en: "Excuse me", es: "Disculpe" },
+                    { en: "have a moment", es: "tener un momento" },
+                    { en: "stuck", es: "trabado / estancado" },
+                    { en: "explain", es: "explicar" }
+                ],
+                starter: "Excuse me, do you have a moment? I am stuck on this board."
+            },
+            {
+                id: 32,
+                category: "Workplace Communication & Teamwork",
+                question: "What do you say during the morning daily standup meeting?",
+                words: [
+                    { en: "yesterday", es: "ayer" },
+                    { en: "today", es: "hoy" },
+                    { en: "finish", es: "terminar" },
+                    { en: "plan to do", es: "planear hacer" }
+                ],
+                starter: "Yesterday I tested the power supply. Today I will solder the main board."
+            },
+            {
+                id: 33,
+                category: "Workplace Communication & Teamwork",
+                question: "How do you explain a delay in your project?",
+                words: [
+                    { en: "delay", es: "demora" },
+                    { en: "waiting for parts", es: "esperando repuestos" },
+                    { en: "supplier", es: "proveedor" },
+                    { en: "need more time", es: "necesitar más tiempo" }
+                ],
+                starter: "I need more time because we are waiting for components from the supplier."
+            },
+            {
+                id: 34,
+                category: "Workplace Communication & Teamwork",
+                question: "How do you write a simple status email to your manager?",
+                words: [
+                    { en: "Hi / Dear", es: "Hola / Estimado" },
+                    { en: "update", es: "actualización" },
+                    { en: "task completed", es: "tarea completada" },
+                    { en: "regards", es: "saludos" }
+                ],
+                starter: "Hi Juan, I completed testing board #2 today. Everything works well."
+            },
+            {
+                id: 35,
+                category: "Workplace Communication & Teamwork",
+                question: "What do you say when you don't understand an instruction?",
+                words: [
+                    { en: "repeat", es: "repetir" },
+                    { en: "slowly", es: "despacio" },
+                    { en: "again", es: "de nuevo" },
+                    { en: "understand", es: "entender" }
+                ],
+                starter: "Could you please repeat that more slowly? I didn't understand."
+            },
+            {
+                id: 36,
+                category: "Workplace Communication & Teamwork",
+                question: "How do you report a hardware bug to your team?",
+                words: [
+                    { en: "found an issue", es: "encontré un problema" },
+                    { en: "overheat", es: "recalentarse" },
+                    { en: "pin 5", es: "pin 5" },
+                    { en: "report", es: "reportar" }
+                ],
+                starter: "I found an issue: resistor R4 gets hot when input is 12 Volts."
+            },
+            {
+                id: 37,
+                category: "Workplace Communication & Teamwork",
+                question: "How do you offer help to a teammate?",
+                words: [
+                    { en: "need help", es: "necesitar ayuda" },
+                    { en: "assist", es: "asistir / ayudar" },
+                    { en: "free now", es: "desocupado ahora" },
+                    { en: "together", es: "juntos" }
+                ],
+                starter: "I am free now. Do you need help with soldering those connectors?"
+            },
+            {
+                id: 38,
+                category: "Workplace Communication & Teamwork",
+                question: "Where do we order new components for the lab?",
+                words: [
+                    { en: "order form", es: "formulario de pedido" },
+                    { en: "purchase", es: "comprar" },
+                    { en: "stock", es: "stock / inventario" },
+                    { en: "part number", es: "número de pieza" }
+                ],
+                starter: "You need to write the part number in the lab purchase form."
+            },
+            {
+                id: 39,
+                category: "Workplace Communication & Teamwork",
+                question: "How do you ask for a datasheet in English?",
+                words: [
+                    { en: "datasheet", es: "hoja de datos" },
+                    { en: "PDF file", es: "archivo PDF" },
+                    { en: "link", es: "enlace / link" },
+                    { en: "send", es: "enviar" }
+                ],
+                starter: "Can you send me the link or PDF for this IC datasheet?"
+            },
+            {
+                id: 40,
+                category: "Workplace Communication & Teamwork",
+                question: "What do you say when you finish your daily work?",
+                words: [
+                    { en: "finished", es: "terminado" },
+                    { en: "clean bench", es: "mesa limpia" },
+                    { en: "see you tomorrow", es: "hasta mañana" },
+                    { en: "turn off lights", es: "apagar luces" }
+                ],
+                starter: "I finished my work and cleaned my bench. See you tomorrow!"
+            },
+
+            // 5. Safety & Lab Rules (10 Cards)
+            {
+                id: 41,
+                category: "Safety & Lab Rules",
+                question: "Why must you wear safety glasses in the electronics lab?",
+                words: [
+                    { en: "safety glasses", es: "gafas de protección" },
+                    { en: "protect eyes", es: "proteger los ojos" },
+                    { en: "solder splash", es: "salpicadura de soldadura" },
+                    { en: "wire pieces", es: "trozos de cable" }
+                ],
+                starter: "You must wear safety glasses to protect your eyes from solder splashes."
+            },
+            {
+                id: 42,
+                category: "Safety & Lab Rules",
+                question: "What should you do before touching high voltage parts?",
+                words: [
+                    { en: "unplug power", es: "desenchufar energía" },
+                    { en: "high voltage", es: "alto voltaje" },
+                    { en: "discharge capacitor", es: "descargar capacitor" },
+                    { en: "electric shock", es: "choque eléctrico" }
+                ],
+                starter: "Always unplug power cable and discharge big capacitors first."
+            },
+            {
+                id: 43,
+                category: "Safety & Lab Rules",
+                question: "Where is the emergency stop button in the lab?",
+                words: [
+                    { en: "emergency button", es: "botón de emergencia" },
+                    { en: "near the door", es: "cerca de la puerta" },
+                    { en: "press", es: "presionar" },
+                    { en: "cut main power", es: "corta electricidad general" }
+                ],
+                starter: "The emergency red button is on the wall near the lab door."
+            },
+            {
+                id: 44,
+                category: "Safety & Lab Rules",
+                question: "Why should you keep liquids away from your workbench?",
+                words: [
+                    { en: "liquids / coffee", es: "líquidos / café" },
+                    { en: "spill", es: "derramar" },
+                    { en: "damage board", es: "dañar la placa" },
+                    { en: "short circuit", es: "cortocircuito" }
+                ],
+                starter: "Because spilled coffee can cause short circuits and damage boards."
+            },
+            {
+                id: 45,
+                category: "Safety & Lab Rules",
+                question: "How do you leave your workbench at the end of the day?",
+                words: [
+                    { en: "turn off tools", es: "apagar herramientas" },
+                    { en: "unplug iron", es: "desenchufar soldador" },
+                    { en: "clean table", es: "limpiar mesa" },
+                    { en: "put away parts", es: "guardar piezas" }
+                ],
+                starter: "I turn off all equipment, unplug the iron, and clear the table."
+            },
+            {
+                id: 46,
+                category: "Safety & Lab Rules",
+                question: "Why do we use fume extractors when soldering?",
+                words: [
+                    { en: "fume extractor", es: "extractor de humo" },
+                    { en: "smoke", es: "humo" },
+                    { en: "harmful gas", es: "gases dañinos" },
+                    { en: "breathe", es: "respirar" }
+                ],
+                starter: "We use extractors to avoid breathing harmful smoke from solder."
+            },
+            {
+                id: 47,
+                category: "Safety & Lab Rules",
+                question: "What is the rule about wearing loose metal items while working?",
+                words: [
+                    { en: "rings / watches", es: "anillos / relojes" },
+                    { en: "metal objects", es: "objetos metálicos" },
+                    { en: "conduct electricity", es: "conducen electricidad" },
+                    { en: "remove", es: "quitar / sacar" }
+                ],
+                starter: "Remove metal rings and watches because metal conducts electricity."
+            },
+            {
+                id: 48,
+                category: "Safety & Lab Rules",
+                question: "Where is the fire extinguisher located?",
+                words: [
+                    { en: "fire extinguisher", es: "extintor de incendios" },
+                    { en: "Class C fire", es: "fuego eléctrico (Clase C)" },
+                    { en: "wall bracket", es: "soporte de pared" },
+                    { en: "safety exit", es: "salida de emergencia" }
+                ],
+                starter: "The fire extinguisher is mounted next to the safety exit."
+            },
+            {
+                id: 49,
+                category: "Safety & Lab Rules",
+                question: "How do you safely throw away sharp component leads?",
+                words: [
+                    { en: "component leads", es: "patitas de componentes" },
+                    { en: "sharp ends", es: "puntas filosas" },
+                    { en: "trash bin", es: "tacho de basura" },
+                    { en: "container", es: "contenedor" }
+                ],
+                starter: "Put sharp cut wire ends in the designated metal container."
+            },
+            {
+                id: 50,
+                category: "Safety & Lab Rules",
+                question: "What should you do if you burn your finger on a soldering iron?",
+                words: [
+                    { en: "cool water", es: "agua fría" },
+                    { en: "first aid kit", es: "botiquín de primeros auxilios" },
+                    { en: "inform supervisor", es: "avisar al supervisor" },
+                    { en: "burn cream", es: "crema para quemaduras" }
+                ],
+                starter: "Put cool water on the burn for 10 minutes and tell your supervisor."
+            },
+
+            // 6. Simple Project Tasks (10 Cards)
+            {
+                id: 51,
+                category: "Simple Project Tasks",
+                question: "Are you ready to assemble the prototype board?",
+                words: [
+                    { en: "assemble", es: "ensamblar / armar" },
+                    { en: "prototype", es: "prototipo" },
+                    { en: "bill of materials", es: "lista de componentes (BOM)" },
+                    { en: "solder parts", es: "soldar piezas" }
+                ],
+                starter: "Yes, I have all parts from the list and my soldering station ready."
+            },
+            {
+                id: 52,
+                category: "Simple Project Tasks",
+                question: "How do you update firmware on the board?",
+                words: [
+                    { en: "connect USB", es: "conectar USB" },
+                    { en: "open software", es: "abrir software" },
+                    { en: "flash code", es: "grabar código" },
+                    { en: "reset button", es: "botón de reseteo" }
+                ],
+                starter: "Connect USB, open the programming tool, and click upload."
+            },
+            {
+                id: 53,
+                category: "Simple Project Tasks",
+                question: "Where do you connect the temperature sensor?",
+                words: [
+                    { en: "analog input", es: "entrada analógica" },
+                    { en: "pin A0", es: "pin A0" },
+                    { en: "ground wire", es: "cable de tierra" },
+                    { en: "signal wire", es: "cable de señal" }
+                ],
+                starter: "Connect signal wire to analog pin A0 and red wire to 5 Volts."
+            },
+            {
+                id: 54,
+                category: "Simple Project Tasks",
+                question: "Can you check the datasheet for pin numbers?",
+                words: [
+                    { en: "datasheet", es: "hoja de datos" },
+                    { en: "pin diagram", es: "diagrama de pines" },
+                    { en: "VCC and GND", es: "alimentación y tierra" },
+                    { en: "page number", es: "número de página" }
+                ],
+                starter: "Yes, page 3 shows pin 1 is VCC and pin 8 is Ground."
+            },
+            {
+                id: 55,
+                category: "Simple Project Tasks",
+                question: "How do you test if the Bluetooth module is working?",
+                words: [
+                    { en: "pair device", es: "emparejar dispositivo" },
+                    { en: "phone app", es: "aplicación de celular" },
+                    { en: "blue LED blink", es: "parpadeo de LED azul" },
+                    { en: "send test string", es: "enviar texto de prueba" }
+                ],
+                starter: "Pair with your phone and check if the blue LED stops blinking."
+            },
+            {
+                id: 56,
+                category: "Simple Project Tasks",
+                question: "Did you double-check the power connector wires?",
+                words: [
+                    { en: "red for positive", es: "rojo para positivo" },
+                    { en: "black for ground", es: "negro para masa / tierra" },
+                    { en: "reverse polarity", es: "polaridad invertida" },
+                    { en: "correct order", es: "orden correcto" }
+                ],
+                starter: "Yes, red is positive (+) and black is ground (-)."
+            },
+            {
+                id: 57,
+                category: "Simple Project Tasks",
+                question: "How do you log measurement results in the project report?",
+                words: [
+                    { en: "write table", es: "escribir tabla" },
+                    { en: "Excel sheet", es: "planilla de Excel" },
+                    { en: "measured value", es: "valor medido" },
+                    { en: "date and time", es: "fecha y hora" }
+                ],
+                starter: "I put measured voltage values directly in our shared Excel sheet."
+            },
+            {
+                id: 58,
+                category: "Simple Project Tasks",
+                question: "What is the next step after soldering all components?",
+                words: [
+                    { en: "visual inspection", es: "inspección visual" },
+                    { en: "clean flux", es: "limpiar resina" },
+                    { en: "test power", es: "probar energía" },
+                    { en: "load code", es: "cargar código" }
+                ],
+                starter: "First inspect joints visually, then test power without chip."
+            },
+            {
+                id: 59,
+                category: "Simple Project Tasks",
+                question: "Why are we using a breadboard for this test?",
+                words: [
+                    { en: "breadboard", es: "protoboard" },
+                    { en: "fast setup", es: "armado rápido" },
+                    { en: "no soldering", es: "sin soldar" },
+                    { en: "change parts easily", es: "cambiar componentes fácil" }
+                ],
+                starter: "Because on a breadboard we can test circuits without soldering."
+            },
+            {
+                id: 60,
+                category: "Simple Project Tasks",
+                question: "How do you store finished circuit boards safely?",
+                words: [
+                    { en: "anti-static bag", es: "bolsa antiestática" },
+                    { en: "label box", es: "etiquetar caja" },
+                    { en: "dry place", es: "lugar seco" },
+                    { en: "safe storage", es: "almacenamiento seguro" }
+                ],
+                starter: "Put each finished board inside an anti-static bag and label it."
+            }
+        ];
+
+        // Categories List
+        const CATEGORIES = [
+            "All Categories",
+            "Workbench & Tools",
+            "Components & Circuits",
+            "Testing & Troubleshooting",
+            "Workplace Communication & Teamwork",
+            "Safety & Lab Rules",
+            "Simple Project Tasks"
+        ];
+    </script>
+
+    <script>
+        // App State
+        let currentCategory = "All Categories";
+        let searchQuery = "";
+        let showOnlyMastered = false;
+        let cardsData = [...FLASHCARDS_DATA];
+        
+        // LocalStorage for Mastered IDs
+        let masteredCardIds = new Set(JSON.parse(localStorage.getItem("electro_mastered_cards") || "[]"));
+
+        // DOM Elements
+        const gridContainer = document.getElementById("flashcards-grid");
+        const emptyState = document.getElementById("empty-state");
+        const searchInput = document.getElementById("search-input");
+        const categoryFiltersContainer = document.getElementById("category-filters");
+        const shuffleBtn = document.getElementById("shuffle-btn");
+        const toggleFilterMasteredBtn = document.getElementById("toggle-filter-mastered");
+        const masteredFilterLabel = document.getElementById("mastered-filter-label");
+        const progressText = document.getElementById("progress-text");
+        const progressBar = document.getElementById("progress-bar");
+        const resetProgressBtn = document.getElementById("reset-progress-btn");
+
+        // Speech Synthesis setup
+        const synth = window.speechSynthesis;
+
+        function speakText(text, lang = "en-US") {
+            if (!synth) {
+                alert("Text-to-speech is not supported in this browser.");
+                return;
+            }
+            synth.cancel(); // stop previous speech
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = 0.9; // Slightly slower speech speed for A2 students
+            synth.speak(utterance);
+        }
+
+        // Initialize App
+        function initApp() {
+            renderCategoryButtons();
+            renderCards();
+            updateProgress();
+            
+            // Event Listeners
+            searchInput.addEventListener("input", (e) => {
+                searchQuery = e.target.value.toLowerCase().trim();
+                renderCards();
+            });
+
+            shuffleBtn.addEventListener("click", () => {
+                shuffleCards();
+            });
+
+            toggleFilterMasteredBtn.addEventListener("click", () => {
+                showOnlyMastered = !showOnlyMastered;
+                masteredFilterLabel.textContent = showOnlyMastered ? "Mastered Only" : "Show All";
+                toggleFilterMasteredBtn.classList.toggle("bg-emerald-500/20", showOnlyMastered);
+                toggleFilterMasteredBtn.classList.toggle("border-emerald-500/50", showOnlyMastered);
+                renderCards();
+            });
+
+            resetProgressBtn.addEventListener("click", () => {
+                if (confirm("Reset all mastered flashcards progress?")) {
+                    masteredCardIds.clear();
+                    saveMasteredState();
+                    updateProgress();
+                    renderCards();
+                }
+            });
+
+            // Initialize Lucide icons
+            lucide.createIcons();
+        }
+
+        function saveMasteredState() {
+            localStorage.setItem("electro_mastered_cards", JSON.stringify([...masteredCardIds]));
+        }
+
+        function updateProgress() {
+            const total = FLASHCARDS_DATA.length;
+            const count = masteredCardIds.size;
+            const percentage = Math.round((count / total) * 100);
+            
+            progressText.textContent = `${count}/${total} Mastered`;
+            progressBar.style.width = `${percentage}%`;
+        }
+
+        function renderCategoryButtons() {
+            categoryFiltersContainer.innerHTML = CATEGORIES.map(cat => {
+                const isActive = cat === currentCategory;
+                const activeClasses = isActive 
+                    ? "bg-cyan-500 text-slate-950 font-semibold shadow-lg shadow-cyan-500/20" 
+                    : "bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700/60";
+                return `
+                    <button 
+                        onclick="selectCategory('${cat}')" 
+                        class="px-3.5 py-1.5 rounded-xl transition-all whitespace-nowrap text-xs font-medium ${activeClasses}">
+                        ${cat}
+                    </button>
+                `;
+            }).join("");
+        }
+
+        window.selectCategory = function(cat) {
+            currentCategory = cat;
+            renderCategoryButtons();
+            renderCards();
+        }
+
+        function shuffleCards() {
+            // Simple Fisher-Yates shuffle algorithm
+            for (let i = cardsData.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cardsData[i], cardsData[j]] = [cardsData[j], cardsData[i]];
+            }
+            renderCards();
+        }
+
+        function renderCards() {
+            gridContainer.innerHTML = "";
+
+            const filtered = cardsData.filter(card => {
+                const matchesCategory = (currentCategory === "All Categories") || (card.category === currentCategory);
+                
+                const matchesSearch = searchQuery === "" || 
+                    card.question.toLowerCase().includes(searchQuery) ||
+                    card.starter.toLowerCase().includes(searchQuery) ||
+                    card.words.some(w => w.en.toLowerCase().includes(searchQuery) || w.es.toLowerCase().includes(searchQuery));
+
+                const matchesMastered = !showOnlyMastered || masteredCardIds.has(card.id);
+
+                return matchesCategory && matchesSearch && matchesMastered;
+            });
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove("hidden");
+            } else {
+                emptyState.classList.add("hidden");
+            }
+
+            filtered.forEach(card => {
+                const isMastered = masteredCardIds.has(card.id);
+                const cardEl = document.createElement("div");
+                cardEl.className = "perspective-1000 h-[380px] w-full";
+                
+                cardEl.innerHTML = `
+                    <div id="card-inner-${card.id}" class="relative w-full h-full duration-500 transform-style-3d cursor-pointer group">
+                        
+                        <!-- FRONT OF CARD -->
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border ${isMastered ? 'border-emerald-500/50' : 'border-slate-800'} rounded-2xl p-5 flex flex-col justify-between backface-hidden shadow-xl hover:border-cyan-500/60 transition-colors">
+                            
+                            <!-- Card Header -->
+                            <div class="flex items-start justify-between gap-2">
+                                <span class="text-[11px] font-mono px-2 py-1 rounded-md bg-slate-800 text-cyan-400 border border-slate-700/60 font-medium">
+                                    ${card.category}
+                                </span>
+                                
+                                <div class="flex items-center gap-1.5" onclick="event.stopPropagation()">
+                                    <button 
+                                        onclick="toggleMastered(${card.id})" 
+                                        class="p-1.5 rounded-lg transition-colors ${isMastered ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 hover:text-slate-300 bg-slate-800/60'}" 
+                                        title="${isMastered ? 'Mark as learning' : 'Mark as mastered'}">
+                                        <i data-lucide="${isMastered ? 'check-circle-2' : 'circle'}" class="w-5 h-5"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Question Content -->
+                            <div class="my-auto py-4 text-center px-2">
+                                <p class="text-xs uppercase tracking-wider text-slate-500 font-mono mb-2">Question / Situation</p>
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-100 leading-snug">
+                                    "${card.question}"
+                                </h3>
+                            </div>
+
+                            <!-- Card Front Footer -->
+                            <div class="flex items-center justify-between pt-3 border-t border-slate-800/80 text-xs text-slate-400">
+                                <button 
+                                    onclick="event.stopPropagation(); speakText('${card.question.replace(/'/g, "\\'")}')" 
+                                    class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors">
+                                    <i data-lucide="volume-2" class="w-4 h-4"></i>
+                                    <span>Listen</span>
+                                </button>
+                                <span class="text-slate-500 flex items-center gap-1 text-[11px]">
+                                    Click to flip <i data-lucide="rotate-cw" class="w-3 h-3"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- BACK OF CARD -->
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border border-cyan-500/40 rounded-2xl p-5 flex flex-col justify-between backface-hidden rotate-y-180 shadow-2xl bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950">
+                            
+                            <!-- Words Section -->
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 flex items-center gap-1">
+                                        <i data-lucide="book-open" class="w-3 h-3"></i> Words you can use
+                                    </span>
+                                    <span class="text-[10px] text-slate-500 font-mono">A2 Vocabulary</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    ${card.words.map(w => `
+                                        <div class="bg-slate-800/70 border border-slate-700/50 p-2 rounded-lg text-xs">
+                                            <div class="font-semibold text-slate-200">${w.en}</div>
+                                            <div class="text-[11px] text-cyan-300/80">${w.es}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Example Answer Section -->
+                            <div class="bg-slate-800/40 border border-cyan-500/20 rounded-xl p-3 my-2">
+                                <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wide block mb-1">
+                                    Simple Answer:
+                                </span>
+                                <p class="text-xs sm:text-sm text-slate-200 italic font-sans leading-relaxed">
+                                    "${card.starter}"
+                                </p>
+                            </div>
+
+                            <!-- Card Back Footer -->
+                            <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs text-slate-400" onclick="event.stopPropagation()">
+                                <button 
+                                    onclick="speakText('${card.starter.replace(/'/g, "\\'")}')" 
+                                    class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors">
+                                    <i data-lucide="volume-2" class="w-4 h-4"></i>
+                                    <span>Listen Answer</span>
+                                </button>
+
+                                <button 
+                                    onclick="flipCard(${card.id})" 
+                                    class="text-slate-400 hover:text-slate-200 text-xs flex items-center gap-1 py-1 px-2 rounded bg-slate-800/80">
+                                    <span>Flip back</span>
+                                    <i data-lucide="undo-2" class="w-3 h-3"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+
+                // Add flip handler on card wrapper click
+                const cardInner = cardEl.querySelector(`#card-inner-${card.id}`);
+                cardEl.addEventListener("click", () => {
+                    cardInner.classList.toggle("rotate-y-180");
+                });
+
+                gridContainer.appendChild(cardEl);
+            });
+
+            lucide.createIcons();
+        }
+
+        window.flipCard = function(id) {
+            const cardInner = document.getElementById(`card-inner-${id}`);
+            if (cardInner) {
+                cardInner.classList.toggle("rotate-y-180");
+            }
+        }
+
+        window.toggleMastered = function(id) {
+            if (masteredCardIds.has(id)) {
+                masteredCardIds.delete(id);
+            } else {
+                masteredCardIds.add(id);
+            }
+            saveMasteredState();
+            updateProgress();
+            renderCards();
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            initApp();
+        };
+    </script>
+</body>
+</html>
