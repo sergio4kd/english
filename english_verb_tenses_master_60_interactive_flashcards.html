@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Verb Tenses Master - 60 Interactive Flashcards</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    },
+                    perspective: {
+                        '1000': '1000px'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* 3D Card Flip Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(107, 114, 128, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-full font-sans transition-colors duration-300 flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo & Title -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-blue-500/20">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight text-slate-900 dark:text-white">Tense Master 60</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Interactive English Grammar Trainer</p>
+                </div>
+            </div>
+
+            <!-- Header Controls & Theme Toggle -->
+            <div class="flex items-center space-x-3">
+                <!-- Streak Badge -->
+                <div class="flex items-center space-x-1 px-3 py-1.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 rounded-full text-amber-600 dark:text-amber-400 font-semibold text-sm">
+                    <i class="fa-solid fa-fire text-amber-500 animate-pulse"></i>
+                    <span id="streak-count">0</span>
+                    <span class="hidden md:inline text-xs font-normal">Streak</span>
+                </div>
+
+                <!-- Dark Mode Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition" title="Toggle Theme">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block"></i>
+                </button>
+
+                <!-- Help / Keyboard Shortcuts Modal Trigger -->
+                <button id="help-btn" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition" title="Keyboard Shortcuts">
+                    <i class="fa-solid fa-keyboard"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col justify-between">
+        
+        <!-- Controls & Filter Toolbar -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200/80 dark:border-slate-700 mb-6 flex flex-wrap gap-3 items-center justify-between">
+            <!-- Category Filter Dropdown -->
+            <div class="flex items-center space-x-2 w-full sm:w-auto flex-1 max-w-xs">
+                <label for="category-select" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden sm:block">Category:</label>
+                <select id="category-select" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-200 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-2.5 outline-none transition">
+                    <option value="ALL">All Categories (60 Cards)</option>
+                    <option value="PRESENT">Present Tenses</option>
+                    <option value="PAST">Past Tenses</option>
+                    <option value="FUTURE">Future Tenses</option>
+                    <option value="PERFECT">Perfect Tenses</option>
+                    <option value="CONDITIONALS">Conditionals & Mixed</option>
+                </select>
+            </div>
+
+            <!-- Action Buttons: Shuffle, Reset -->
+            <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+                <button id="shuffle-btn" class="px-3.5 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-medium rounded-xl transition flex items-center space-x-2">
+                    <i class="fa-solid fa-shuffle text-xs"></i>
+                    <span>Shuffle</span>
+                </button>
+
+                <button id="reset-btn" class="px-3.5 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-medium rounded-xl transition flex items-center space-x-2">
+                    <i class="fa-solid fa-rotate-right text-xs"></i>
+                    <span>Reset Progress</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Tracker Bar -->
+        <div class="mb-6 bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200/80 dark:border-slate-700">
+            <div class="flex justify-between items-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+                <span id="card-counter-text">Card 1 of 60</span>
+                <span>Accuracy: <span id="score-text" class="text-blue-600 dark:text-blue-400">0%</span> (<span id="correct-count">0</span>/<span id="tested-count">0</span>)</span>
+            </div>
+            <!-- Dual Progress Bar -->
+            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden flex">
+                <div id="progress-correct" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
+                <div id="progress-incorrect" class="bg-rose-500 h-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Flashcard Center Viewport -->
+        <div class="flex-1 flex flex-col justify-center items-center my-2 relative">
+            
+            <!-- Perspective Container for 3D Flip -->
+            <div class="w-full max-w-2xl h-[400px] sm:h-[380px] perspective-1000 relative">
+                
+                <!-- The Flip Container Card -->
+                <div id="flashcard" class="w-full h-full relative transform-style-3d duration-500 rounded-3xl shadow-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700">
+                    
+                    <!-- FRONT SIDE OF CARD -->
+                    <div class="absolute inset-0 w-full h-full backface-hidden p-6 sm:p-8 flex flex-col justify-between rounded-3xl bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-800 dark:to-slate-800/80">
+                        <!-- Card Top Bar: Badge & Flip Hint -->
+                        <div class="flex items-center justify-between">
+                            <span id="card-tense-badge" class="px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                                Present Simple
+                            </span>
+                            <button id="flip-to-back-btn" class="text-xs text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium flex items-center space-x-1.5 transition">
+                                <span>Grammar Clue</span>
+                                <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                            </button>
+                        </div>
+
+                        <!-- Card Sentence & Prompt -->
+                        <div class="my-auto py-4 text-center">
+                            <p id="sentence-display" class="text-xl sm:text-2xl font-medium leading-relaxed text-slate-800 dark:text-slate-100 mb-6">
+                                She <span class="border-b-2 border-blue-500 px-2 py-0.5 text-blue-600 dark:text-blue-400 font-bold">[______]</span> (go) to the store every morning.
+                            </p>
+
+                            <!-- Interactive Input & Check Form -->
+                            <form id="answer-form" onsubmit="return false;" class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto w-full">
+                                <div class="relative w-full">
+                                    <input type="text" id="answer-input" placeholder="Type answer here..." autocomplete="off" spellcheck="false"
+                                        class="w-full px-4 py-3 rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition text-center font-semibold text-lg shadow-inner">
+                                    <span id="input-status-icon" class="absolute right-3 top-3.5 hidden"></span>
+                                </div>
+                                <button type="submit" id="check-btn" class="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition active:scale-95 flex items-center justify-center space-x-2">
+                                    <span>Check</span>
+                                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                                </button>
+                            </form>
+
+                            <!-- Answer Feedback Alert Banner -->
+                            <div id="feedback-banner" class="mt-4 min-h-[42px] flex items-center justify-center text-sm font-semibold rounded-xl px-4 py-2 hidden transition-all"></div>
+                        </div>
+
+                        <!-- Bottom Footer Info -->
+                        <div class="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-700/60 pt-3">
+                            <span>Press <kbd class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 rounded text-slate-600 dark:text-slate-300 font-mono">Enter</kbd> to check</span>
+                            <span>Press <kbd class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 rounded text-slate-600 dark:text-slate-300 font-mono">Space</kbd> to flip</span>
+                        </div>
+                    </div>
+
+                    <!-- BACK SIDE OF CARD (Clue / Rules) -->
+                    <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 p-6 sm:p-8 flex flex-col justify-between rounded-3xl bg-slate-900 text-white border border-slate-700 shadow-2xl">
+                        <!-- Back Top Bar -->
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold tracking-wider uppercase text-amber-400 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-lightbulb"></i>
+                                <span>Grammar Clue & Formula</span>
+                            </span>
+                            <button id="flip-to-front-btn" class="text-xs text-slate-400 hover:text-white font-medium flex items-center space-x-1 transition">
+                                <span>Back to Exercise</span>
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>
+                        </div>
+
+                        <!-- Clue Content Body -->
+                        <div class="my-auto space-y-4">
+                            <div>
+                                <h4 class="text-xs text-slate-400 uppercase font-semibold tracking-wider">Signal Words / Context</h4>
+                                <p id="clue-signals" class="text-base font-semibold text-amber-300 mt-0.5">"every morning", "always", "usually"</p>
+                            </div>
+
+                            <div class="bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700">
+                                <h4 class="text-xs text-slate-400 uppercase font-semibold tracking-wider mb-1">Formula / Structure</h4>
+                                <p id="clue-formula" class="text-sm font-mono text-emerald-400 font-bold">Subject + Verb(s/es)</p>
+                            </div>
+
+                            <div>
+                                <h4 class="text-xs text-slate-400 uppercase font-semibold tracking-wider">Grammar Rule</h4>
+                                <p id="clue-rule" class="text-sm text-slate-300 leading-relaxed mt-0.5">
+                                    Used for daily routines, habits, or universal facts.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Back Bottom Button -->
+                        <div class="text-center border-t border-slate-800 pt-3">
+                            <button id="return-card-btn" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-xl text-slate-300 transition">
+                                Click to Flip Back & Answer
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar Controls -->
+            <div class="flex items-center justify-between w-full max-w-2xl mt-6 px-2">
+                <button id="prev-card-btn" class="px-4 py-2.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl shadow-sm text-sm font-semibold transition flex items-center space-x-2">
+                    <i class="fa-solid fa-chevron-left text-xs"></i>
+                    <span>Previous</span>
+                </button>
+
+                <!-- Search / Jump to Card Modal Trigger -->
+                <button id="jump-btn" class="px-3.5 py-2.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl shadow-sm text-sm font-medium transition flex items-center space-x-2">
+                    <i class="fa-solid fa-list-ol text-blue-500"></i>
+                    <span>Jump to Card</span>
+                </button>
+
+                <button id="next-card-btn" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-md shadow-blue-500/20 text-sm font-semibold transition flex items-center space-x-2">
+                    <span>Next</span>
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer Container -->
+    <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-3 text-center text-xs text-slate-400 dark:text-slate-500">
+        <p>Interactive 60 Verb Tenses Mastery • Practice English Grammar Fluency</p>
+    </footer>
+
+    <!-- JUMP TO CARD MODAL -->
+    <div id="jump-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700 max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-700">
+                <h3 class="font-bold text-slate-900 dark:text-white text-lg">Select a Flashcard (1-60)</h3>
+                <button id="close-modal-btn" class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div id="card-grid" class="grid grid-cols-5 sm:grid-cols-6 gap-2 my-4 overflow-y-auto p-1">
+                <!-- Dynamically Populated Grid Buttons -->
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-end">
+                <button id="modal-close-action" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold rounded-xl">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- KEYBOARD HELP MODAL -->
+    <div id="help-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-700">
+                <h3 class="font-bold text-slate-900 dark:text-white text-lg"><i class="fa-solid fa-keyboard mr-2 text-blue-500"></i> Keyboard Shortcuts</h3>
+                <button id="close-help-btn" class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="py-4 space-y-3 text-sm text-slate-600 dark:text-slate-300">
+                <div class="flex justify-between items-center"><span class="font-medium">Check Answer</span><kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded font-mono text-xs">Enter</kbd></div>
+                <div class="flex justify-between items-center"><span class="font-medium">Flip Card for Clue</span><kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded font-mono text-xs">Space</kbd> / <kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded font-mono text-xs">F</kbd></div>
+                <div class="flex justify-between items-center"><span class="font-medium">Next Card</span><kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded font-mono text-xs">→</kbd> (Right Arrow)</div>
+                <div class="flex justify-between items-center"><span class="font-medium">Previous Card</span><kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded font-mono text-xs">←</kbd> (Left Arrow)</div>
+            </div>
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-end">
+                <button id="help-close-action" class="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-xl">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUDIO EFFECTS USING WEB AUDIO API -->
+    <script>
+        // Sound synthesis for interaction feedback
+        class SoundFX {
+            constructor() {
+                this.ctx = null;
+            }
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+            playCorrect() {
+                this.init();
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc1 = this.ctx.createOscillator();
+                const osc2 = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc1.type = 'sine';
+                osc2.type = 'sine';
+
+                osc1.frequency.setValueAtTime(523.25, now); // C5
+                osc1.frequency.exponentialRampToValueAtTime(659.25, now + 0.15); // E5
+
+                osc2.frequency.setValueAtTime(659.25, now + 0.15);
+                osc2.frequency.exponentialRampToValueAtTime(783.99, now + 0.3); // G5
+
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+
+                osc1.connect(gain);
+                osc2.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc1.start(now);
+                osc1.stop(now + 0.15);
+                osc2.start(now + 0.15);
+                osc2.stop(now + 0.35);
+            }
+            playIncorrect() {
+                this.init();
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.exponentialRampToValueAtTime(130, now + 0.25);
+
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.25);
+            }
+        }
+        const sfx = new SoundFX();
+    </script>
+
+    <!-- 60 EXERCISES DATABASE & APPLICATION LOGIC -->
+    <script>
+        // Database of 60 unique grammar exercises covering all English verb tenses
+        const cardsData = [
+            // --- PRESENT TENSES (1-12) ---
+            {
+                id: 1,
+                tense: "Present Simple",
+                category: "PRESENT",
+                sentence: "She [______] (go) to the gym every morning before work.",
+                verb: "go",
+                answers: ["goes"],
+                signals: "every morning, routines, general truths",
+                formula: "Subject + Verb(s/es)",
+                rule: "Used for regular habits or permanent situations. Add '-es' for third-person singular (she/he/it)."
+            },
+            {
+                id: 2,
+                tense: "Present Simple",
+                category: "PRESENT",
+                sentence: "They [______] (not / like) seafood very much.",
+                verb: "not like",
+                answers: ["don't like", "do not like"],
+                signals: "general preference, stative verbs",
+                formula: "Subject + do/does not + Verb(base)",
+                rule: "Use 'don't' (do not) for plural subjects (I, you, we, they) in negative present simple statements."
+            },
+            {
+                id: 3,
+                tense: "Present Continuous",
+                category: "PRESENT",
+                sentence: "Look! The children [______] (play) happily in the garden right now.",
+                verb: "play",
+                answers: ["are playing"],
+                signals: "Look!, right now, at the moment",
+                formula: "Subject + am/is/are + Verb-ing",
+                rule: "Describes actions happening right now at the moment of speech."
+            },
+            {
+                id: 4,
+                tense: "Present Continuous",
+                category: "PRESENT",
+                sentence: "Why [______] you [______] (cry)? Is everything alright?",
+                verb: "cry",
+                answers: ["are you crying"],
+                type: "split",
+                signals: "current state, observable action",
+                formula: "Am/Is/Are + Subject + Verb-ing?",
+                rule: "In questions, place 'am/is/are' before the subject."
+            },
+            {
+                id: 5,
+                tense: "Present Perfect",
+                category: "PRESENT",
+                sentence: "I [______] (already / finish) my homework for tomorrow.",
+                verb: "already finish",
+                answers: ["have already finished", "have finished"],
+                signals: "already, yet, recently, life experience",
+                formula: "Subject + have/has + Past Participle (V3)",
+                rule: "Connects past actions to the present moment, emphasizing the result."
+            },
+            {
+                id: 6,
+                tense: "Present Perfect",
+                category: "PRESENT",
+                sentence: "He [______] (never / visit) Paris before.",
+                verb: "never visit",
+                answers: ["has never visited", "hasn't visited"],
+                signals: "never, ever, life experiences",
+                formula: "Subject + has/have + never + V3",
+                rule: "'Never' is placed between 'has' and the past participle (V3)."
+            },
+            {
+                id: 7,
+                tense: "Present Perfect Continuous",
+                category: "PRESENT",
+                sentence: "It [______] (rain) continuously for three hours.",
+                verb: "rain",
+                answers: ["has been raining"],
+                signals: "for 3 hours, since morning, lately",
+                formula: "Subject + have/has been + Verb-ing",
+                rule: "Emphasizes the duration of an ongoing action that started in the past and continues now."
+            },
+            {
+                id: 8,
+                tense: "Present Perfect Continuous",
+                category: "PRESENT",
+                sentence: "How long [______] you [______] (learn) English?",
+                verb: "learn",
+                answers: ["have you been learning"],
+                type: "split",
+                signals: "How long...?, duration up to now",
+                formula: "How long + have/has + Subject + been + Verb-ing?",
+                rule: "Used to ask about duration of uninterrupted activities starting in the past."
+            },
+            {
+                id: 9,
+                tense: "Present Simple (Stative)",
+                category: "PRESENT",
+                sentence: "This soup [______] (taste) delicious!",
+                verb: "taste",
+                answers: ["tastes"],
+                signals: "stative perception, sense verbs",
+                formula: "Subject + Verb(s/es)",
+                rule: "Stative sense verbs (taste, smell, sound, love) are not normally used in continuous tenses."
+            },
+            {
+                id: 10,
+                tense: "Present Continuous (Future Plan)",
+                category: "PRESENT",
+                sentence: "We [______] (meet) the architect at 3 PM tomorrow.",
+                verb: "meet",
+                answers: ["are meeting"],
+                signals: "fixed arrangement, future time marker",
+                formula: "Subject + am/is/are + Verb-ing",
+                rule: "Present Continuous can express definite, fixed future arrangements."
+            },
+            {
+                id: 11,
+                tense: "Present Perfect vs Past",
+                category: "PRESENT",
+                sentence: "She [______] (live) in London since 2018.",
+                verb: "live",
+                answers: ["has lived", "has been living"],
+                signals: "since 2018, starting past until now",
+                formula: "Subject + has + V3 / has been + V-ing",
+                rule: "Use 'since' with Present Perfect to indicate an action continuing from a specific start point."
+            },
+            {
+                id: 12,
+                tense: "Present Simple (Negative)",
+                category: "PRESENT",
+                sentence: "He [______] (not / understand) the explanation.",
+                verb: "not understand",
+                answers: ["doesn't understand", "does not understand"],
+                signals: "stative state, current lack of understanding",
+                formula: "Subject + doesn't + Verb(base)",
+                rule: "Use 'doesn't' (does not) for third-person singular (he/she/it) negative sentences."
+            },
+
+            // --- PAST TENSES (13-25) ---
+            {
+                id: 13,
+                tense: "Past Simple",
+                category: "PAST",
+                sentence: "Yesterday, I [______] (buy) a new laptop from the store.",
+                verb: "buy",
+                answers: ["bought"],
+                signals: "yesterday, last week, in 2010",
+                formula: "Subject + Past Form (V2)",
+                rule: "Irregular past tense of 'buy' is 'bought'. Used for completed past actions."
+            },
+            {
+                id: 14,
+                tense: "Past Simple (Negative)",
+                category: "PAST",
+                sentence: "They [______] (not / attend) the meeting last Tuesday.",
+                verb: "not attend",
+                answers: ["didn't attend", "did not attend"],
+                signals: "last Tuesday, specific past time",
+                formula: "Subject + didn't + Verb(base)",
+                rule: "In Past Simple negative, use 'didn't' followed by the base form of the verb."
+            },
+            {
+                id: 15,
+                tense: "Past Continuous",
+                category: "PAST",
+                sentence: "While I [______] (walk) home, it started to rain.",
+                verb: "walk",
+                answers: ["was walking"],
+                signals: "while, background continuous past action",
+                formula: "Subject + was/were + Verb-ing",
+                rule: "'While' usually introduces a longer background action in progress (Past Continuous)."
+            },
+            {
+                id: 16,
+                tense: "Past Continuous",
+                category: "PAST",
+                sentence: "At 8 PM last night, we [______] (watch) a movie.",
+                verb: "watch",
+                answers: ["were watching"],
+                signals: "at 8 PM last night, specific past moment",
+                formula: "Subject + were + Verb-ing",
+                rule: "Use 'were' for plural subjects (we/they/you) in Past Continuous."
+            },
+            {
+                id: 17,
+                tense: "Past Perfect",
+                category: "PAST",
+                sentence: "When we arrived, the train [______] (already / leave).",
+                verb: "already leave",
+                answers: ["had already left", "had left"],
+                signals: "before another past event, by the time",
+                formula: "Subject + had + Past Participle (V3)",
+                rule: "Expresses an action completed BEFORE another past event occurred."
+            },
+            {
+                id: 18,
+                tense: "Past Perfect",
+                category: "PAST",
+                sentence: "She failed because she [______] (not / study) enough.",
+                verb: "not study",
+                answers: ["hadn't studied", "had not studied"],
+                signals: "past cause & effect",
+                formula: "Subject + hadn't + Past Participle (V3)",
+                rule: "Shows the prior past cause of a later past outcome."
+            },
+            {
+                id: 19,
+                tense: "Past Perfect Continuous",
+                category: "PAST",
+                sentence: "He was exhausted because he [______] (run) for two hours.",
+                verb: "run",
+                answers: ["had been running"],
+                signals: "because, duration before past point",
+                formula: "Subject + had been + Verb-ing",
+                rule: "Shows an ongoing past action that was continuing up to another past moment."
+            },
+            {
+                id: 20,
+                tense: "Past Perfect Continuous",
+                category: "PAST",
+                sentence: "How long [______] you [______] (wait) before the bus arrived?",
+                verb: "wait",
+                answers: ["had you been waiting"],
+                signals: "before + past simple, duration",
+                formula: "Had + Subject + been + Verb-ing?",
+                rule: "Interrogative form for Past Perfect Continuous."
+            },
+            {
+                id: 21,
+                tense: "Past Simple (Irregular)",
+                category: "PAST",
+                sentence: "He [______] (teach) mathematics for twenty years before retiring.",
+                verb: "teach",
+                answers: ["taught"],
+                signals: "completed past period",
+                formula: "Subject + V2 (taught)",
+                rule: "The irregular past tense of 'teach' is 'taught'."
+            },
+            {
+                id: 22,
+                tense: "Past Simple Interrogative",
+                category: "PAST",
+                sentence: "[______] you [______] (see) the news yesterday?",
+                verb: "see",
+                answers: ["did you see"],
+                signals: "yesterday, question",
+                formula: "Did + Subject + Verb(base)?",
+                rule: "Questions in Past Simple start with 'Did' followed by base verb."
+            },
+            {
+                id: 23,
+                tense: "Past Continuous vs Simple",
+                category: "PAST",
+                sentence: "The phone rang while I [______] (take) a shower.",
+                verb: "take",
+                answers: ["was taking"],
+                signals: "while + background action",
+                formula: "was/were + Verb-ing",
+                rule: "Short interrupted action = Past Simple; ongoing background action = Past Continuous."
+            },
+            {
+                id: 24,
+                tense: "Past Perfect Sequence",
+                category: "PAST",
+                sentence: "By the time I reached the cinema, the film [______] (start).",
+                verb: "start",
+                answers: ["had started"],
+                signals: "by the time + past simple",
+                formula: "Subject + had + V3",
+                rule: "Action happening earlier than another past action requires Past Perfect."
+            },
+            {
+                id: 25,
+                tense: "Used To (Past Habit)",
+                category: "PAST",
+                sentence: "When I was young, I [______] (play) soccer every afternoon.",
+                verb: "play",
+                answers: ["played", "used to play"],
+                signals: "when I was young, past routine",
+                formula: "used to + Verb / Past Simple V2",
+                rule: "Past habits can be expressed using standard Past Simple or 'used to'."
+            },
+
+            // --- FUTURE TENSES (26-38) ---
+            {
+                id: 26,
+                tense: "Future Simple (will)",
+                category: "FUTURE",
+                sentence: "I think it [______] (rain) later this afternoon.",
+                verb: "rain",
+                answers: ["will rain"],
+                signals: "I think, prediction without present proof",
+                formula: "Subject + will + Verb(base)",
+                rule: "Use 'will' for predictions based on opinion or spontaneous decisions."
+            },
+            {
+                id: 27,
+                tense: "Future Simple (Be going to)",
+                category: "FUTURE",
+                sentence: "Look at those dark clouds! It [______] (rain) soon.",
+                verb: "rain",
+                answers: ["is going to rain"],
+                signals: "Look at...!, clear present evidence",
+                formula: "Subject + am/is/are + going to + Verb(base)",
+                rule: "Use 'be going to' when there is clear physical evidence right now."
+            },
+            {
+                id: 28,
+                tense: "Future Continuous",
+                category: "FUTURE",
+                sentence: "At this exact time tomorrow, I [______] (fly) to New York.",
+                verb: "fly",
+                answers: ["will be flying"],
+                signals: "at this time tomorrow, specific future duration",
+                formula: "Subject + will be + Verb-ing",
+                rule: "Used for an action that will be in progress at a specific time in the future."
+            },
+            {
+                id: 29,
+                tense: "Future Perfect",
+                category: "FUTURE",
+                sentence: "By 2030, scientists [______] (find) a cure for many diseases.",
+                verb: "find",
+                answers: ["will have found"],
+                signals: "By 2030, By the time..., completed before future point",
+                formula: "Subject + will have + Past Participle (V3)",
+                rule: "Expresses an action completed BEFORE a specific point in the future."
+            },
+            {
+                id: 30,
+                tense: "Future Perfect Continuous",
+                category: "FUTURE",
+                sentence: "By December, she [______] (work) here for ten years.",
+                verb: "work",
+                answers: ["will have been working"],
+                signals: "By... for [duration]",
+                formula: "Subject + will have been + Verb-ing",
+                rule: "Emphasizes the continuous duration of an action up to a future moment."
+            },
+            {
+                id: 31,
+                tense: "Future Simple (Promise)",
+                category: "FUTURE",
+                sentence: "Don't worry, I [______] (not / tell) anyone your secret.",
+                verb: "not tell",
+                answers: ["won't tell", "will not tell"],
+                signals: "promise, refusal, instant offer",
+                formula: "Subject + won't + Verb(base)",
+                rule: "'won't' is the contraction for 'will not', used in promises and guarantees."
+            },
+            {
+                id: 32,
+                tense: "Future Plan (be going to)",
+                category: "FUTURE",
+                sentence: "We [______] (buy) a new car next month; we've saved enough money.",
+                verb: "buy",
+                answers: ["are going to buy"],
+                signals: "prior plan, intention",
+                formula: "Subject + am/is/are going to + Verb",
+                rule: "Used for intentions and decisions made BEFORE the moment of speaking."
+            },
+            {
+                id: 33,
+                tense: "Future Continuous",
+                category: "FUTURE",
+                sentence: "Don't call at 7 PM. We [______] (have) dinner then.",
+                verb: "have",
+                answers: ["will be having"],
+                signals: "at 7 PM, specific future activity",
+                formula: "Subject + will be + Verb-ing",
+                rule: "Indicates action that will be underway at a specified future moment."
+            },
+            {
+                id: 34,
+                tense: "Future Perfect",
+                category: "FUTURE",
+                sentence: "By next week, I [______] (read) all three books.",
+                verb: "read",
+                answers: ["will have read"],
+                signals: "By next week, completion marker",
+                formula: "Subject + will have + V3 (read /red/)",
+                rule: "Past participle of 'read' is spelled 'read' (pronounced /red/)."
+            },
+            {
+                id: 35,
+                tense: "Future Offer (will)",
+                category: "FUTURE",
+                sentence: "That bag looks heavy! I [______] (carry) it for you.",
+                verb: "carry",
+                answers: ["will carry", "'ll carry"],
+                signals: "instant offer, spontaneous decision",
+                formula: "Subject + will + Verb(base)",
+                rule: "Offers made at the moment of speaking always use 'will'."
+            },
+            {
+                id: 36,
+                tense: "Future Time Clause",
+                category: "FUTURE",
+                sentence: "As soon as he arrives, we [______] (start) the discussion.",
+                verb: "start",
+                answers: ["will start"],
+                signals: "as soon as + present simple",
+                formula: "Main clause: will + Verb(base)",
+                rule: "In future time clauses, main clause uses 'will' while time clause uses Present Simple."
+            },
+            {
+                id: 37,
+                tense: "Future Schedule (Present Simple)",
+                category: "FUTURE",
+                sentence: "The flight [______] (depart) at 6:30 AM tomorrow morning.",
+                verb: "depart",
+                answers: ["departs"],
+                signals: "timetable, fixed schedule",
+                formula: "Subject + Verb(s/es)",
+                rule: "Timetables, schedules, and official calendar events use Present Simple for future."
+            },
+            {
+                id: 38,
+                tense: "Future Perfect Negative",
+                category: "FUTURE",
+                sentence: "By tomorrow, they [______] (not / complete) the renovation.",
+                verb: "not complete",
+                answers: ["won't have completed", "will not have completed"],
+                signals: "By tomorrow + negative completion",
+                formula: "Subject + won't have + V3",
+                rule: "Negative form of Future Perfect."
+            },
+
+            // --- PERFECT TENSES MASTER & COMPARISONS (39-48) ---
+            {
+                id: 39,
+                tense: "Present Perfect",
+                category: "PERFECT",
+                sentence: "She [______] (be) a doctor for over fifteen years.",
+                verb: "be",
+                answers: ["has been"],
+                signals: "for 15 years, status continuing now",
+                formula: "Subject + has + been (V3)",
+                rule: "Past participle of 'be' is 'been'."
+            },
+            {
+                id: 40,
+                tense: "Present Perfect (Experience)",
+                category: "PERFECT",
+                sentence: "[______] you ever [______] (eat) sushi before?",
+                verb: "eat",
+                answers: ["have you eaten"],
+                type: "split",
+                signals: "ever, life experience",
+                formula: "Have + Subject + V3 (eaten)?",
+                rule: "Questions asking about lifetime experiences."
+            },
+            {
+                id: 41,
+                tense: "Past Perfect",
+                category: "PERFECT",
+                sentence: "He realized he [______] (lose) his keys after he locked the door.",
+                verb: "lose",
+                answers: ["had lost"],
+                signals: "realized that (earlier action)",
+                formula: "Subject + had + V3 (lost)",
+                rule: "Losing the keys happened BEFORE realizing it."
+            },
+            {
+                id: 42,
+                tense: "Present Perfect vs Past Simple",
+                category: "PERFECT",
+                sentence: "I [______] (see) that film last night.",
+                verb: "see",
+                answers: ["saw"],
+                signals: "last night (finished time)",
+                formula: "Subject + V2 (saw)",
+                rule: "Finished time marker 'last night' forces Past Simple, NOT Present Perfect."
+            },
+            {
+                id: 43,
+                tense: "Present Perfect vs Past Simple",
+                category: "PERFECT",
+                sentence: "I [______] (see) that film three times already.",
+                verb: "see",
+                answers: ["have seen"],
+                signals: "already, unspecified time",
+                formula: "Subject + have + V3",
+                rule: "Unspecified time / repetition up to now requires Present Perfect."
+            },
+            {
+                id: 44,
+                tense: "Past Perfect Continuous",
+                category: "PERFECT",
+                sentence: "The streets were wet because it [______] (snow) all night.",
+                verb: "snow",
+                answers: ["had been snowing"],
+                signals: "result in past (streets were wet), duration",
+                formula: "Subject + had been + Verb-ing",
+                rule: "Continuous action in past that produced a visible past result."
+            },
+            {
+                id: 45,
+                tense: "Future Perfect",
+                category: "PERFECT",
+                sentence: "In two months, we [______] (finish) our degree program.",
+                verb: "finish",
+                answers: ["will have finished"],
+                signals: "In two months (future target)",
+                formula: "Subject + will have + V3",
+                rule: "Looking back from a future deadline."
+            },
+            {
+                id: 46,
+                tense: "Present Perfect Continuous",
+                category: "PERFECT",
+                sentence: "My hands are dirty because I [______] (work) in the garden.",
+                verb: "work",
+                answers: ["have been working"],
+                signals: "present result (hands dirty)",
+                formula: "Subject + have been + Verb-ing",
+                rule: "Recent activity with a visible present effect."
+            },
+            {
+                id: 47,
+                tense: "Past Perfect Negative",
+                category: "PERFECT",
+                sentence: "They couldn't get in because they [______] (not / book) tickets.",
+                verb: "not book",
+                answers: ["hadn't booked", "had not booked"],
+                signals: "past reason for failure",
+                formula: "Subject + hadn't + V3",
+                rule: "Prior omission leading to past consequence."
+            },
+            {
+                id: 48,
+                tense: "Present Perfect (Just)",
+                category: "PERFECT",
+                sentence: "Careful! I [______] (just / paint) that wall.",
+                verb: "just paint",
+                answers: ["have just painted"],
+                signals: "just, very recent past action",
+                formula: "Subject + have + just + V3",
+                rule: "'Just' goes between auxiliary 'have' and main verb."
+            },
+
+            // --- CONDITIONALS & MIXED TENSES (49-60) ---
+            {
+                id: 49,
+                tense: "Zero Conditional",
+                category: "CONDITIONALS",
+                sentence: "If you heat ice, it [______] (melt).",
+                verb: "melt",
+                answers: ["melts"],
+                signals: "scientific fact, general truth",
+                formula: "If + Present Simple, Present Simple",
+                rule: "Used for universal scientific facts and general laws of nature."
+            },
+            {
+                id: 50,
+                tense: "First Conditional",
+                category: "CONDITIONALS",
+                sentence: "If it rains tomorrow, we [______] (cancel) the picnic.",
+                verb: "cancel",
+                answers: ["will cancel"],
+                signals: "real future condition",
+                formula: "If + Present Simple, Will + Verb",
+                rule: "First conditional: Real possibility in the future."
+            },
+            {
+                id: 51,
+                tense: "First Conditional",
+                category: "CONDITIONALS",
+                sentence: "Unless you [______] (study) hard, you won't pass the exam.",
+                verb: "study",
+                answers: ["study"],
+                signals: "Unless (= if not)",
+                formula: "Unless + Present Simple",
+                rule: "'Unless' means 'if not' and takes a positive verb form."
+            },
+            {
+                id: 52,
+                tense: "Second Conditional",
+                category: "CONDITIONALS",
+                sentence: "If I won the lottery, I [______] (travel) around the world.",
+                verb: "travel",
+                answers: ["would travel"],
+                signals: "hypothetical present/future",
+                formula: "If + Past Simple, Would + Verb",
+                rule: "Unreal or unlikely hypothetical condition in the present or future."
+            },
+            {
+                id: 53,
+                tense: "Second Conditional",
+                category: "CONDITIONALS",
+                sentence: "If I [______] (be) you, I would take that job offer.",
+                verb: "be",
+                answers: ["were", "was"],
+                signals: "advice, imaginary state",
+                formula: "If + I/he/she + were",
+                rule: "In formal English, 'were' is used for all subjects in Second Conditional."
+            },
+            {
+                id: 54,
+                tense: "Third Conditional",
+                category: "CONDITIONALS",
+                sentence: "If she had known about the party, she [______] (come).",
+                verb: "come",
+                answers: ["would have come"],
+                signals: "unreal past condition",
+                formula: "If + Past Perfect, Would have + V3",
+                rule: "Regret or imaginary situation in the past that cannot be changed."
+            },
+            {
+                id: 55,
+                tense: "Third Conditional",
+                category: "CONDITIONALS",
+                sentence: "We wouldn't have missed the flight if we [______] (take) a taxi.",
+                verb: "take",
+                answers: ["had taken"],
+                signals: "past hypothetical result",
+                formula: "If + Past Perfect (had taken)",
+                rule: "The 'if clause' takes Past Perfect (had + V3)."
+            },
+            {
+                id: 56,
+                tense: "Wish / Past Simple",
+                category: "CONDITIONALS",
+                sentence: "I wish I [______] (have) more free time these days.",
+                verb: "have",
+                answers: ["had"],
+                signals: "I wish (present regret)",
+                formula: "I wish + Subject + Past Simple",
+                rule: "Expressing a wish about a present situation requires Past Simple."
+            },
+            {
+                id: 57,
+                tense: "Mixed Tense Review",
+                category: "CONDITIONALS",
+                sentence: "While he was studying, his mother [______] (cook) dinner.",
+                verb: "cook",
+                answers: ["was cooking"],
+                signals: "simultaneous past actions (while)",
+                formula: "Past Continuous + while + Past Continuous",
+                rule: "Two parallel actions happening simultaneously in the past."
+            },
+            {
+                id: 58,
+                tense: "Mixed Tense Review",
+                category: "CONDITIONALS",
+                sentence: "By the time you get home, I [______] (cook) dinner.",
+                verb: "cook",
+                answers: ["will have cooked"],
+                signals: "By the time + present simple",
+                formula: "Main clause: Future Perfect",
+                rule: "Future deadline marker combined with Present Simple clause."
+            },
+            {
+                id: 59,
+                tense: "Passive Voice Present",
+                category: "CONDITIONALS",
+                sentence: "English [______] (speak) in many countries around the globe.",
+                verb: "speak",
+                answers: ["is spoken"],
+                signals: "general fact, passive focus",
+                formula: "Subject + am/is/are + V3",
+                rule: "Present Simple Passive: Object + is/are + Past Participle."
+            },
+            {
+                id: 60,
+                tense: "Passive Voice Past",
+                category: "CONDITIONALS",
+                sentence: "The Mona Lisa [______] (paint) by Leonardo da Vinci.",
+                verb: "paint",
+                answers: ["was painted"],
+                signals: "historical past, passive focus",
+                formula: "Subject + was/were + V3",
+                rule: "Past Simple Passive: Object + was/were + Past Participle."
+            }
+        ];
+
+        // APPLICATION STATE MANAGEMENT
+        let activeDeck = [...cardsData];
+        let currentIndex = 0;
+        let isFlipped = false;
+        let cardStats = {}; // { id: { tested: boolean, correct: boolean } }
+        let streak = 0;
+
+        // DOM ELEMENTS
+        const flashcard = document.getElementById('flashcard');
+        const categorySelect = document.getElementById('category-select');
+        const sentenceDisplay = document.getElementById('sentence-display');
+        const answerInput = document.getElementById('answer-input');
+        const answerForm = document.getElementById('answer-form');
+        const checkBtn = document.getElementById('check-btn');
+        const feedbackBanner = document.getElementById('feedback-banner');
+        const cardTenseBadge = document.getElementById('card-tense-badge');
+        
+        // Clue DOM
+        const clueSignals = document.getElementById('clue-signals');
+        const clueFormula = document.getElementById('clue-formula');
+        const clueRule = document.getElementById('clue-rule');
+
+        // Nav & Stats DOM
+        const prevBtn = document.getElementById('prev-card-btn');
+        const nextBtn = document.getElementById('next-card-btn');
+        const shuffleBtn = document.getElementById('shuffle-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const jumpBtn = document.getElementById('jump-btn');
+        const cardCounterText = document.getElementById('card-counter-text');
+        const scoreText = document.getElementById('score-text');
+        const correctCountEl = document.getElementById('correct-count');
+        const testedCountEl = document.getElementById('tested-count');
+        const streakCountEl = document.getElementById('streak-count');
+        const progressCorrect = document.getElementById('progress-correct');
+        const progressIncorrect = document.getElementById('progress-incorrect');
+
+        // Modals DOM
+        const jumpModal = document.getElementById('jump-modal');
+        const cardGrid = document.getElementById('card-grid');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modalCloseAction = document.getElementById('modal-close-action');
+        const helpModal = document.getElementById('help-modal');
+        const helpBtn = document.getElementById('help-btn');
+        const closeHelpBtn = document.getElementById('close-help-btn');
+        const helpCloseAction = document.getElementById('help-close-action');
+
+        // Theme Toggle DOM
+        const themeToggleBtn = document.getElementById('theme-toggle');
+
+        // INIT APPLICATION
+        function initApp() {
+            loadProgress();
+            renderCard();
+            setupEventListeners();
+            updateProgressStats();
+        }
+
+        // RENDER CURRENT CARD CONTENT
+        function renderCard() {
+            if (activeDeck.length === 0) return;
+
+            const card = activeDeck[currentIndex];
+            
+            // Ensure card is non-flipped state
+            if (isFlipped) flipCard(false);
+
+            // Populate Front Card
+            cardTenseBadge.textContent = `${card.id}. ${card.tense}`;
+            
+            // Format sentence with underlined blank placeholder
+            const formattedSentence = card.sentence.replace(
+                '[______]', 
+                `<span class="inline-block border-b-2 border-blue-500 font-bold px-2 py-0.5 text-blue-600 dark:text-blue-400 min-w-[80px]">[ ______ ]</span>`
+            );
+            sentenceDisplay.innerHTML = formattedSentence;
+
+            // Reset Input & Feedback
+            answerInput.value = '';
+            answerInput.disabled = false;
+            checkBtn.disabled = false;
+            answerInput.classList.remove('border-emerald-500', 'border-rose-500', 'ring-2', 'ring-emerald-500/30', 'ring-rose-500/30');
+            answerInput.classList.add('border-slate-300', 'dark:border-slate-600');
+            feedbackBanner.classList.add('hidden');
+            feedbackBanner.className = "mt-4 min-h-[42px] flex items-center justify-center text-sm font-semibold rounded-xl px-4 py-2 hidden transition-all";
+
+            // If user already answered this card before, show previous state
+            const existingStat = cardStats[card.id];
+            if (existingStat && existingStat.tested) {
+                answerInput.value = existingStat.userAnswer || '';
+                showFeedback(existingStat.correct, card.answers[0]);
+            }
+
+            // Populate Back Card (Clues)
+            clueSignals.textContent = card.signals || "N/A";
+            clueFormula.textContent = card.formula || "";
+            clueRule.textContent = card.rule || "";
+
+            // Update Header Counter
+            cardCounterText.textContent = `Card ${currentIndex + 1} of ${activeDeck.length}`;
+
+            // Auto Focus input for fast keyboard practice
+            setTimeout(() => {
+                answerInput.focus();
+            }, 100);
+        }
+
+        // FLIP CARD FUNCTIONALITY
+        function flipCard(forceState) {
+            if (typeof forceState === 'boolean') {
+                isFlipped = forceState;
+            } else {
+                isFlipped = !isFlipped;
+            }
+
+            if (isFlipped) {
+                flashcard.classList.add('rotate-y-180');
+            } else {
+                flashcard.classList.remove('rotate-y-180');
+            }
+        }
+
+        // ANSWER VERIFICATION & NORMALIZATION
+        function normalizeText(text) {
+            return text
+                .toLowerCase()
+                .trim()
+                .replace(/’/g, "'") // Standardize curly apostrophes
+                .replace(/\s+/g, " ");
+        }
+
+        function verifyAnswer() {
+            const card = activeDeck[currentIndex];
+            const userRaw = answerInput.value;
+            const userNorm = normalizeText(userRaw);
+
+            if (!userNorm) return; // Don't check empty inputs
+
+            const isCorrect = card.answers.some(ans => normalizeText(ans) === userNorm);
+
+            // Record Stat
+            const isFirstAttempt = !cardStats[card.id] || !cardStats[card.id].tested;
+            cardStats[card.id] = {
+                tested: true,
+                correct: isCorrect,
+                userAnswer: userRaw
+            };
+
+            // Streak Tracking
+            if (isCorrect) {
+                if (isFirstAttempt) streak++;
+                sfx.playCorrect();
+                // Trigger Confetti effect on high streak milestones
+                if (streak > 0 && streak % 5 === 0) {
+                    confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+                }
+            } else {
+                streak = 0;
+                sfx.playIncorrect();
+            }
+
+            // Update UI elements
+            showFeedback(isCorrect, card.answers[0]);
+            updateProgressStats();
+            saveProgress();
+        }
+
+        // DISPLAY FEEDBACK BANNER & INPUT HIGHLIGHT
+        function showFeedback(isCorrect, primaryAnswer) {
+            feedbackBanner.classList.remove('hidden');
+            answerInput.classList.remove('border-slate-300', 'dark:border-slate-600');
+
+            if (isCorrect) {
+                answerInput.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-500/30');
+                feedbackBanner.className = "mt-4 min-h-[42px] flex items-center justify-center text-sm font-semibold rounded-xl px-4 py-2 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800";
+                feedbackBanner.innerHTML = `<i class="fa-solid fa-circle-check mr-2 text-emerald-500"></i> Excellent! Correct Answer.`;
+            } else {
+                answerInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/30');
+                feedbackBanner.className = "mt-4 min-h-[42px] flex items-center justify-center text-sm font-semibold rounded-xl px-4 py-2 bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800";
+                feedbackBanner.innerHTML = `<i class="fa-solid fa-circle-xmark mr-2 text-rose-500"></i> Incorrect! Correct form: <strong class="ml-1 underline font-bold">${primaryAnswer}</strong>`;
+            }
+        }
+
+        // UPDATE SCORE & PROGRESS BAR TRACKER
+        function updateProgressStats() {
+            const totalInDeck = activeDeck.length;
+            let testedInDeck = 0;
+            let correctInDeck = 0;
+
+            activeDeck.forEach(card => {
+                const stat = cardStats[card.id];
+                if (stat && stat.tested) {
+                    testedInDeck++;
+                    if (stat.correct) correctInDeck++;
+                }
+            });
+
+            const incorrectInDeck = testedInDeck - correctInDeck;
+            const accuracy = testedInDeck > 0 ? Math.round((correctInDeck / testedInDeck) * 100) : 0;
+
+            // DOM Updates
+            scoreText.textContent = `${accuracy}%`;
+            correctCountEl.textContent = correctInDeck;
+            testedCountEl.textContent = testedInDeck;
+            streakCountEl.textContent = streak;
+
+            // Bar Widths
+            const correctPercent = totalInDeck > 0 ? (correctInDeck / totalInDeck) * 100 : 0;
+            const incorrectPercent = totalInDeck > 0 ? (incorrectInDeck / totalInDeck) * 100 : 0;
+
+            progressCorrect.style.width = `${correctPercent}%`;
+            progressIncorrect.style.width = `${incorrectPercent}%`;
+        }
+
+        // CATEGORY FILTERING LOGIC
+        function filterCategory(cat) {
+            if (cat === "ALL") {
+                activeDeck = [...cardsData];
+            } else {
+                activeDeck = cardsData.filter(card => card.category === cat);
+            }
+            currentIndex = 0;
+            renderCard();
+            updateProgressStats();
+        }
+
+        // SHUFFLE CARDS
+        function shuffleDeck() {
+            for (let i = activeDeck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [activeDeck[i], activeDeck[j]] = [activeDeck[j], activeDeck[i]];
+            }
+            currentIndex = 0;
+            renderCard();
+        }
+
+        // RESET ALL USER PROGRESS
+        function resetProgress() {
+            if (confirm("Are you sure you want to reset all your score progress and saved answers?")) {
+                cardStats = {};
+                streak = 0;
+                localStorage.removeItem('tense_master_stats');
+                localStorage.removeItem('tense_master_streak');
+                renderCard();
+                updateProgressStats();
+            }
+        }
+
+        // JUMP MODAL POPULATION
+        function openJumpModal() {
+            cardGrid.innerHTML = '';
+            cardsData.forEach((card, index) => {
+                const stat = cardStats[card.id];
+                let statusBg = "bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-600";
+                
+                if (stat && stat.tested) {
+                    if (stat.correct) {
+                        statusBg = "bg-emerald-500 text-white border-emerald-600 font-bold";
+                    } else {
+                        statusBg = "bg-rose-500 text-white border-rose-600 font-bold";
+                    }
+                }
+
+                const btn = document.createElement('button');
+                btn.className = `p-2.5 text-xs font-semibold rounded-xl border transition hover:scale-105 ${statusBg}`;
+                btn.textContent = card.id;
+                btn.title = `${card.id}. ${card.tense}`;
+                btn.onclick = () => {
+                    // Switch category to ALL if card not in active deck
+                    const existsInActive = activeDeck.findIndex(c => c.id === card.id);
+                    if (existsInActive !== -1) {
+                        currentIndex = existsInActive;
+                    } else {
+                        categorySelect.value = "ALL";
+                        filterCategory("ALL");
+                        currentIndex = cardsData.findIndex(c => c.id === card.id);
+                    }
+                    renderCard();
+                    closeJumpModal();
+                };
+                cardGrid.appendChild(btn);
+            });
+
+            jumpModal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeJumpModal() {
+            jumpModal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // LOCAL STORAGE PERSISTENCE
+        function saveProgress() {
+            localStorage.setItem('tense_master_stats', JSON.stringify(cardStats));
+            localStorage.setItem('tense_master_streak', streak.toString());
+        }
+
+        function loadProgress() {
+            const savedStats = localStorage.getItem('tense_master_stats');
+            const savedStreak = localStorage.getItem('tense_master_streak');
+            if (savedStats) cardStats = JSON.parse(savedStats);
+            if (savedStreak) streak = parseInt(savedStreak, 10) || 0;
+        }
+
+        // EVENT LISTENERS BINDING
+        function setupEventListeners() {
+            // Answer submit form
+            answerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                verifyAnswer();
+            });
+
+            // Card Flip Controls
+            document.getElementById('flip-to-back-btn').onclick = () => flipCard(true);
+            document.getElementById('flip-to-front-btn').onclick = () => flipCard(false);
+            document.getElementById('return-card-btn').onclick = () => flipCard(false);
+
+            // Card Navigation
+            nextBtn.onclick = () => {
+                if (currentIndex < activeDeck.length - 1) {
+                    currentIndex++;
+                    renderCard();
+                } else {
+                    // Loop back to start
+                    currentIndex = 0;
+                    renderCard();
+                }
+            };
+
+            prevBtn.onclick = () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    renderCard();
+                } else {
+                    currentIndex = activeDeck.length - 1;
+                    renderCard();
+                }
+            };
+
+            // Category Select
+            categorySelect.onchange = (e) => filterCategory(e.target.value);
+
+            // Toolbar buttons
+            shuffleBtn.onclick = shuffleDeck;
+            resetBtn.onclick = resetProgress;
+
+            // Jump Modal
+            jumpBtn.onclick = openJumpModal;
+            closeModalBtn.onclick = closeJumpModal;
+            modalCloseAction.onclick = closeJumpModal;
+
+            // Help Modal
+            helpBtn.onclick = () => helpModal.classList.remove('opacity-0', 'pointer-events-none');
+            closeHelpBtn.onclick = () => helpModal.classList.add('opacity-0', 'pointer-events-none');
+            helpCloseAction.onclick = () => helpModal.classList.add('opacity-0', 'pointer-events-none');
+
+            // Dark Mode Toggle
+            themeToggleBtn.onclick = () => {
+                document.documentElement.classList.toggle('dark');
+            };
+
+            // Global Keyboard Shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Ignore key events if user is focusing inputs inside modals
+                if (jumpModal.classList.contains('pointer-events-none') === false || helpModal.classList.contains('pointer-events-none') === false) {
+                    if (e.key === "Escape") {
+                        closeJumpModal();
+                        helpModal.classList.add('opacity-0', 'pointer-events-none');
+                    }
+                    return;
+                }
+
+                if (e.target === answerInput) {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        verifyAnswer();
+                    }
+                    return;
+                }
+
+                if (e.key === " " || e.key.toLowerCase() === "f") {
+                    e.preventDefault();
+                    flipCard();
+                } else if (e.key === "ArrowRight") {
+                    e.preventDefault();
+                    nextBtn.click();
+                } else if (e.key === "ArrowLeft") {
+                    e.preventDefault();
+                    prevBtn.click();
+                }
+            });
+        }
+
+        // START APP ON WINDOW LOAD
+        window.onload = function() {
+            initApp();
+        };
+    </script>
+</body>
+</html>
